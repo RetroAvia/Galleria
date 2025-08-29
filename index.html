@@ -1544,14 +1544,14 @@
         const MAX_IMAGES = 10;
         
         // Supabase configuration
-        const CLOUD_SYNC_ENABLED = true;
+        let CLOUD_SYNC_ENABLED = true;
         const SUPABASE_URL = 'https://moenkmmkpogjapsyiuat.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vZW5rbW1rcG9namFwc3lpdWF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0OTYyMTYsImV4cCI6MjA3MjA3MjIxNn0.RdFnDxJVIgESel9I6s84KRR3F6yPFL7rk0ycFP_q0pg';
         
-        // Initialize Supabase client
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Initialize Supabase client - wait for the script to load
+        let supabase = null;
         
-        // Variabili globali
+        // Variabili globali - dichiarate tutte insieme
         let games = [];
         let editMode = false;
         let currentCategory = 'all';
@@ -1562,9 +1562,43 @@
         let currentGameImages = [];
         let uploadedImages = [];
 
+        // Initialize Supabase when window loads
+        function initSupabase() {
+            if (typeof window.supabase !== 'undefined') {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                console.log('✅ Supabase initialized successfully');
+                return true;
+            } else {
+                console.error('❌ Supabase SDK not loaded');
+                return false;
+            }
+        }
+
         // Inizializzazione
         document.addEventListener('DOMContentLoaded', () => {
-            initializeApp();
+            // Initialize app with retry logic for Supabase
+            let retries = 0;
+            const maxRetries = 5;
+            
+            function tryInitialize() {
+                if (typeof window.supabase !== 'undefined') {
+                    if (initSupabase()) {
+                        initializeApp();
+                        return;
+                    }
+                }
+                
+                retries++;
+                if (retries < maxRetries) {
+                    setTimeout(tryInitialize, 200 * retries); // Increasing delay
+                } else {
+                    console.warn('⚠️ Supabase failed to load after retries, running in local mode');
+                    CLOUD_SYNC_ENABLED = false;
+                    initializeApp();
+                }
+            }
+            
+            tryInitialize();
         });
 
         function initializeApp() {
@@ -1573,8 +1607,8 @@
             updateStats();
             updateAuthUI();
             
-            // Only sync from cloud if enabled
-            if (CLOUD_SYNC_ENABLED) {
+            // Only sync from cloud if enabled and supabase is available
+            if (CLOUD_SYNC_ENABLED && supabase) {
                 syncFromCloud(); 
             } else {
                 updateSyncStatus('local', 'Solo Locale');
@@ -1583,10 +1617,11 @@
 
         // Supabase Sync Functions
         async function syncToCloud(showNotifications = true) {
-            if (!CLOUD_SYNC_ENABLED) {
+            if (!CLOUD_SYNC_ENABLED || !supabase) {
                 if (showNotifications) {
-                    showToast('ℹ️ Sincronizzazione cloud disabilitata', 'info');
+                    showToast('ℹ️ Sincronizzazione cloud non disponibile', 'info');
                 }
+                updateSyncStatus('local', 'Solo Locale');
                 return;
             }
 
@@ -1604,7 +1639,9 @@
                     .delete()
                     .neq('id', 'impossible_id'); // Delete all rows
 
-                if (deleteError) throw deleteError;
+                if (deleteError && !deleteError.message.includes('No rows found')) {
+                    throw deleteError;
+                }
 
                 // Insert all games
                 const gamesForSupabase = games.map(game => ({
@@ -1640,12 +1677,18 @@
             } catch (error) {
                 console.error('Errore sync to Supabase:', error);
                 updateSyncStatus('error', 'Errore sync');
-                if (showNotifications) showToast(`⚠️ Errore sincronizzazione: ${error.message}`, 'error');
+                if (showNotifications) {
+                    if (error.message.includes('relation "games" does not exist')) {
+                        showToast('⚠️ Tabella "games" non trovata su Supabase. Creala prima!', 'error');
+                    } else {
+                        showToast(`⚠️ Errore sincronizzazione: ${error.message}`, 'error');
+                    }
+                }
             }
         }
 
         async function syncFromCloud(showNotifications = false) {
-            if (!CLOUD_SYNC_ENABLED) {
+            if (!CLOUD_SYNC_ENABLED || !supabase) {
                 updateSyncStatus('local', 'Solo Locale');
                 return;
             }
@@ -1659,7 +1702,16 @@
                     .select('*')
                     .order('created_at', { ascending: false });
 
-                if (error) throw error;
+                if (error) {
+                    if (error.message.includes('relation "games" does not exist')) {
+                        updateSyncStatus('error', 'Tabella mancante');
+                        if (showNotifications) {
+                            showToast('⚠️ Tabella "games" non esiste su Supabase. Creala prima!', 'error');
+                        }
+                        return;
+                    }
+                    throw error;
+                }
 
                 if (cloudGames && cloudGames.length > 0) {
                     // Convert Supabase format back to app format
@@ -1746,8 +1798,8 @@
                 return;
             }
             
-            if (!CLOUD_SYNC_ENABLED) {
-                showToast('ℹ️ Sincronizzazione cloud disabilitata', 'info');
+            if (!CLOUD_SYNC_ENABLED || !supabase) {
+                showToast('ℹ️ Sincronizzazione cloud non disponibile', 'info');
                 return;
             }
             
@@ -1789,10 +1841,10 @@
             // Keyboard shortcuts
             document.addEventListener('keydown', handleKeyboardShortcuts);
 
-            // Auto-sync ogni 5 minuti (solo se cloud sync è abilitato)
-            if (CLOUD_SYNC_ENABLED) {
+            // Auto-sync ogni 5 minuti (solo se cloud sync è abilitato e supabase è inizializzato)
+            if (CLOUD_SYNC_ENABLED && supabase) {
                 setInterval(() => {
-                    if (games.length > 0) {
+                    if (games.length > 0 && supabase) {
                         syncToCloud(false);
                     }
                 }, 5 * 60 * 1000);
@@ -2879,7 +2931,7 @@
             
             window.retroavia = {
                 games: () => games,
-                supabase: supabase,
+                supabase: () => supabase,
                 stats: () => ({
                     total: games.length,
                     categories: {
