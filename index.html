@@ -148,6 +148,11 @@
             border-color: var(--accent-primary);
         }
 
+        .sync-status.local {
+            color: var(--text-secondary);
+            border-color: var(--border-color);
+        }
+
         .sync-spinner {
             width: 12px;
             height: 12px;
@@ -1537,8 +1542,14 @@
         const ADMIN_PASSWORD = 'RetroAvia2024!';
         const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
         const MAX_IMAGES = 10;
-        const CLOUD_BIN_ID = '675a34c1e41b4d34e465d4eb'; // JSONBin.io bin ID
-        const CLOUD_API_KEY = '$2a$10$vK0LCX4iSIKhYTfHg3hwSe6I0jb1V5zRh1BZ1Qf1C7VlUWJpSRSim'; // JSONBin.io API key
+        
+        // Supabase configuration
+        const CLOUD_SYNC_ENABLED = true;
+        const SUPABASE_URL = 'https://moenkmmkpogjapsyiuat.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vZW5rbW1rcG9namFwc3lpdWF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0OTYyMTYsImV4cCI6MjA3MjA3MjIxNn0.RdFnDxJVIgESel9I6s84KRR3F6yPFL7rk0ycFP_q0pg';
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
         // Variabili globali
         let games = [];
@@ -1561,11 +1572,24 @@
             setupEventListeners();
             updateStats();
             updateAuthUI();
-            syncFromCloud(); // Auto-sync at startup
+            
+            // Only sync from cloud if enabled
+            if (CLOUD_SYNC_ENABLED) {
+                syncFromCloud(); 
+            } else {
+                updateSyncStatus('local', 'Solo Locale');
+            }
         }
 
-        // Cloud Sync Functions
+        // Supabase Sync Functions
         async function syncToCloud(showNotifications = true) {
+            if (!CLOUD_SYNC_ENABLED) {
+                if (showNotifications) {
+                    showToast('ℹ️ Sincronizzazione cloud disabilitata', 'info');
+                }
+                return;
+            }
+
             if (games.length === 0) {
                 if (showNotifications) updateSyncStatus('synced', 'Nessun dato da sincronizzare');
                 return;
@@ -1574,94 +1598,114 @@
             try {
                 updateSyncStatus('syncing', 'Sincronizzazione...');
                 
-                const data = {
-                    version: '2.0',
-                    timestamp: new Date().toISOString(),
-                    games: games,
-                    metadata: {
-                        total: games.length,
-                        lastModified: Math.max(...games.map(g => new Date(g.updatedAt || g.createdAt).getTime())),
-                        categories: {
-                            color: games.filter(g => g.category === 'color').length,
-                            advance: games.filter(g => g.category === 'advance').length,
-                            sp: games.filter(g => g.category === 'sp').length
-                        }
-                    }
-                };
+                // Clear existing data and insert all games
+                const { error: deleteError } = await supabase
+                    .from('games')
+                    .delete()
+                    .neq('id', 'impossible_id'); // Delete all rows
 
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${CLOUD_BIN_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': CLOUD_API_KEY,
-                        'X-Bin-Name': 'RetroAvia Gallery Data'
-                    },
-                    body: JSON.stringify(data)
-                });
+                if (deleteError) throw deleteError;
 
-                if (response.ok) {
-                    localStorage.setItem('retroavia_last_sync', new Date().toISOString());
-                    updateSyncStatus('synced', 'Sincronizzato');
-                    if (showNotifications) showToast('☁️ Dati sincronizzati nel cloud!', 'success');
-                } else {
-                    throw new Error('Errore di rete');
-                }
+                // Insert all games
+                const gamesForSupabase = games.map(game => ({
+                    id: game.id,
+                    name: game.name,
+                    category: game.category,
+                    images: game.images || [],
+                    price: game.price,
+                    model: game.model || '',
+                    shell: game.shell || '',
+                    buttons: game.buttons || '',
+                    label: game.label || '',
+                    battery: game.battery || '',
+                    audio: game.audio || '',
+                    display: game.display || '',
+                    led: game.led || '',
+                    box: game.box || '',
+                    cover: game.cover || '',
+                    other: game.other || '',
+                    created_at: game.createdAt,
+                    updated_at: game.updatedAt
+                }));
+
+                const { error: insertError } = await supabase
+                    .from('games')
+                    .insert(gamesForSupabase);
+
+                if (insertError) throw insertError;
+
+                localStorage.setItem('retroavia_last_sync', new Date().toISOString());
+                updateSyncStatus('synced', 'Sincronizzato');
+                if (showNotifications) showToast('☁️ Dati sincronizzati su Supabase!', 'success');
             } catch (error) {
-                console.error('Errore sync to cloud:', error);
+                console.error('Errore sync to Supabase:', error);
                 updateSyncStatus('error', 'Errore sync');
-                if (showNotifications) showToast('⚠️ Errore nella sincronizzazione cloud', 'error');
+                if (showNotifications) showToast(`⚠️ Errore sincronizzazione: ${error.message}`, 'error');
             }
         }
 
         async function syncFromCloud(showNotifications = false) {
+            if (!CLOUD_SYNC_ENABLED) {
+                updateSyncStatus('local', 'Solo Locale');
+                return;
+            }
+
             try {
                 updateSyncStatus('syncing', 'Caricamento...');
                 
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${CLOUD_BIN_ID}/latest`, {
-                    method: 'GET',
-                    headers: {
-                        'X-Master-Key': CLOUD_API_KEY
-                    }
-                });
+                // Fetch all games from Supabase
+                const { data: cloudGames, error } = await supabase
+                    .from('games')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-                if (response.ok) {
-                    const result = await response.json();
-                    const cloudData = result.record;
+                if (error) throw error;
 
-                    if (cloudData && cloudData.games && Array.isArray(cloudData.games)) {
-                        const localTimestamp = localStorage.getItem('retroavia_last_sync');
-                        const cloudTimestamp = cloudData.timestamp;
+                if (cloudGames && cloudGames.length > 0) {
+                    // Convert Supabase format back to app format
+                    const convertedGames = cloudGames.map(game => ({
+                        id: game.id,
+                        name: game.name,
+                        category: game.category,
+                        images: game.images || [],
+                        price: game.price,
+                        model: game.model || '',
+                        shell: game.shell || '',
+                        buttons: game.buttons || '',
+                        label: game.label || '',
+                        battery: game.battery || '',
+                        audio: game.audio || '',
+                        display: game.display || '',
+                        led: game.led || '',
+                        box: game.box || '',
+                        cover: game.cover || '',
+                        other: game.other || '',
+                        createdAt: game.created_at,
+                        updatedAt: game.updated_at
+                    }));
 
-                        // Se il cloud è più recente o non abbiamo dati locali, usa il cloud
-                        if (!localTimestamp || new Date(cloudTimestamp) > new Date(localTimestamp) || games.length === 0) {
-                            games = cloudData.games;
-                            games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                            
-                            saveDataLocal();
-                            renderGallery();
-                            updateStats();
-                            
-                            localStorage.setItem('retroavia_last_sync', cloudTimestamp);
-                            updateSyncStatus('synced', 'Sincronizzato');
-                            
-                            if (showNotifications && games.length > 0) {
-                                showToast(`☁️ ${games.length} progetti caricati dal cloud!`, 'success');
-                            }
-                        } else {
-                            updateSyncStatus('synced', 'Aggiornato');
+                    // Update local games if cloud has data or local is empty
+                    if (games.length === 0 || convertedGames.length > games.length) {
+                        games = convertedGames;
+                        saveDataLocal();
+                        renderGallery();
+                        updateStats();
+                        
+                        localStorage.setItem('retroavia_last_sync', new Date().toISOString());
+                        updateSyncStatus('synced', 'Sincronizzato');
+                        
+                        if (showNotifications && games.length > 0) {
+                            showToast(`☁️ ${games.length} progetti caricati da Supabase!`, 'success');
                         }
                     } else {
-                        updateSyncStatus('synced', 'Cloud vuoto');
+                        updateSyncStatus('synced', 'Aggiornato');
                     }
-                } else if (response.status === 404) {
-                    // Bin non esistente, crealo
-                    await syncToCloud(false);
                 } else {
-                    throw new Error('Errore API');
+                    updateSyncStatus('synced', 'Cloud vuoto');
                 }
             } catch (error) {
-                console.error('Errore sync from cloud:', error);
-                updateSyncStatus('error', 'Errore sync');
+                console.error('Errore sync from Supabase:', error);
+                updateSyncStatus('error', `Errore: ${error.message}`);
                 // In caso di errore, usa i dati locali
                 if (games.length === 0) {
                     loadDataLocal();
@@ -1687,6 +1731,10 @@
                 case 'error':
                     syncIcon.className = 'fas fa-cloud-exclamation';
                     break;
+                case 'local':
+                    syncIcon.className = 'fas fa-hard-drive';
+                    syncStatus.className = 'sync-status local';
+                    break;
                 default:
                     syncIcon.className = 'fas fa-cloud';
             }
@@ -1695,6 +1743,11 @@
         async function forceSyncData() {
             if (!isAuthenticated) {
                 showToast('🔒 Accedi come admin per sincronizzare', 'error');
+                return;
+            }
+            
+            if (!CLOUD_SYNC_ENABLED) {
+                showToast('ℹ️ Sincronizzazione cloud disabilitata', 'info');
                 return;
             }
             
@@ -1736,12 +1789,14 @@
             // Keyboard shortcuts
             document.addEventListener('keydown', handleKeyboardShortcuts);
 
-            // Auto-sync ogni 5 minuti
-            setInterval(() => {
-                if (games.length > 0) {
-                    syncToCloud(false);
-                }
-            }, 5 * 60 * 1000);
+            // Auto-sync ogni 5 minuti (solo se cloud sync è abilitato)
+            if (CLOUD_SYNC_ENABLED) {
+                setInterval(() => {
+                    if (games.length > 0) {
+                        syncToCloud(false);
+                    }
+                }, 5 * 60 * 1000);
+            }
         }
 
         // Multiple Images Handling
@@ -2282,7 +2337,10 @@
             if (confirm(`🗑️ Sei sicuro di voler eliminare "${game.name}"?\n\nQuesta azione non può essere annullata.`)) {
                 games = games.filter(g => g.id !== id);
                 saveDataLocal();
-                syncToCloud(false); // Sync silently
+                // Only sync to cloud if enabled
+                if (CLOUD_SYNC_ENABLED) {
+                    syncToCloud(false);
+                }
                 renderGallery();
                 updateStats();
                 showToast('🗑️ Progetto eliminato', 'success');
@@ -2337,7 +2395,10 @@
                 }
 
                 saveDataLocal();
-                await syncToCloud(false); // Sync to cloud
+                // Only sync to cloud if enabled
+                if (CLOUD_SYNC_ENABLED) {
+                    await syncToCloud(false);
+                }
                 closeModal('formModal');
                 renderGallery();
                 updateStats();
@@ -2458,7 +2519,10 @@
                         games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                         
                         saveDataLocal();
-                        await syncToCloud(false); // Sync to cloud
+                        // Only sync to cloud if enabled
+                        if (CLOUD_SYNC_ENABLED) {
+                            await syncToCloud(false);
+                        }
                         renderGallery();
                         updateStats();
                         showToast(`🎉 ${importedGames.length} progetti importati!`, 'success');
@@ -2495,7 +2559,10 @@
             if (confirmation === 'ELIMINA TUTTO') {
                 games = [];
                 saveDataLocal();
-                syncToCloud(false); // Sync to cloud
+                // Only sync to cloud if enabled
+                if (CLOUD_SYNC_ENABLED) {
+                    syncToCloud(false);
+                }
                 renderGallery();
                 updateStats();
                 showToast('🗑️ Tutti i dati sono stati eliminati', 'success');
@@ -2677,7 +2744,9 @@
 
         // Progressive Web App features
         function initPWA() {
-            // Register service worker if available
+            // Service Worker registration disabled for now
+            // You can enable this by creating a sw.js file in your root directory
+            /*
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('/sw.js')
@@ -2689,6 +2758,7 @@
                         });
                 });
             }
+            */
 
             // Add to home screen prompt
             let deferredPrompt;
@@ -2800,14 +2870,16 @@
 
         // Debug info for development
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            console.log('🎮 RetroAvia Gallery v2.0 - Development Mode');
+            console.log('🎮 RetroAvia Gallery v2.0 - Development Mode with Supabase');
             console.log('🔧 Debug commands:');
             console.log('  - retroavia.games: View all games');
             console.log('  - retroavia.stats(): View statistics');
             console.log('  - retroavia.clearCache(): Clear all data');
+            console.log('  - retroavia.supabase: Access Supabase client');
             
             window.retroavia = {
                 games: () => games,
+                supabase: supabase,
                 stats: () => ({
                     total: games.length,
                     categories: {
