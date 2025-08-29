@@ -113,6 +113,50 @@
             margin: 0 auto;
         }
 
+        /* Sync Status */
+        .sync-status {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 1500;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sync-status.syncing {
+            color: var(--accent-warning);
+            border-color: var(--accent-warning);
+        }
+
+        .sync-status.synced {
+            color: var(--accent-secondary);
+            border-color: var(--accent-secondary);
+        }
+
+        .sync-status.error {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .sync-spinner {
+            width: 12px;
+            height: 12px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
         /* Auth Section */
         .auth-section {
             background: rgba(17, 17, 17, 0.9);
@@ -308,6 +352,10 @@
             background: linear-gradient(135deg, #e17055, #d63031);
         }
 
+        .admin-btn.sync {
+            background: linear-gradient(135deg, var(--accent-info), #0088cc);
+        }
+
         /* Gallery */
         .gallery-container {
             max-width: 1600px;
@@ -452,6 +500,20 @@
             opacity: 1;
         }
 
+        .image-indicator {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--accent-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
         .edit-controls {
             position: absolute;
             top: 15px;
@@ -537,7 +599,7 @@
         }
 
         .modal-content {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 3rem auto;
             background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
             border-radius: 24px;
@@ -581,11 +643,25 @@
             color: white;
         }
 
-        .modal-image-container {
+        /* Image Gallery in Modal */
+        .modal-gallery {
+            position: relative;
             width: 100%;
             height: 500px;
-            position: relative;
             overflow: hidden;
+        }
+
+        .gallery-container-modal {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
         }
 
         .modal-image {
@@ -603,6 +679,70 @@
             font-size: 5rem;
             color: var(--text-muted);
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+        }
+
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .gallery-nav:hover {
+            background: var(--accent-primary);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .gallery-nav.prev {
+            left: 20px;
+        }
+
+        .gallery-nav.next {
+            right: 20px;
+        }
+
+        .gallery-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .gallery-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-dot.active {
+            background: var(--accent-primary);
+            transform: scale(1.2);
+        }
+
+        .gallery-counter {
+            position: absolute;
+            top: 20px;
+            left: 25px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
         }
 
         .modal-info {
@@ -684,7 +824,7 @@
         }
 
         .form-content {
-            max-width: 700px;
+            max-width: 800px;
             margin: 2rem auto;
             background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
             border-radius: 24px;
@@ -751,60 +891,96 @@
             background: rgba(0, 0, 0, 0.7);
         }
 
-        .file-input-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .file-input {
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            position: absolute;
-            cursor: pointer;
-            z-index: 2;
-        }
-
-        .file-input-display {
-            padding: 2rem 1rem;
+        /* Multiple Images Upload */
+        .images-upload-container {
             border: 2px dashed var(--border-color);
             border-radius: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--text-secondary);
+            padding: 2rem 1rem;
             text-align: center;
-            cursor: pointer;
+            background: rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             position: relative;
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
         }
 
-        .file-input-display:hover {
+        .images-upload-container:hover {
             border-color: var(--accent-primary);
             background: rgba(255, 0, 80, 0.1);
         }
 
-        .file-input-display.dragover {
+        .images-upload-container.dragover {
             border-color: var(--accent-secondary);
             background: rgba(0, 255, 136, 0.1);
         }
 
-        .file-input-display i {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+        .images-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
         }
 
-        .image-preview {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: 12px;
+        .upload-placeholder {
+            pointer-events: none;
+        }
+
+        .upload-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .images-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
             margin-top: 1rem;
+        }
+
+        .image-preview-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 1;
             border: 2px solid var(--border-color);
+        }
+
+        .image-preview-img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+        }
+
+        .image-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .image-remove:hover {
+            background: #ff4444;
+            transform: scale(1.1);
+        }
+
+        .image-count {
+            color: var(--accent-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
         .form-actions {
@@ -1055,6 +1231,23 @@
             .search-box {
                 max-width: 100%;
             }
+
+            .sync-status {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 1rem;
+            }
+
+            .gallery-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .images-preview {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            }
         }
 
         /* Custom scrollbar */
@@ -1077,6 +1270,12 @@
     </style>
 </head>
 <body>
+    <!-- Sync Status -->
+    <div class="sync-status" id="syncStatus">
+        <i class="fas fa-cloud" id="syncIcon"></i>
+        <span id="syncText">Locale</span>
+    </div>
+
     <!-- Loading Overlay -->
     <div class="loading" id="loading">
         <div class="spinner"></div>
@@ -1156,6 +1355,9 @@
         <button class="admin-btn" id="editModeBtn" onclick="toggleEditMode()">
             <i class="fas fa-edit"></i> ✏️ Modalità Modifica
         </button>
+        <button class="admin-btn sync" onclick="forceSyncData()">
+            <i class="fas fa-sync-alt"></i> ☁️ Sincronizza Cloud
+        </button>
         <button class="admin-btn export" onclick="exportData()">
             <i class="fas fa-download"></i> 💾 Esporta Dati
         </button>
@@ -1190,11 +1392,22 @@
             <span class="modal-close" onclick="closeModal('detailModal')">
                 <i class="fas fa-times"></i>
             </span>
-            <div class="modal-image-container">
-                <img class="modal-image" id="modalImage" style="display: none;" alt="Game Boy">
-                <div class="modal-image-placeholder" id="modalImagePlaceholder">
-                    <i class="fas fa-gamepad"></i>
+            <div class="modal-gallery" id="modalGallery">
+                <div class="gallery-container-modal" id="galleryContainerModal">
+                    <div class="gallery-slide">
+                        <div class="modal-image-placeholder">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                    </div>
                 </div>
+                <button class="gallery-nav prev" id="prevBtn" onclick="changeSlide(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="gallery-nav next" id="nextBtn" onclick="changeSlide(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="gallery-counter" id="galleryCounter">1 / 1</div>
+                <div class="gallery-indicators" id="galleryIndicators"></div>
             </div>
             <div class="modal-info">
                 <h2 class="modal-title" id="modalTitle">Titolo Progetto</h2>
@@ -1232,17 +1445,17 @@
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="gameImage"><i class="fas fa-image"></i> Immagine Progetto</label>
-                    <div class="file-input-container">
-                        <input type="file" id="gameImageFile" class="file-input" accept="image/*">
-                        <div class="file-input-display" id="fileInputDisplay">
+                    <label for="gameImages"><i class="fas fa-images"></i> Immagini Progetto (Max 10)</label>
+                    <div class="images-upload-container" id="imagesUploadContainer">
+                        <input type="file" id="gameImages" class="images-input" accept="image/*" multiple>
+                        <div class="upload-placeholder" id="uploadPlaceholder">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            <div><strong>Clicca o trascina per caricare un'immagine</strong></div>
-                            <small>JPG, PNG, GIF (Max 5MB)</small>
+                            <div><strong>Clicca o trascina per caricare immagini</strong></div>
+                            <small>JPG, PNG, GIF - Max 10 immagini (5MB ciascuna)</small>
                         </div>
+                        <div class="images-preview" id="imagesPreview"></div>
+                        <div class="image-count" id="imageCount">0 / 10 immagini</div>
                     </div>
-                    <img id="imagePreview" class="image-preview" style="display: none;" alt="Anteprima">
-                    <input type="hidden" id="gameImage">
                 </div>
 
                 <div class="form-grid">
@@ -1321,8 +1534,11 @@
 
     <script>
         // Configurazione
-        const ADMIN_PASSWORD = 'RetroAvia2024!'; // Cambia questa password!
+        const ADMIN_PASSWORD = 'RetroAvia2024!';
         const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+        const MAX_IMAGES = 10;
+        const CLOUD_BIN_ID = '675a34c1e41b4d34e465d4eb'; // JSONBin.io bin ID
+        const CLOUD_API_KEY = '$2a$10$vK0LCX4iSIKhYTfHg3hwSe6I0jb1V5zRh1BZ1Qf1C7VlUWJpSRSim'; // JSONBin.io API key
         
         // Variabili globali
         let games = [];
@@ -1331,6 +1547,9 @@
         let editingId = null;
         let isAuthenticated = false;
         let searchQuery = '';
+        let currentSlide = 0;
+        let currentGameImages = [];
+        let uploadedImages = [];
 
         // Inizializzazione
         document.addEventListener('DOMContentLoaded', () => {
@@ -1342,6 +1561,144 @@
             setupEventListeners();
             updateStats();
             updateAuthUI();
+            syncFromCloud(); // Auto-sync at startup
+        }
+
+        // Cloud Sync Functions
+        async function syncToCloud(showNotifications = true) {
+            if (games.length === 0) {
+                if (showNotifications) updateSyncStatus('synced', 'Nessun dato da sincronizzare');
+                return;
+            }
+
+            try {
+                updateSyncStatus('syncing', 'Sincronizzazione...');
+                
+                const data = {
+                    version: '2.0',
+                    timestamp: new Date().toISOString(),
+                    games: games,
+                    metadata: {
+                        total: games.length,
+                        lastModified: Math.max(...games.map(g => new Date(g.updatedAt || g.createdAt).getTime())),
+                        categories: {
+                            color: games.filter(g => g.category === 'color').length,
+                            advance: games.filter(g => g.category === 'advance').length,
+                            sp: games.filter(g => g.category === 'sp').length
+                        }
+                    }
+                };
+
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${CLOUD_BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': CLOUD_API_KEY,
+                        'X-Bin-Name': 'RetroAvia Gallery Data'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    localStorage.setItem('retroavia_last_sync', new Date().toISOString());
+                    updateSyncStatus('synced', 'Sincronizzato');
+                    if (showNotifications) showToast('☁️ Dati sincronizzati nel cloud!', 'success');
+                } else {
+                    throw new Error('Errore di rete');
+                }
+            } catch (error) {
+                console.error('Errore sync to cloud:', error);
+                updateSyncStatus('error', 'Errore sync');
+                if (showNotifications) showToast('⚠️ Errore nella sincronizzazione cloud', 'error');
+            }
+        }
+
+        async function syncFromCloud(showNotifications = false) {
+            try {
+                updateSyncStatus('syncing', 'Caricamento...');
+                
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${CLOUD_BIN_ID}/latest`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': CLOUD_API_KEY
+                    }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    const cloudData = result.record;
+
+                    if (cloudData && cloudData.games && Array.isArray(cloudData.games)) {
+                        const localTimestamp = localStorage.getItem('retroavia_last_sync');
+                        const cloudTimestamp = cloudData.timestamp;
+
+                        // Se il cloud è più recente o non abbiamo dati locali, usa il cloud
+                        if (!localTimestamp || new Date(cloudTimestamp) > new Date(localTimestamp) || games.length === 0) {
+                            games = cloudData.games;
+                            games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                            
+                            saveDataLocal();
+                            renderGallery();
+                            updateStats();
+                            
+                            localStorage.setItem('retroavia_last_sync', cloudTimestamp);
+                            updateSyncStatus('synced', 'Sincronizzato');
+                            
+                            if (showNotifications && games.length > 0) {
+                                showToast(`☁️ ${games.length} progetti caricati dal cloud!`, 'success');
+                            }
+                        } else {
+                            updateSyncStatus('synced', 'Aggiornato');
+                        }
+                    } else {
+                        updateSyncStatus('synced', 'Cloud vuoto');
+                    }
+                } else if (response.status === 404) {
+                    // Bin non esistente, crealo
+                    await syncToCloud(false);
+                } else {
+                    throw new Error('Errore API');
+                }
+            } catch (error) {
+                console.error('Errore sync from cloud:', error);
+                updateSyncStatus('error', 'Errore sync');
+                // In caso di errore, usa i dati locali
+                if (games.length === 0) {
+                    loadDataLocal();
+                }
+            }
+        }
+
+        function updateSyncStatus(status, text) {
+            const syncStatus = document.getElementById('syncStatus');
+            const syncIcon = document.getElementById('syncIcon');
+            const syncText = document.getElementById('syncText');
+            
+            syncStatus.className = `sync-status ${status}`;
+            syncText.textContent = text;
+            
+            switch(status) {
+                case 'syncing':
+                    syncIcon.innerHTML = '<div class="sync-spinner"></div>';
+                    break;
+                case 'synced':
+                    syncIcon.className = 'fas fa-cloud-check';
+                    break;
+                case 'error':
+                    syncIcon.className = 'fas fa-cloud-exclamation';
+                    break;
+                default:
+                    syncIcon.className = 'fas fa-cloud';
+            }
+        }
+
+        async function forceSyncData() {
+            if (!isAuthenticated) {
+                showToast('🔒 Accedi come admin per sincronizzare', 'error');
+                return;
+            }
+            
+            await syncToCloud(true);
         }
 
         // Setup event listeners
@@ -1354,16 +1711,16 @@
             // Form submission
             document.getElementById('gameForm').addEventListener('submit', handleFormSubmit);
 
-            // File input
-            const fileInput = document.getElementById('gameImageFile');
-            const fileDisplay = document.getElementById('fileInputDisplay');
+            // Multiple images input
+            const imagesInput = document.getElementById('gameImages');
+            const uploadContainer = document.getElementById('imagesUploadContainer');
             
-            fileInput.addEventListener('change', handleFileSelect);
+            imagesInput.addEventListener('change', handleMultipleImagesSelect);
             
-            // Drag and drop
-            fileDisplay.addEventListener('dragover', handleDragOver);
-            fileDisplay.addEventListener('dragleave', handleDragLeave);
-            fileDisplay.addEventListener('drop', handleFileDrop);
+            // Drag and drop for images
+            uploadContainer.addEventListener('dragover', handleDragOver);
+            uploadContainer.addEventListener('dragleave', handleDragLeave);
+            uploadContainer.addEventListener('drop', handleMultipleImagesDrop);
 
             // Search
             document.getElementById('searchInput').addEventListener('input', handleSearch);
@@ -1378,14 +1735,109 @@
 
             // Keyboard shortcuts
             document.addEventListener('keydown', handleKeyboardShortcuts);
+
+            // Auto-sync ogni 5 minuti
+            setInterval(() => {
+                if (games.length > 0) {
+                    syncToCloud(false);
+                }
+            }, 5 * 60 * 1000);
         }
 
-        // File handling
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file) {
-                processFile(file);
+        // Multiple Images Handling
+        function handleMultipleImagesSelect(e) {
+            const files = Array.from(e.target.files);
+            processMultipleImages(files);
+        }
+
+        function handleMultipleImagesDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            
+            const files = Array.from(e.dataTransfer.files).filter(file => file.type.match('image.*'));
+            processMultipleImages(files);
+        }
+
+        function processMultipleImages(files) {
+            if (uploadedImages.length + files.length > MAX_IMAGES) {
+                showToast(`⚠️ Massimo ${MAX_IMAGES} immagini consentite`, 'error');
+                return;
             }
+
+            showLoading('🖼️ Caricamento immagini...');
+            
+            const loadPromises = files.map(file => {
+                return new Promise((resolve, reject) => {
+                    if (!file.type.match('image.*')) {
+                        reject(new Error('Formato non supportato'));
+                        return;
+                    }
+
+                    if (file.size > MAX_FILE_SIZE) {
+                        reject(new Error('File troppo grande'));
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = e => resolve({
+                        data: e.target.result,
+                        name: file.name,
+                        size: file.size
+                    });
+                    reader.onerror = () => reject(new Error('Errore lettura file'));
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            Promise.allSettled(loadPromises)
+                .then(results => {
+                    const successful = results.filter(r => r.status === 'fulfilled').map(r => r.value);
+                    const failed = results.filter(r => r.status === 'rejected');
+
+                    if (failed.length > 0) {
+                        showToast(`⚠️ ${failed.length} immagini non caricate`, 'error');
+                    }
+
+                    uploadedImages.push(...successful);
+                    updateImagesPreview();
+                    
+                    if (successful.length > 0) {
+                        showToast(`✅ ${successful.length} immagini caricate!`, 'success');
+                    }
+                })
+                .finally(() => {
+                    hideLoading();
+                });
+        }
+
+        function updateImagesPreview() {
+            const preview = document.getElementById('imagesPreview');
+            const counter = document.getElementById('imageCount');
+            const placeholder = document.getElementById('uploadPlaceholder');
+            
+            counter.textContent = `${uploadedImages.length} / ${MAX_IMAGES} immagini`;
+            
+            if (uploadedImages.length === 0) {
+                preview.innerHTML = '';
+                placeholder.style.display = 'block';
+                return;
+            }
+
+            placeholder.style.display = 'none';
+            preview.innerHTML = uploadedImages.map((img, index) => `
+                <div class="image-preview-item">
+                    <img src="${img.data}" alt="${img.name}" class="image-preview-img">
+                    <button type="button" class="image-remove" onclick="removeImage(${index})" title="Rimuovi immagine">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeImage(index) {
+            uploadedImages.splice(index, 1);
+            updateImagesPreview();
+            showToast('🗑️ Immagine rimossa', 'info');
         }
 
         function handleDragOver(e) {
@@ -1397,72 +1849,54 @@
             e.currentTarget.classList.remove('dragover');
         }
 
-        function handleFileDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('dragover');
+        // Gallery Navigation for Modal
+        function changeSlide(direction) {
+            if (currentGameImages.length <= 1) return;
             
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                const file = files[0];
-                document.getElementById('gameImageFile').files = files;
-                processFile(file);
-            }
+            currentSlide = (currentSlide + direction + currentGameImages.length) % currentGameImages.length;
+            updateModalGallery();
         }
 
-        function processFile(file) {
-            // Validazione
-            if (!file.type.match('image.*')) {
-                showToast('⚠️ Seleziona solo file immagine (JPG, PNG, GIF)', 'error');
-                return;
-            }
-
-            if (file.size > MAX_FILE_SIZE) {
-                showToast('⚠️ File troppo grande. Massimo 5MB', 'error');
-                return;
-            }
-
-            showLoading('🖼️ Caricamento immagine...');
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const base64 = e.target.result;
-                    document.getElementById('gameImage').value = base64;
-                    
-                    const preview = document.getElementById('imagePreview');
-                    preview.src = base64;
-                    preview.style.display = 'block';
-                    
-                    const display = document.getElementById('fileInputDisplay');
-                    display.innerHTML = `
-                        <i class="fas fa-check-circle" style="color: var(--accent-secondary); font-size: 2rem;"></i>
-                        <div><strong>✅ Immagine caricata con successo!</strong></div>
-                        <small>${file.name} (${formatFileSize(file.size)})</small>
-                    `;
-                    
-                    showToast('✅ Immagine caricata correttamente!', 'success');
-                } catch (error) {
-                    showToast('❌ Errore nel caricamento del file', 'error');
-                    console.error('Errore file:', error);
-                } finally {
-                    hideLoading();
-                }
-            };
-            
-            reader.onerror = function() {
-                showToast('❌ Errore nella lettura del file', 'error');
-                hideLoading();
-            };
-            
-            reader.readAsDataURL(file);
+        function goToSlide(index) {
+            currentSlide = index;
+            updateModalGallery();
         }
 
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        function updateModalGallery() {
+            const container = document.getElementById('galleryContainerModal');
+            const counter = document.getElementById('galleryCounter');
+            const indicators = document.getElementById('galleryIndicators');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            // Nascondi controlli se c'è solo un'immagine
+            const showControls = currentGameImages.length > 1;
+            prevBtn.style.display = showControls ? 'flex' : 'none';
+            nextBtn.style.display = showControls ? 'flex' : 'none';
+            indicators.style.display = showControls ? 'flex' : 'none';
+            
+            if (currentGameImages.length === 0) return;
+            
+            // Update slides
+            container.innerHTML = currentGameImages.map((img, index) => `
+                <div class="gallery-slide">
+                    <img src="${img}" alt="Game Boy ${index + 1}" class="modal-image">
+                </div>
+            `).join('');
+            
+            // Update position
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update counter
+            counter.textContent = `${currentSlide + 1} / ${currentGameImages.length}`;
+            
+            // Update indicators
+            if (showControls) {
+                indicators.innerHTML = currentGameImages.map((_, index) => `
+                    <div class="gallery-dot ${index === currentSlide ? 'active' : ''}" 
+                         onclick="goToSlide(${index})"></div>
+                `).join('');
+            }
         }
 
         // Authentication
@@ -1540,6 +1974,10 @@
 
         // Data management
         function loadData() {
+            loadDataLocal();
+        }
+
+        function loadDataLocal() {
             try {
                 const saved = localStorage.getItem('retroavia_games');
                 if (saved) {
@@ -1555,7 +1993,7 @@
             }
         }
 
-        function saveData() {
+        function saveDataLocal() {
             try {
                 localStorage.setItem('retroavia_games', JSON.stringify(games));
             } catch (error) {
@@ -1641,6 +2079,9 @@
 
             gallery.innerHTML = filteredGames.map(game => {
                 const createdDate = new Date(game.createdAt).toLocaleDateString('it-IT');
+                const imageCount = game.images ? game.images.length : 0;
+                const firstImage = imageCount > 0 ? game.images[0] : null;
+                
                 return `
                     <div class="game-card" onclick="showDetails('${game.id}')">
                         ${editMode ? `
@@ -1654,10 +2095,11 @@
                             </div>
                         ` : ''}
                         <div class="game-image-container">
-                            ${game.image ? 
-                                `<img src="${game.image}" alt="${game.name}" class="game-image">` : 
+                            ${firstImage ? 
+                                `<img src="${firstImage}" alt="${game.name}" class="game-image">` : 
                                 `<div class="game-placeholder"><i class="fas fa-gamepad"></i></div>`
                             }
+                            ${imageCount > 1 ? `<div class="image-indicator">📸 ${imageCount} foto</div>` : ''}
                             <div class="game-overlay"></div>
                             <div class="game-date">${createdDate}</div>
                         </div>
@@ -1681,16 +2123,21 @@
             document.getElementById('modalTitle').textContent = game.name;
             document.getElementById('modalPrice').textContent = `€ ${parseFloat(game.price).toFixed(2)}`;
             
-            const modalImage = document.getElementById('modalImage');
-            const modalImagePlaceholder = document.getElementById('modalImagePlaceholder');
-            
-            if (game.image) {
-                modalImage.src = game.image;
-                modalImage.style.display = 'block';
-                modalImagePlaceholder.style.display = 'none';
-            } else {
-                modalImage.style.display = 'none';
-                modalImagePlaceholder.style.display = 'flex';
+            // Setup images
+            currentGameImages = game.images || [];
+            currentSlide = 0;
+            updateModalGallery();
+
+            if (currentGameImages.length === 0) {
+                const galleryContainer = document.getElementById('galleryContainerModal');
+                galleryContainer.innerHTML = `
+                    <div class="gallery-slide">
+                        <div class="modal-image-placeholder">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('galleryCounter').textContent = '0 / 0';
             }
 
             const specs = [
@@ -1757,13 +2204,8 @@
 
         function resetForm() {
             document.getElementById('gameForm').reset();
-            document.getElementById('imagePreview').style.display = 'none';
-            document.getElementById('gameImage').value = '';
-            document.getElementById('fileInputDisplay').innerHTML = `
-                <i class="fas fa-cloud-upload-alt"></i>
-                <div><strong>Clicca o trascina per caricare un'immagine</strong></div>
-                <small>JPG, PNG, GIF (Max 5MB)</small>
-            `;
+            uploadedImages = [];
+            updateImagesPreview();
         }
 
         function editGame(id) {
@@ -1794,18 +2236,16 @@
                 }
             });
             
-            // Gestisci immagine
-            if (game.image) {
-                document.getElementById('gameImage').value = game.image;
-                const preview = document.getElementById('imagePreview');
-                preview.src = game.image;
-                preview.style.display = 'block';
-                document.getElementById('fileInputDisplay').innerHTML = `
-                    <i class="fas fa-check-circle" style="color: var(--accent-secondary); font-size: 2rem;"></i>
-                    <div><strong>✅ Immagine già caricata</strong></div>
-                    <small>Seleziona un nuovo file per sostituirla</small>
-                `;
+            // Gestisci immagini
+            uploadedImages = [];
+            if (game.images && game.images.length > 0) {
+                uploadedImages = game.images.map((img, index) => ({
+                    data: img,
+                    name: `Immagine ${index + 1}`,
+                    size: 0
+                }));
             }
+            updateImagesPreview();
             
             document.getElementById('formModal').style.display = 'block';
         }
@@ -1821,7 +2261,8 @@
             
             if (confirm(`🗑️ Sei sicuro di voler eliminare "${game.name}"?\n\nQuesta azione non può essere annullata.`)) {
                 games = games.filter(g => g.id !== id);
-                saveData();
+                saveDataLocal();
+                syncToCloud(false); // Sync silently
                 renderGallery();
                 updateStats();
                 showToast('🗑️ Progetto eliminato', 'success');
@@ -1829,11 +2270,16 @@
         }
 
         // Form submission
-        function handleFormSubmit(e) {
+        async function handleFormSubmit(e) {
             e.preventDefault();
             
             if (!isAuthenticated) {
                 showToast('🔒 Accesso non autorizzato', 'error');
+                return;
+            }
+
+            if (uploadedImages.length === 0) {
+                showToast('📸 Aggiungi almeno un\'immagine al progetto', 'error');
                 return;
             }
 
@@ -1844,7 +2290,7 @@
                     id: editingId || Date.now().toString(),
                     name: document.getElementById('gameName').value.trim(),
                     category: document.getElementById('gameCategory').value,
-                    image: document.getElementById('gameImage').value,
+                    images: uploadedImages.map(img => img.data),
                     price: parseFloat(document.getElementById('gamePrice').value) || 0,
                     model: document.getElementById('gameModel').value.trim(),
                     shell: document.getElementById('gameShell').value.trim(),
@@ -1870,7 +2316,8 @@
                     showToast('🎉 Nuovo progetto aggiunto!', 'success');
                 }
 
-                saveData();
+                saveDataLocal();
+                await syncToCloud(false); // Sync to cloud
                 closeModal('formModal');
                 renderGallery();
                 updateStats();
@@ -1896,7 +2343,7 @@
             
             try {
                 const exportData = {
-                    version: '1.0',
+                    version: '2.0',
                     timestamp: new Date().toISOString(),
                     games: games,
                     stats: {
@@ -1905,7 +2352,8 @@
                             color: games.filter(g => g.category === 'color').length,
                             advance: games.filter(g => g.category === 'advance').length,
                             sp: games.filter(g => g.category === 'sp').length
-                        }
+                        },
+                        totalImages: games.reduce((acc, game) => acc + (game.images ? game.images.length : 0), 0)
                     }
                 };
 
@@ -1943,7 +2391,7 @@
                 showLoading('📤 Importazione in corso...');
                 
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = async function(e) {
                     try {
                         const importedData = JSON.parse(e.target.result);
                         let importedGames = [];
@@ -1986,7 +2434,8 @@
                         // Ordina per data di creazione
                         games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                         
-                        saveData();
+                        saveDataLocal();
+                        await syncToCloud(false); // Sync to cloud
                         renderGallery();
                         updateStats();
                         showToast(`🎉 ${importedGames.length} progetti importati!`, 'success');
@@ -2006,83 +2455,4 @@
         function clearAllData() {
             if (!isAuthenticated) {
                 showToast('🔒 Accedi come admin per cancellare', 'error');
-                return;
-            }
-
-            if (games.length === 0) {
-                showToast('ℹ️ Nessun dato da cancellare', 'info');
-                return;
-            }
-
-            const confirmation = prompt(
-                `🚨 ATTENZIONE: Stai per eliminare TUTTI i ${games.length} progetti!\n\n` +
-                `Questa operazione è IRREVERSIBILE!\n\n` +
-                `Per confermare, scrivi: ELIMINA TUTTO`
-            );
-
-            if (confirmation === 'ELIMINA TUTTO') {
-                games = [];
-                saveData();
-                renderGallery();
-                updateStats();
-                showToast('🗑️ Tutti i dati sono stati eliminati', 'success');
-            } else if (confirmation !== null) {
-                showToast('❌ Operazione annullata - testo non corretto', 'error');
-            }
-        }
-
-        // Event handlers
-        function handleOutsideClick(e) {
-            if (e.target.classList.contains('modal') || e.target.classList.contains('form-modal')) {
-                e.target.style.display = 'none';
-            }
-        }
-
-        function handleKeyboardShortcuts(e) {
-            if (e.key === 'Escape') {
-                closeModal('detailModal');
-                closeModal('formModal');
-                closeAuthModal();
-            }
-            
-            if (e.ctrlKey && e.key === 'k') {
-                e.preventDefault();
-                document.getElementById('searchInput').focus();
-            }
-        }
-
-        // Modal management
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            if (modalId === 'formModal') {
-                resetForm();
-                editingId = null;
-            }
-        }
-
-        // Toast notifications
-        function showToast(message, type = 'success') {
-            const existingToast = document.querySelector('.toast');
-            if (existingToast) {
-                existingToast.remove();
-            }
-
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.style.animation = 'slideOutRight 0.3s ease';
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            toast.remove();
-                        }
-                    }, 300);
-                }
-            }, 4000);
-        }
-    </script>
-</body>
-</html>
+                return
