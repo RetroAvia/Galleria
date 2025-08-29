@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroAvia - Gallery Game Boy</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #222222;
+            --accent-primary: #ff0050;
+            --accent-secondary: #00ff88;
+            --accent-warning: #ffaa00;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --shadow-glow: rgba(255, 0, 80, 0.3);
+            --shadow-glow-green: rgba(0, 255, 136, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 0, 80, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(26, 26, 26, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 80, 0.1), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .header h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px var(--shadow-glow);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        .nav-container {
+            padding: 1.5rem;
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .nav-tab {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-tab:hover::before {
+            left: 100%;
+        }
+
+        .nav-tab:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--accent-primary), #cc0040);
+            color: white;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px var(--shadow-glow);
+        }
+
+        /* Admin Controls */
+        .admin-controls {
+            padding: 2rem;
+            text-align: center;
+            background: rgba(17, 17, 17, 0.5);
+        }
+
+        .admin-btn {
+            background: linear-gradient(135deg, var(--accent-secondary), #00cc6a);
+            color: var(--bg-primary);
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0 0.75rem;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px var(--shadow-glow-green);
+        }
+
+        .admin-btn.edit-mode {
+            background: linear-gradient(135deg, var(--accent-warning), #e69500);
+        }
+
+        /* Gallery */
+        .gallery-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .game-card {
+            background: linear-gradient(135deg, var(--bg-card), rgba(34, 34, 34, 0.8));
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(135deg, transparent, var(--accent-primary), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-card:hover::before {
+            opacity: 1;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 30px var(--shadow-glow);
+        }
+
+        .game-image-container {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .game-card:hover .game-image {
+            transform: scale(1.1);
+        }
+
+        .game-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text-muted);
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+        }
+
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-card:hover .game-overlay {
+            opacity: 1;
+        }
+
+        .edit-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-btn {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .edit-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .edit-btn.delete:hover {
+            background: #ff4444;
+            border-color: #ff4444;
+        }
+
+        .game-info {
+            padding: 1.5rem;
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .game-model {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .game-price {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            max-width: 1000px;
+            margin: 3rem auto;
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            z-index: 1001;
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .modal-image-container {
+            width: 100%;
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: var(--text-muted);
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+        }
+
+        .modal-info {
+            padding: 2.5rem;
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .spec-item {
+            background: linear-gradient(135deg, rgba(255, 0, 80, 0.1), rgba(0, 0, 0, 0.3));
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spec-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .spec-label {
+            font-weight: 600;
+            color: var(--accent-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .spec-value {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .modal-price {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Form Modal */
+        .form-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-content {
+            max-width: 700px;
+            margin: 2rem auto;
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--accent-primary);
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--accent-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px var(--shadow-glow);
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .file-input-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-display {
+            padding: 1rem 1.25rem;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-secondary);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .file-input-display:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255, 0, 80, 0.1);
+        }
+
+        .file-input-display i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 12px;
+            margin-top: 1rem;
+            border: 2px solid var(--border-color);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), #cc0040);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px var(--shadow-glow);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--bg-secondary), #333333);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* Loading state */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .modal-content,
+            .form-content {
+                margin: 1rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .admin-btn {
+                margin: 0.5rem;
+                display: block;
+                width: 200px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <header class="header">
+        <h1>RetroAvia</h1>
+        <p class="subtitle">La tua collezione di Game Boy modificati</p>
+    </header>
+
+    <div class="nav-container">
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-category="all">
+                <i class="fas fa-gamepad"></i> Tutti
+            </button>
+            <button class="nav-tab" data-category="color">
+                <i class="fas fa-palette"></i> Game Boy Color
+            </button>
+            <button class="nav-tab" data-category="advance">
+                <i class="fas fa-mobile-alt"></i> Game Boy Advance
+            </button>
+            <button class="nav-tab" data-category="sp">
+                <i class="fas fa-laptop"></i> Game Boy Advance SP
+            </button>
+        </nav>
+    </div>
+
+    <div class="admin-controls">
+        <button class="admin-btn" onclick="openAddModal()">
+            <i class="fas fa-plus"></i> Aggiungi Game Boy
+        </button>
+        <button class="admin-btn" id="editModeBtn" onclick="toggleEditMode()">
+            <i class="fas fa-edit"></i> Modalità Modifica
+        </button>
+        <button class="admin-btn" onclick="exportData()" style="background: linear-gradient(135deg, #6c5ce7, #5a4fce);">
+            <i class="fas fa-download"></i> Esporta Dati
+        </button>
+        <button class="admin-btn" onclick="importData()" style="background: linear-gradient(135deg, #00b894, #00a085);">
+            <i class="fas fa-upload"></i> Importa Dati
+        </button>
+    </div>
+
+    <div class="gallery-container">
+        <div class="gallery" id="gallery">
+            <div class="empty-state">
+                <i class="fas fa-gamepad"></i>
+                <h3>Nessun Game Boy ancora aggiunto</h3>
+                <p>Clicca su "Aggiungi Game Boy" per iniziare la tua collezione</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Dettagli -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content slide-up">
+            <span class="modal-close" onclick="closeModal('detailModal')">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="modal-image-container">
+                <img class="modal-image" id="modalImage" style="display: none;" alt="Game Boy">
+                <div class="modal-image-placeholder" id="modalImagePlaceholder">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+            </div>
+            <div class="modal-info">
+                <h2 class="modal-title" id="modalTitle">Titolo Game Boy</h2>
+                <div class="spec-grid" id="specGrid">
+                    <!-- Specifiche verranno inserite dinamicamente -->
+                </div>
+                <div class="modal-price" id="modalPrice">€ 0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="form-modal" id="formModal">
+        <div class="form-content slide-up">
+            <span class="modal-close" onclick="closeModal('formModal')">
+                <i class="fas fa-times"></i>
+            </span>
+            <h2 class="form-title" id="formTitle">Aggiungi Game Boy</h2>
+            <form id="gameForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="gameName"><i class="fas fa-tag"></i> Nome/Titolo</label>
+                        <input type="text" id="gameName" required placeholder="Es. Game Boy Color Pikachu Edition">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameCategory"><i class="fas fa-list"></i> Categoria</label>
+                        <select id="gameCategory" required>
+                            <option value="">Seleziona categoria</option>
+                            <option value="color">Game Boy Color</option>
+                            <option value="advance">Game Boy Advance</option>
+                            <option value="sp">Game Boy Advance SP</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="gameImage"><i class="fas fa-image"></i> Immagine</label>
+                    <div class="file-input-container">
+                        <input type="file" id="gameImageFile" class="file-input" accept="image/*" onchange="handleImageUpload(this)">
+                        <div class="file-input-display" id="fileInputDisplay">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <div>Clicca per caricare un'immagine</div>
+                            <small>JPG, PNG, GIF (Max 5MB)</small>
+                        </div>
+                    </div>
+                    <img id="imagePreview" class="image-preview" style="display: none;" alt="Anteprima">
+                    <input type="hidden" id="gameImage">
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="gamePrice"><i class="fas fa-euro-sign"></i> Prezzo</label>
+                        <input type="number" id="gamePrice" step="0.01" required placeholder="120.00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameModel"><i class="fas fa-microchip"></i> Modello</label>
+                        <input type="text" id="gameModel" required placeholder="Es. CGB-001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameShell"><i class="fas fa-mobile-alt"></i> Scocca</label>
+                        <input type="text" id="gameShell" placeholder="Es. Trasparente fumé">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameButtons"><i class="fas fa-circle"></i> Pulsanti</label>
+                        <input type="text" id="gameButtons" placeholder="Es. Originali Nintendo">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameLabel"><i class="fas fa-tag"></i> Etichetta</label>
+                        <input type="text" id="gameLabel" placeholder="Es. Olografica Pokémon">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameBattery"><i class="fas fa-battery-full"></i> Batteria</label>
+                        <input type="text" id="gameBattery" placeholder="Es. Li-ion 1200mAh">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameAudio"><i class="fas fa-volume-up"></i> Audio</label>
+                        <input type="text" id="gameAudio" placeholder="Es. Speaker migliorato + jack 3.5mm">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameDisplay"><i class="fas fa-tv"></i> Display</label>
+                        <input type="text" id="gameDisplay" placeholder="Es. IPS V2 con regolazione luminosità">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameLed"><i class="fas fa-lightbulb"></i> Kit Led</label>
+                        <input type="text" id="gameLed" placeholder="Es. RGB personalizzabile">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameBox"><i class="fas fa-box"></i> Box</label>
+                        <input type="text" id="gameBox" placeholder="Es. Scatola originale + manuale">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gameCover"><i class="fas fa-shield-alt"></i> Cover</label>
+                        <input type="text" id="gameCover" placeholder="Es. Cover protettiva in silicone">
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="gameOther"><i class="fas fa-plus-circle"></i> Altro</label>
+                    <textarea id="gameOther" rows="3" placeholder="Note aggiuntive, modifiche speciali, etc..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('formModal')">
+                        <i class="fas fa-times"></i> Annulla
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Salva Game Boy
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Variabili globali
+        let games = [];
+        let editMode = false;
+        let currentCategory = 'all';
+        let editingId = null;
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            setupEventListeners();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Navigation tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchCategory(tab.dataset.category, tab));
+            });
+
+            // Form submission
+            document.getElementById('gameForm').addEventListener('submit', handleFormSubmit);
+
+            // Close modals on outside click
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal') || e.target.classList.contains('form-modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal('detailModal');
+                    closeModal('formModal');
+                }
+            });
+        }
+
+        // Gestione upload immagine
+        function handleImageUpload(input) {
+            const file = input.files[0];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            
+            if (!file) return;
+            
+            if (file.size > maxSize) {
+                alert('Il file è troppo grande. Massimo 5MB consentiti.');
+                input.value = '';
+                return;
+            }
+
+            if (!file.type.match('image.*')) {
+                alert('Seleziona solo file immagine (JPG, PNG, GIF).');
+                input.value = '';
+                return;
+            }
+
+            showLoading();
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = e.target.result;
+                document.getElementById('gameImage').value = base64;
+                
+                const preview = document.getElementById('imagePreview');
+                preview.src = base64;
+                preview.style.display = 'block';
+                
+                const display = document.getElementById('fileInputDisplay');
+                display.innerHTML = `
+                    <i class="fas fa-check-circle" style="color: var(--accent-secondary);"></i>
+                    <div>Immagine caricata con successo!</div>
+                    <small>${file.name}</small>
+                `;
+                
+                hideLoading();
+            };
+            
+            reader.onerror = function() {
+                alert('Errore nel caricamento del file.');
+                hideLoading();
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // Loading states
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Carica dati salvati
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('retroavia_games');
+                if (saved) {
+                    games = JSON.parse(saved);
+                }
+                renderGallery();
+            } catch (error) {
+                console.error('Errore nel caricamento dei dati:', error);
+                games = [];
+            }
+        }
+
+        // Salva dati
+        function saveData() {
+            try {
+                localStorage.setItem('retroavia_games', JSON.stringify(games));
+            } catch (error) {
+                console.error('Errore nel salvataggio:', error);
+                alert('Errore nel salvataggio dei dati!');
+            }
+        }
+
+        // Switch categoria
+        function switchCategory(category, tabElement) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            tabElement.classList.add('active');
+            currentCategory = category;
+            renderGallery();
+        }
+
+        // Renderizza galleria
+        function renderGallery() {
+            const gallery = document.getElementById('gallery');
+            const filteredGames = currentCategory === 'all' 
+                ? games 
+                : games.filter(game => game.category === currentCategory);
+
+            if (filteredGames.length === 0) {
+                gallery.innerHTML = `
+                    <div class="empty-state fade-in">
+                        <i class="fas fa-gamepad"></i>
+                        <h3>${currentCategory === 'all' ? 'Nessun Game Boy ancora aggiunto' : 'Nessun Game Boy in questa categoria'}</h3>
+                        <p>Clicca su "Aggiungi Game Boy" per iniziare</p>
+                    </div>
+                `;
+                return;
+            }
+
+            gallery.innerHTML = filteredGames.map(game => `
+                <div class="game-card fade-in" onclick="showDetails('${game.id}')">
+                    ${editMode ? `
+                        <div class="edit-controls">
+                            <button class="edit-btn" onclick="event.stopPropagation(); editGame('${game.id}')" title="Modifica">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="edit-btn delete" onclick="event.stopPropagation(); deleteGame('${game.id}')" title="Elimina">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    ` : ''}
+                    <div class="game-image-container">
+                        ${game.image ? 
+                            `<img src="${game.image}" alt="${game.name}" class="game-image">` : 
+                            `<div class="game-placeholder"><i class="fas fa-gamepad"></i></div>`
+                        }
+                        <div class="game-overlay"></div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">${game.name}</div>
+                        <div class="game-model">${game.model}</div>
+                        <div class="game-price">€ ${parseFloat(game.price).toFixed(2)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Mostra dettagli
+        function showDetails(id) {
+            if (editMode) return;
+            
+            const game = games.find(g => g.id === id);
+            if (!game) return;
+
+            document.getElementById('modalTitle').textContent = game.name;
+            document.getElementById('modalPrice').textContent = `€ ${parseFloat(game.price).toFixed(2)}`;
+            
+            const modalImage = document.getElementById('modalImage');
+            const modalImagePlaceholder = document.getElementById('modalImagePlaceholder');
+            
+            if (game.image) {
+                modalImage.src = game.image;
+                modalImage.style.display = 'block';
+                modalImagePlaceholder.style.display = 'none';
+            } else {
+                modalImage.style.display = 'none';
+                modalImagePlaceholder.style.display = 'flex';
+            }
+
+            const specs = [
+                { label: 'Modello', value: game.model, icon: 'microchip' },
+                { label: 'Scocca', value: game.shell, icon: 'mobile-alt' },
+                { label: 'Pulsanti', value: game.buttons, icon: 'circle' },
+                { label: 'Etichetta', value: game.label, icon: 'tag' },
+                { label: 'Batteria', value: game.battery, icon: 'battery-full' },
+                { label: 'Audio', value: game.audio, icon: 'volume-up' },
+                { label: 'Display', value: game.display, icon: 'tv' },
+                { label: 'Kit Led', value: game.led, icon: 'lightbulb' },
+                { label: 'Box', value: game.box, icon: 'box' },
+                { label: 'Cover', value: game.cover, icon: 'shield-alt' },
+                { label: 'Altro', value: game.other, icon: 'plus-circle' }
+            ].filter(spec => spec.value && spec.value.trim() !== '');
+
+            document.getElementById('specGrid').innerHTML = specs.map(spec => `
+                <div class="spec-item">
+                    <div class="spec-label">
+                        <i class="fas fa-${spec.icon}"></i> ${spec.label}
+                    </div>
+                    <div class="spec-value">${spec.value}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('detailModal').style.display = 'block';
+        }
+
+        // Toggle edit mode
+        function toggleEditMode() {
+            editMode = !editMode;
+            const btn = document.getElementById('editModeBtn');
+            
+            if (editMode) {
+                btn.innerHTML = '<i class="fas fa-times"></i> Esci da Modifica';
+                btn.classList.add('edit-mode');
+            } else {
+                btn.innerHTML = '<i class="fas fa-edit"></i> Modalità Modifica';
+                btn.classList.remove('edit-mode');
+            }
+            
+            renderGallery();
+        }
+
+        // Apri modal aggiungi
+        function openAddModal() {
+            editingId = null;
+            document.getElementById('formTitle').textContent = 'Aggiungi Game Boy';
+            resetForm();
+            document.getElementById('formModal').style.display = 'block';
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('gameForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('gameImage').value = '';
+            document.getElementById('fileInputDisplay').innerHTML = `
+                <i class="fas fa-cloud-upload-alt"></i>
+                <div>Clicca per caricare un'immagine</div>
+                <small>JPG, PNG, GIF (Max 5MB)</small>
+            `;
+        }
+
+        // Modifica game
+        function editGame(id) {
+            const game = games.find(g => g.id === id);
+            if (!game) return;
+
+            editingId = id;
+            document.getElementById('formTitle').textContent = 'Modifica Game Boy';
+            
+            // Popola form
+            document.getElementById('gameName').value = game.name || '';
+            document.getElementById('gameCategory').value = game.category || '';
+            document.getElementById('gamePrice').value = game.price || '';
+            document.getElementById('gameModel').value = game.model || '';
+            document.getElementById('gameShell').value = game.shell || '';
+            document.getElementById('gameButtons').value = game.buttons || '';
+            document.getElementById('gameLabel').value = game.label || '';
+            document.getElementById('gameBattery').value = game.battery || '';
+            document.getElementById('gameAudio').value = game.audio || '';
+            document.getElementById('gameDisplay').value = game.display || '';
+            document.getElementById('gameLed').value = game.led || '';
+            document.getElementById('gameBox').value = game.box || '';
+            document.getElementById('gameCover').value = game.cover || '';
+            document.getElementById('gameOther').value = game.other || '';
+            
+            // Gestisci immagine
+            if (game.image) {
+                document.getElementById('gameImage').value = game.image;
+                const preview = document.getElementById('imagePreview');
+                preview.src = game.image;
+                preview.style.display = 'block';
+                document.getElementById('fileInputDisplay').innerHTML = `
+                    <i class="fas fa-check-circle" style="color: var(--accent-secondary);"></i>
+                    <div>Immagine già caricata</div>
+                    <small>Seleziona un nuovo file per sostituirla</small>
+                `;
+            }
+            
+            document.getElementById('formModal').style.display = 'block';
+        }
+
+        // Elimina game
+        function deleteGame(id) {
+            const game = games.find(g => g.id === id);
+            if (!game) return;
+            
+            if (confirm(`Sei sicuro di voler eliminare "${game.name}"?`)) {
+                games = games.filter(g => g.id !== id);
+                saveData();
+                renderGallery();
+            }
+        }
+
+        // Gestione submit form
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const gameData = {
+                id: editingId || Date.now().toString(),
+                name: document.getElementById('gameName').value.trim(),
+                category: document.getElementById('gameCategory').value,
+                image: document.getElementById('gameImage').value,
+                price: parseFloat(document.getElementById('gamePrice').value) || 0,
+                model: document.getElementById('gameModel').value.trim(),
+                shell: document.getElementById('gameShell').value.trim(),
+                buttons: document.getElementById('gameButtons').value.trim(),
+                label: document.getElementById('gameLabel').value.trim(),
+                battery: document.getElementById('gameBattery').value.trim(),
+                audio: document.getElementById('gameAudio').value.trim(),
+                display: document.getElementById('gameDisplay').value.trim(),
+                led: document.getElementById('gameLed').value.trim(),
+                box: document.getElementById('gameBox').value.trim(),
+                cover: document.getElementById('gameCover').value.trim(),
+                other: document.getElementById('gameOther').value.trim(),
+                createdAt: editingId ? games.find(g => g.id === editingId).createdAt : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            if (editingId) {
+                const index = games.findIndex(g => g.id === editingId);
+                games[index] = gameData;
+            } else {
+                games.unshift(gameData); // Aggiungi all'inizio
+            }
+
+            saveData();
+            closeModal('formModal');
+            renderGallery();
+            
+            // Toast notification
+            showToast(editingId ? 'Game Boy aggiornato!' : 'Game Boy aggiunto!');
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, var(--accent-secondary), #00cc6a);
+                color: var(--bg-primary);
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                font-weight: 600;
+                z-index: 2000;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        // Export data
+        function exportData() {
+            if (games.length === 0) {
+                alert('Nessun dato da esportare!');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(games, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `retroavia_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showToast('Dati esportati con successo!');
+        }
+
+        // Import data
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedGames = JSON.parse(e.target.result);
+                        if (Array.isArray(importedGames)) {
+                            const confirm = window.confirm(
+                                `Trovati ${importedGames.length} Game Boy nel file.\nVuoi sostituire i dati attuali o aggiungerli?`
+                            );
+                            
+                            if (confirm === true) {
+                                games = importedGames;
+                            } else {
+                                // Merge data
+                                importedGames.forEach(game => {
+                                    if (!games.find(g => g.id === game.id)) {
+                                        games.push(game);
+                                    }
+                                });
+                            }
+                            
+                            saveData();
+                            renderGallery();
+                            showToast(`${importedGames.length} Game Boy importati!`);
+                        } else {
+                            throw new Error('Formato file non valido');
+                        }
+                    } catch (error) {
+                        alert('Errore nell\'importazione: file non valido!');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        // Chiudi modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'formModal') {
+                resetForm();
+                editingId = null;
+            }
+        }
+
+        // Aggiungi stili per animazioni toast
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
