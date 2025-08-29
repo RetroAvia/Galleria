@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RetroAvia - Gallery Game Boy</title>
+    <title>RetroAvia - Gallery Game Boy 🎮</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -15,12 +15,14 @@
             --accent-primary: #ff0050;
             --accent-secondary: #00ff88;
             --accent-warning: #ffaa00;
+            --accent-info: #00aaff;
             --text-primary: #ffffff;
             --text-secondary: #cccccc;
             --text-muted: #888888;
             --border-color: #333333;
             --shadow-glow: rgba(255, 0, 80, 0.3);
             --shadow-glow-green: rgba(0, 255, 136, 0.3);
+            --shadow-glow-blue: rgba(0, 170, 255, 0.3);
         }
 
         * {
@@ -48,9 +50,16 @@
             height: 100%;
             background: 
                 radial-gradient(circle at 25% 25%, rgba(255, 0, 80, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 75% 75%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(0, 170, 255, 0.05) 0%, transparent 50%);
             pointer-events: none;
             z-index: -1;
+            animation: backgroundPulse 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundPulse {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
         }
 
         /* Header */
@@ -100,6 +109,60 @@
             font-weight: 300;
             position: relative;
             z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Auth Section */
+        .auth-section {
+            background: rgba(17, 17, 17, 0.9);
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .auth-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .auth-status.logged-out {
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.2), rgba(255, 170, 0, 0.1));
+            color: var(--accent-warning);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+        }
+
+        .auth-status.logged-in {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            color: var(--accent-secondary);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .auth-btn {
+            background: linear-gradient(135deg, var(--accent-info), #0088cc);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px var(--shadow-glow-blue);
+        }
+
+        .auth-btn.logout {
+            background: linear-gradient(135deg, var(--accent-primary), #cc0040);
         }
 
         /* Navigation */
@@ -161,11 +224,52 @@
             box-shadow: 0 0 20px var(--shadow-glow);
         }
 
+        /* Stats Bar */
+        .stats-bar {
+            background: rgba(26, 26, 26, 0.8);
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         /* Admin Controls */
         .admin-controls {
             padding: 2rem;
             text-align: center;
             background: rgba(17, 17, 17, 0.5);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .admin-controls.hidden {
+            display: none;
         }
 
         .admin-btn {
@@ -176,7 +280,7 @@
             border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
-            margin: 0 0.75rem;
+            margin: 0.5rem;
             font-size: 0.95rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -192,11 +296,70 @@
             background: linear-gradient(135deg, var(--accent-warning), #e69500);
         }
 
+        .admin-btn.export {
+            background: linear-gradient(135deg, #6c5ce7, #5a4fce);
+        }
+
+        .admin-btn.import {
+            background: linear-gradient(135deg, #00b894, #00a085);
+        }
+
+        .admin-btn.clear {
+            background: linear-gradient(135deg, #e17055, #d63031);
+        }
+
         /* Gallery */
         .gallery-container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 2rem;
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .gallery-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 300px;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px var(--shadow-glow);
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
         }
 
         .gallery {
@@ -228,7 +391,7 @@
             padding: 1px;
             background: linear-gradient(135deg, transparent, var(--accent-primary), transparent);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: exclude;
+            -webkit-mask-composite: xor;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -347,6 +510,18 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
+        .game-date {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--text-muted);
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
         /* Modal */
         .modal {
             display: none;
@@ -369,13 +544,25 @@
             overflow: hidden;
             position: relative;
             border: 1px solid var(--border-color);
+            animation: modalSlideUp 0.4s ease;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .modal-close {
             position: absolute;
             top: 20px;
             right: 25px;
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: var(--text-primary);
             cursor: pointer;
             z-index: 1001;
@@ -504,6 +691,7 @@
             padding: 2.5rem;
             position: relative;
             border: 1px solid var(--border-color);
+            animation: modalSlideUp 0.4s ease;
         }
 
         .form-title {
@@ -565,20 +753,20 @@
 
         .file-input-container {
             position: relative;
-            display: inline-block;
             width: 100%;
         }
 
         .file-input {
-            opacity: 0;
-            position: absolute;
             width: 100%;
             height: 100%;
+            opacity: 0;
+            position: absolute;
             cursor: pointer;
+            z-index: 2;
         }
 
         .file-input-display {
-            padding: 1rem 1.25rem;
+            padding: 2rem 1rem;
             border: 2px dashed var(--border-color);
             border-radius: 12px;
             background: rgba(0, 0, 0, 0.3);
@@ -587,6 +775,12 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .file-input-display:hover {
@@ -594,18 +788,23 @@
             background: rgba(255, 0, 80, 0.1);
         }
 
+        .file-input-display.dragover {
+            border-color: var(--accent-secondary);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
         .file-input-display i {
             font-size: 2rem;
             margin-bottom: 0.5rem;
-            display: block;
         }
 
         .image-preview {
-            max-width: 200px;
+            max-width: 100%;
             max-height: 200px;
             border-radius: 12px;
             margin-top: 1rem;
             border: 2px solid var(--border-color);
+            object-fit: cover;
         }
 
         .form-actions {
@@ -626,6 +825,26 @@
             font-size: 1rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: 'Space Grotesk', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-primary {
@@ -654,6 +873,7 @@
             text-align: center;
             padding: 4rem 2rem;
             color: var(--text-muted);
+            grid-column: 1 / -1;
         }
 
         .empty-state i {
@@ -684,6 +904,8 @@
             align-items: center;
             justify-content: center;
             z-index: 2000;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .spinner {
@@ -695,9 +917,99 @@
             animation: spin 1s linear infinite;
         }
 
+        .loading-text {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Auth Modal */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-content {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .auth-content h3 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .auth-content input {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .auth-content input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px var(--shadow-glow);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 2000;
+            animation: slideInRight 0.3s ease;
+            max-width: 300px;
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, var(--accent-secondary), #00cc6a);
+            color: var(--bg-primary);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: white;
+        }
+
+        .toast.info {
+            background: linear-gradient(135deg, var(--accent-info), #0088cc);
+            color: white;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
         }
 
         /* Responsive */
@@ -725,31 +1037,42 @@
             }
             
             .admin-btn {
-                margin: 0.5rem;
                 display: block;
-                width: 200px;
-                margin-left: auto;
-                margin-right: auto;
+                width: 100%;
+                max-width: 250px;
+                margin: 0.5rem auto;
+            }
+
+            .stats-container {
+                gap: 1rem;
+            }
+
+            .gallery-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .search-box {
+                max-width: 100%;
             }
         }
 
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
         }
 
-        .slide-up {
-            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 4px;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #cc0040, #00cc6a);
         }
     </style>
 </head>
@@ -757,17 +1080,62 @@
     <!-- Loading Overlay -->
     <div class="loading" id="loading">
         <div class="spinner"></div>
+        <div class="loading-text">Caricamento in corso...</div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-content">
+            <h3>🔐 Accesso Admin</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Inserisci la password per accedere alle funzioni di modifica</p>
+            <input type="password" id="authPassword" placeholder="Password Admin" autocomplete="current-password">
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button class="btn btn-secondary" onclick="closeAuthModal()">Annulla</button>
+                <button class="btn btn-primary" onclick="authenticate()">Accedi</button>
+            </div>
+        </div>
     </div>
 
     <header class="header">
-        <h1>RetroAvia</h1>
-        <p class="subtitle">La tua collezione di Game Boy modificati</p>
+        <h1>RetroAvia 🎮</h1>
+        <p class="subtitle">Galleria dei miei lavori personalizzati - Trova ispirazione per il tuo prossimo Game Boy modificato</p>
     </header>
+
+    <div class="auth-section">
+        <div class="auth-status" id="authStatus">
+            <i class="fas fa-lock" id="authIcon"></i>
+            <span id="authText">Modalità Visitatore</span>
+        </div>
+        <button class="auth-btn" id="authButton" onclick="showAuthModal()">
+            <i class="fas fa-sign-in-alt"></i> Accedi Admin
+        </button>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number" id="totalGames">0</div>
+                <div class="stat-label">🎮 Totale Progetti</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="colorGames">0</div>
+                <div class="stat-label">🌈 Game Boy Color</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="advanceGames">0</div>
+                <div class="stat-label">📱 Game Boy Advance</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="spGames">0</div>
+                <div class="stat-label">💻 Game Boy Advance SP</div>
+            </div>
+        </div>
+    </div>
 
     <div class="nav-container">
         <nav class="nav-tabs">
             <button class="nav-tab active" data-category="all">
-                <i class="fas fa-gamepad"></i> Tutti
+                <i class="fas fa-gamepad"></i> Tutti i Progetti
             </button>
             <button class="nav-tab" data-category="color">
                 <i class="fas fa-palette"></i> Game Boy Color
@@ -781,34 +1149,44 @@
         </nav>
     </div>
 
-    <div class="admin-controls">
+    <div class="admin-controls hidden" id="adminControls">
         <button class="admin-btn" onclick="openAddModal()">
-            <i class="fas fa-plus"></i> Aggiungi Game Boy
+            <i class="fas fa-plus"></i> 🎮 Aggiungi Progetto
         </button>
         <button class="admin-btn" id="editModeBtn" onclick="toggleEditMode()">
-            <i class="fas fa-edit"></i> Modalità Modifica
+            <i class="fas fa-edit"></i> ✏️ Modalità Modifica
         </button>
-        <button class="admin-btn" onclick="exportData()" style="background: linear-gradient(135deg, #6c5ce7, #5a4fce);">
-            <i class="fas fa-download"></i> Esporta Dati
+        <button class="admin-btn export" onclick="exportData()">
+            <i class="fas fa-download"></i> 💾 Esporta Dati
         </button>
-        <button class="admin-btn" onclick="importData()" style="background: linear-gradient(135deg, #00b894, #00a085);">
-            <i class="fas fa-upload"></i> Importa Dati
+        <button class="admin-btn import" onclick="importData()">
+            <i class="fas fa-upload"></i> 📤 Importa Dati
+        </button>
+        <button class="admin-btn clear" onclick="clearAllData()">
+            <i class="fas fa-trash-alt"></i> 🗑️ Cancella Tutto
         </button>
     </div>
 
     <div class="gallery-container">
+        <div class="gallery-header">
+            <h2 class="gallery-title" id="galleryTitle">🎮 Tutti i Progetti</h2>
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Cerca progetti...">
+            </div>
+        </div>
         <div class="gallery" id="gallery">
             <div class="empty-state">
                 <i class="fas fa-gamepad"></i>
-                <h3>Nessun Game Boy ancora aggiunto</h3>
-                <p>Clicca su "Aggiungi Game Boy" per iniziare la tua collezione</p>
+                <h3>Nessun progetto ancora aggiunto</h3>
+                <p>I progetti RetroAvia appariranno qui una volta aggiunti</p>
             </div>
         </div>
     </div>
 
     <!-- Modal Dettagli -->
     <div class="modal" id="detailModal">
-        <div class="modal-content slide-up">
+        <div class="modal-content">
             <span class="modal-close" onclick="closeModal('detailModal')">
                 <i class="fas fa-times"></i>
             </span>
@@ -819,7 +1197,7 @@
                 </div>
             </div>
             <div class="modal-info">
-                <h2 class="modal-title" id="modalTitle">Titolo Game Boy</h2>
+                <h2 class="modal-title" id="modalTitle">Titolo Progetto</h2>
                 <div class="spec-grid" id="specGrid">
                     <!-- Specifiche verranno inserite dinamicamente -->
                 </div>
@@ -830,15 +1208,15 @@
 
     <!-- Modal Form -->
     <div class="form-modal" id="formModal">
-        <div class="form-content slide-up">
+        <div class="form-content">
             <span class="modal-close" onclick="closeModal('formModal')">
                 <i class="fas fa-times"></i>
             </span>
-            <h2 class="form-title" id="formTitle">Aggiungi Game Boy</h2>
+            <h2 class="form-title" id="formTitle">🎮 Aggiungi Progetto</h2>
             <form id="gameForm">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="gameName"><i class="fas fa-tag"></i> Nome/Titolo</label>
+                        <label for="gameName"><i class="fas fa-tag"></i> Nome Progetto</label>
                         <input type="text" id="gameName" required placeholder="Es. Game Boy Color Pikachu Edition">
                     </div>
                     
@@ -846,20 +1224,20 @@
                         <label for="gameCategory"><i class="fas fa-list"></i> Categoria</label>
                         <select id="gameCategory" required>
                             <option value="">Seleziona categoria</option>
-                            <option value="color">Game Boy Color</option>
-                            <option value="advance">Game Boy Advance</option>
-                            <option value="sp">Game Boy Advance SP</option>
+                            <option value="color">🌈 Game Boy Color</option>
+                            <option value="advance">📱 Game Boy Advance</option>
+                            <option value="sp">💻 Game Boy Advance SP</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="gameImage"><i class="fas fa-image"></i> Immagine</label>
+                    <label for="gameImage"><i class="fas fa-image"></i> Immagine Progetto</label>
                     <div class="file-input-container">
-                        <input type="file" id="gameImageFile" class="file-input" accept="image/*" onchange="handleImageUpload(this)">
+                        <input type="file" id="gameImageFile" class="file-input" accept="image/*">
                         <div class="file-input-display" id="fileInputDisplay">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            <div>Clicca per caricare un'immagine</div>
+                            <div><strong>Clicca o trascina per caricare un'immagine</strong></div>
                             <small>JPG, PNG, GIF (Max 5MB)</small>
                         </div>
                     </div>
@@ -869,64 +1247,64 @@
 
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="gamePrice"><i class="fas fa-euro-sign"></i> Prezzo</label>
+                        <label for="gamePrice"><i class="fas fa-euro-sign"></i> Prezzo Realizzazione</label>
                         <input type="number" id="gamePrice" step="0.01" required placeholder="120.00">
                     </div>
                     
                     <div class="form-group">
-                        <label for="gameModel"><i class="fas fa-microchip"></i> Modello</label>
+                        <label for="gameModel"><i class="fas fa-microchip"></i> Modello Base</label>
                         <input type="text" id="gameModel" required placeholder="Es. CGB-001">
                     </div>
                     
                     <div class="form-group">
                         <label for="gameShell"><i class="fas fa-mobile-alt"></i> Scocca</label>
-                        <input type="text" id="gameShell" placeholder="Es. Trasparente fumé">
+                        <input type="text" id="gameShell" placeholder="Es. Trasparente fumé custom">
                     </div>
                     
                     <div class="form-group">
                         <label for="gameButtons"><i class="fas fa-circle"></i> Pulsanti</label>
-                        <input type="text" id="gameButtons" placeholder="Es. Originali Nintendo">
+                        <input type="text" id="gameButtons" placeholder="Es. Custom colorati">
                     </div>
                     
                     <div class="form-group">
                         <label for="gameLabel"><i class="fas fa-tag"></i> Etichetta</label>
-                        <input type="text" id="gameLabel" placeholder="Es. Olografica Pokémon">
+                        <input type="text" id="gameLabel" placeholder="Es. Olografica personalizzata">
                     </div>
                     
                     <div class="form-group">
                         <label for="gameBattery"><i class="fas fa-battery-full"></i> Batteria</label>
-                        <input type="text" id="gameBattery" placeholder="Es. Li-ion 1200mAh">
+                        <input type="text" id="gameBattery" placeholder="Es. Li-ion 1200mAh estesa">
                     </div>
                     
                     <div class="form-group">
                         <label for="gameAudio"><i class="fas fa-volume-up"></i> Audio</label>
-                        <input type="text" id="gameAudio" placeholder="Es. Speaker migliorato + jack 3.5mm">
+                        <input type="text" id="gameAudio" placeholder="Es. Speaker potenziato + jack 3.5mm">
                     </div>
                     
                     <div class="form-group">
                         <label for="gameDisplay"><i class="fas fa-tv"></i> Display</label>
-                        <input type="text" id="gameDisplay" placeholder="Es. IPS V2 con regolazione luminosità">
+                        <input type="text" id="gameDisplay" placeholder="Es. IPS V2 con controllo luminosità">
                     </div>
                     
                     <div class="form-group">
-                        <label for="gameLed"><i class="fas fa-lightbulb"></i> Kit Led</label>
-                        <input type="text" id="gameLed" placeholder="Es. RGB personalizzabile">
+                        <label for="gameLed"><i class="fas fa-lightbulb"></i> Kit LED</label>
+                        <input type="text" id="gameLed" placeholder="Es. RGB programmabile">
                     </div>
                     
                     <div class="form-group">
-                        <label for="gameBox"><i class="fas fa-box"></i> Box</label>
-                        <input type="text" id="gameBox" placeholder="Es. Scatola originale + manuale">
+                        <label for="gameBox"><i class="fas fa-box"></i> Accessori</label>
+                        <input type="text" id="gameBox" placeholder="Es. Box originale restaurato">
                     </div>
                     
                     <div class="form-group">
-                        <label for="gameCover"><i class="fas fa-shield-alt"></i> Cover</label>
-                        <input type="text" id="gameCover" placeholder="Es. Cover protettiva in silicone">
+                        <label for="gameCover"><i class="fas fa-shield-alt"></i> Protezioni</label>
+                        <input type="text" id="gameCover" placeholder="Es. Cover protettiva trasparente">
                     </div>
                 </div>
                 
                 <div class="form-group full-width">
-                    <label for="gameOther"><i class="fas fa-plus-circle"></i> Altro</label>
-                    <textarea id="gameOther" rows="3" placeholder="Note aggiuntive, modifiche speciali, etc..."></textarea>
+                    <label for="gameOther"><i class="fas fa-plus-circle"></i> Note e Modifiche Extra</label>
+                    <textarea id="gameOther" rows="3" placeholder="Descrivi modifiche speciali, personalizzazioni uniche, dettagli tecnici..."></textarea>
                 </div>
                 
                 <div class="form-actions">
@@ -934,7 +1312,7 @@
                         <i class="fas fa-times"></i> Annulla
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Salva Game Boy
+                        <i class="fas fa-save"></i> 💾 Salva Progetto
                     </button>
                 </div>
             </form>
@@ -942,17 +1320,29 @@
     </div>
 
     <script>
+        // Configurazione
+        const ADMIN_PASSWORD = 'RetroAvia2024!'; // Cambia questa password!
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+        
         // Variabili globali
         let games = [];
         let editMode = false;
         let currentCategory = 'all';
         let editingId = null;
+        let isAuthenticated = false;
+        let searchQuery = '';
 
         // Inizializzazione
         document.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
+        });
+
+        function initializeApp() {
             loadData();
             setupEventListeners();
-        });
+            updateStats();
+            updateAuthUI();
+        }
 
         // Setup event listeners
         function setupEventListeners() {
@@ -964,158 +1354,324 @@
             // Form submission
             document.getElementById('gameForm').addEventListener('submit', handleFormSubmit);
 
-            // Close modals on outside click
-            window.addEventListener('click', (e) => {
-                if (e.target.classList.contains('modal') || e.target.classList.contains('form-modal')) {
-                    e.target.style.display = 'none';
-                }
+            // File input
+            const fileInput = document.getElementById('gameImageFile');
+            const fileDisplay = document.getElementById('fileInputDisplay');
+            
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Drag and drop
+            fileDisplay.addEventListener('dragover', handleDragOver);
+            fileDisplay.addEventListener('dragleave', handleDragLeave);
+            fileDisplay.addEventListener('drop', handleFileDrop);
+
+            // Search
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+
+            // Auth password enter key
+            document.getElementById('authPassword').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') authenticate();
             });
+
+            // Close modals on outside click
+            window.addEventListener('click', handleOutsideClick);
 
             // Keyboard shortcuts
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeModal('detailModal');
-                    closeModal('formModal');
-                }
-            });
+            document.addEventListener('keydown', handleKeyboardShortcuts);
         }
 
-        // Gestione upload immagine
-        function handleImageUpload(input) {
-            const file = input.files[0];
-            const maxSize = 5 * 1024 * 1024; // 5MB
-            
-            if (!file) return;
-            
-            if (file.size > maxSize) {
-                alert('Il file è troppo grande. Massimo 5MB consentiti.');
-                input.value = '';
-                return;
+        // File handling
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                processFile(file);
             }
+        }
 
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleFileDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                document.getElementById('gameImageFile').files = files;
+                processFile(file);
+            }
+        }
+
+        function processFile(file) {
+            // Validazione
             if (!file.type.match('image.*')) {
-                alert('Seleziona solo file immagine (JPG, PNG, GIF).');
-                input.value = '';
+                showToast('⚠️ Seleziona solo file immagine (JPG, PNG, GIF)', 'error');
                 return;
             }
 
-            showLoading();
+            if (file.size > MAX_FILE_SIZE) {
+                showToast('⚠️ File troppo grande. Massimo 5MB', 'error');
+                return;
+            }
+
+            showLoading('🖼️ Caricamento immagine...');
             
             const reader = new FileReader();
             reader.onload = function(e) {
-                const base64 = e.target.result;
-                document.getElementById('gameImage').value = base64;
-                
-                const preview = document.getElementById('imagePreview');
-                preview.src = base64;
-                preview.style.display = 'block';
-                
-                const display = document.getElementById('fileInputDisplay');
-                display.innerHTML = `
-                    <i class="fas fa-check-circle" style="color: var(--accent-secondary);"></i>
-                    <div>Immagine caricata con successo!</div>
-                    <small>${file.name}</small>
-                `;
-                
-                hideLoading();
+                try {
+                    const base64 = e.target.result;
+                    document.getElementById('gameImage').value = base64;
+                    
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = base64;
+                    preview.style.display = 'block';
+                    
+                    const display = document.getElementById('fileInputDisplay');
+                    display.innerHTML = `
+                        <i class="fas fa-check-circle" style="color: var(--accent-secondary); font-size: 2rem;"></i>
+                        <div><strong>✅ Immagine caricata con successo!</strong></div>
+                        <small>${file.name} (${formatFileSize(file.size)})</small>
+                    `;
+                    
+                    showToast('✅ Immagine caricata correttamente!', 'success');
+                } catch (error) {
+                    showToast('❌ Errore nel caricamento del file', 'error');
+                    console.error('Errore file:', error);
+                } finally {
+                    hideLoading();
+                }
             };
             
             reader.onerror = function() {
-                alert('Errore nel caricamento del file.');
+                showToast('❌ Errore nella lettura del file', 'error');
                 hideLoading();
             };
             
             reader.readAsDataURL(file);
         }
 
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Authentication
+        function showAuthModal() {
+            if (isAuthenticated) {
+                logout();
+            } else {
+                document.getElementById('authModal').style.display = 'flex';
+                document.getElementById('authPassword').focus();
+            }
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('authPassword').value = '';
+        }
+
+        function authenticate() {
+            const password = document.getElementById('authPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                isAuthenticated = true;
+                updateAuthUI();
+                closeAuthModal();
+                showToast('🎉 Accesso effettuato con successo!', 'success');
+            } else {
+                showToast('🚫 Password non corretta', 'error');
+                document.getElementById('authPassword').value = '';
+                document.getElementById('authPassword').focus();
+            }
+        }
+
+        function logout() {
+            isAuthenticated = false;
+            editMode = false;
+            updateAuthUI();
+            renderGallery();
+            showToast('👋 Disconnesso dalla modalità admin', 'info');
+        }
+
+        function updateAuthUI() {
+            const authStatus = document.getElementById('authStatus');
+            const authButton = document.getElementById('authButton');
+            const authIcon = document.getElementById('authIcon');
+            const authText = document.getElementById('authText');
+            const adminControls = document.getElementById('adminControls');
+
+            if (isAuthenticated) {
+                authStatus.className = 'auth-status logged-in';
+                authIcon.className = 'fas fa-unlock';
+                authText.textContent = 'Modalità Admin Attiva';
+                authButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Disconnetti';
+                authButton.className = 'auth-btn logout';
+                adminControls.classList.remove('hidden');
+            } else {
+                authStatus.className = 'auth-status logged-out';
+                authIcon.className = 'fas fa-lock';
+                authText.textContent = 'Modalità Visitatore';
+                authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Accedi Admin';
+                authButton.className = 'auth-btn';
+                adminControls.classList.add('hidden');
+            }
+        }
+
         // Loading states
-        function showLoading() {
-            document.getElementById('loading').style.display = 'flex';
+        function showLoading(text = 'Caricamento in corso...') {
+            const loading = document.getElementById('loading');
+            const loadingText = document.querySelector('.loading-text');
+            loadingText.textContent = text;
+            loading.style.display = 'flex';
         }
 
         function hideLoading() {
             document.getElementById('loading').style.display = 'none';
         }
 
-        // Carica dati salvati
+        // Data management
         function loadData() {
             try {
                 const saved = localStorage.getItem('retroavia_games');
                 if (saved) {
                     games = JSON.parse(saved);
+                    games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 }
                 renderGallery();
+                updateStats();
             } catch (error) {
                 console.error('Errore nel caricamento dei dati:', error);
                 games = [];
+                showToast('⚠️ Errore nel caricamento dei dati', 'error');
             }
         }
 
-        // Salva dati
         function saveData() {
             try {
                 localStorage.setItem('retroavia_games', JSON.stringify(games));
             } catch (error) {
                 console.error('Errore nel salvataggio:', error);
-                alert('Errore nel salvataggio dei dati!');
+                showToast('❌ Errore nel salvataggio dei dati!', 'error');
             }
         }
 
-        // Switch categoria
+        // Stats
+        function updateStats() {
+            const total = games.length;
+            const color = games.filter(g => g.category === 'color').length;
+            const advance = games.filter(g => g.category === 'advance').length;
+            const sp = games.filter(g => g.category === 'sp').length;
+
+            document.getElementById('totalGames').textContent = total;
+            document.getElementById('colorGames').textContent = color;
+            document.getElementById('advanceGames').textContent = advance;
+            document.getElementById('spGames').textContent = sp;
+        }
+
+        // Search
+        function handleSearch(e) {
+            searchQuery = e.target.value.toLowerCase();
+            renderGallery();
+        }
+
+        function filterGames() {
+            let filteredGames = currentCategory === 'all' 
+                ? games 
+                : games.filter(game => game.category === currentCategory);
+
+            if (searchQuery) {
+                filteredGames = filteredGames.filter(game => 
+                    game.name.toLowerCase().includes(searchQuery) ||
+                    game.model.toLowerCase().includes(searchQuery) ||
+                    (game.shell && game.shell.toLowerCase().includes(searchQuery)) ||
+                    (game.other && game.other.toLowerCase().includes(searchQuery))
+                );
+            }
+
+            return filteredGames;
+        }
+
+        // Category switching
         function switchCategory(category, tabElement) {
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             tabElement.classList.add('active');
             currentCategory = category;
+            
+            const titles = {
+                'all': '🎮 Tutti i Progetti',
+                'color': '🌈 Game Boy Color',
+                'advance': '📱 Game Boy Advance',
+                'sp': '💻 Game Boy Advance SP'
+            };
+            
+            document.getElementById('galleryTitle').textContent = titles[category];
             renderGallery();
         }
 
-        // Renderizza galleria
+        // Gallery rendering
         function renderGallery() {
             const gallery = document.getElementById('gallery');
-            const filteredGames = currentCategory === 'all' 
-                ? games 
-                : games.filter(game => game.category === currentCategory);
+            const filteredGames = filterGames();
 
             if (filteredGames.length === 0) {
+                const emptyMessage = searchQuery 
+                    ? `Nessun progetto trovato per "${searchQuery}"`
+                    : currentCategory === 'all' 
+                        ? 'Nessun progetto ancora aggiunto'
+                        : 'Nessun progetto in questa categoria';
+
                 gallery.innerHTML = `
-                    <div class="empty-state fade-in">
+                    <div class="empty-state">
                         <i class="fas fa-gamepad"></i>
-                        <h3>${currentCategory === 'all' ? 'Nessun Game Boy ancora aggiunto' : 'Nessun Game Boy in questa categoria'}</h3>
-                        <p>Clicca su "Aggiungi Game Boy" per iniziare</p>
+                        <h3>${emptyMessage}</h3>
+                        <p>${searchQuery ? 'Prova a modificare i termini di ricerca' : 'I progetti RetroAvia appariranno qui una volta aggiunti'}</p>
                     </div>
                 `;
                 return;
             }
 
-            gallery.innerHTML = filteredGames.map(game => `
-                <div class="game-card fade-in" onclick="showDetails('${game.id}')">
-                    ${editMode ? `
-                        <div class="edit-controls">
-                            <button class="edit-btn" onclick="event.stopPropagation(); editGame('${game.id}')" title="Modifica">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="edit-btn delete" onclick="event.stopPropagation(); deleteGame('${game.id}')" title="Elimina">
-                                <i class="fas fa-trash"></i>
-                            </button>
+            gallery.innerHTML = filteredGames.map(game => {
+                const createdDate = new Date(game.createdAt).toLocaleDateString('it-IT');
+                return `
+                    <div class="game-card" onclick="showDetails('${game.id}')">
+                        ${editMode ? `
+                            <div class="edit-controls">
+                                <button class="edit-btn" onclick="event.stopPropagation(); editGame('${game.id}')" title="Modifica Progetto">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="edit-btn delete" onclick="event.stopPropagation(); deleteGame('${game.id}')" title="Elimina Progetto">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        ` : ''}
+                        <div class="game-image-container">
+                            ${game.image ? 
+                                `<img src="${game.image}" alt="${game.name}" class="game-image">` : 
+                                `<div class="game-placeholder"><i class="fas fa-gamepad"></i></div>`
+                            }
+                            <div class="game-overlay"></div>
+                            <div class="game-date">${createdDate}</div>
                         </div>
-                    ` : ''}
-                    <div class="game-image-container">
-                        ${game.image ? 
-                            `<img src="${game.image}" alt="${game.name}" class="game-image">` : 
-                            `<div class="game-placeholder"><i class="fas fa-gamepad"></i></div>`
-                        }
-                        <div class="game-overlay"></div>
+                        <div class="game-info">
+                            <div class="game-title">${game.name}</div>
+                            <div class="game-model">${game.model}</div>
+                            <div class="game-price">€ ${parseFloat(game.price).toFixed(2)}</div>
+                        </div>
                     </div>
-                    <div class="game-info">
-                        <div class="game-title">${game.name}</div>
-                        <div class="game-model">${game.model}</div>
-                        <div class="game-price">€ ${parseFloat(game.price).toFixed(2)}</div>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        // Mostra dettagli
+        // Detail modal
         function showDetails(id) {
             if (editMode) return;
             
@@ -1138,17 +1694,17 @@
             }
 
             const specs = [
-                { label: 'Modello', value: game.model, icon: 'microchip' },
+                { label: 'Modello Base', value: game.model, icon: 'microchip' },
                 { label: 'Scocca', value: game.shell, icon: 'mobile-alt' },
                 { label: 'Pulsanti', value: game.buttons, icon: 'circle' },
                 { label: 'Etichetta', value: game.label, icon: 'tag' },
                 { label: 'Batteria', value: game.battery, icon: 'battery-full' },
                 { label: 'Audio', value: game.audio, icon: 'volume-up' },
                 { label: 'Display', value: game.display, icon: 'tv' },
-                { label: 'Kit Led', value: game.led, icon: 'lightbulb' },
-                { label: 'Box', value: game.box, icon: 'box' },
-                { label: 'Cover', value: game.cover, icon: 'shield-alt' },
-                { label: 'Altro', value: game.other, icon: 'plus-circle' }
+                { label: 'Kit LED', value: game.led, icon: 'lightbulb' },
+                { label: 'Accessori', value: game.box, icon: 'box' },
+                { label: 'Protezioni', value: game.cover, icon: 'shield-alt' },
+                { label: 'Note Extra', value: game.other, icon: 'plus-circle' }
             ].filter(spec => spec.value && spec.value.trim() !== '');
 
             document.getElementById('specGrid').innerHTML = specs.map(spec => `
@@ -1163,65 +1719,80 @@
             document.getElementById('detailModal').style.display = 'block';
         }
 
-        // Toggle edit mode
+        // Edit mode
         function toggleEditMode() {
+            if (!isAuthenticated) {
+                showToast('🔒 Accedi come admin per modificare', 'error');
+                return;
+            }
+
             editMode = !editMode;
             const btn = document.getElementById('editModeBtn');
             
             if (editMode) {
-                btn.innerHTML = '<i class="fas fa-times"></i> Esci da Modifica';
+                btn.innerHTML = '<i class="fas fa-times"></i> ❌ Esci da Modifica';
                 btn.classList.add('edit-mode');
+                showToast('✏️ Modalità modifica attivata', 'info');
             } else {
-                btn.innerHTML = '<i class="fas fa-edit"></i> Modalità Modifica';
+                btn.innerHTML = '<i class="fas fa-edit"></i> ✏️ Modalità Modifica';
                 btn.classList.remove('edit-mode');
+                showToast('👁️ Modalità visualizzazione attivata', 'info');
             }
             
             renderGallery();
         }
 
-        // Apri modal aggiungi
+        // Form management
         function openAddModal() {
+            if (!isAuthenticated) {
+                showToast('🔒 Accedi come admin per aggiungere progetti', 'error');
+                return;
+            }
+            
             editingId = null;
-            document.getElementById('formTitle').textContent = 'Aggiungi Game Boy';
+            document.getElementById('formTitle').textContent = '🎮 Aggiungi Nuovo Progetto';
             resetForm();
             document.getElementById('formModal').style.display = 'block';
         }
 
-        // Reset form
         function resetForm() {
             document.getElementById('gameForm').reset();
             document.getElementById('imagePreview').style.display = 'none';
             document.getElementById('gameImage').value = '';
             document.getElementById('fileInputDisplay').innerHTML = `
                 <i class="fas fa-cloud-upload-alt"></i>
-                <div>Clicca per caricare un'immagine</div>
+                <div><strong>Clicca o trascina per caricare un'immagine</strong></div>
                 <small>JPG, PNG, GIF (Max 5MB)</small>
             `;
         }
 
-        // Modifica game
         function editGame(id) {
+            if (!isAuthenticated) {
+                showToast('🔒 Accedi come admin per modificare', 'error');
+                return;
+            }
+
             const game = games.find(g => g.id === id);
             if (!game) return;
 
             editingId = id;
-            document.getElementById('formTitle').textContent = 'Modifica Game Boy';
+            document.getElementById('formTitle').textContent = '✏️ Modifica Progetto';
             
             // Popola form
-            document.getElementById('gameName').value = game.name || '';
-            document.getElementById('gameCategory').value = game.category || '';
-            document.getElementById('gamePrice').value = game.price || '';
-            document.getElementById('gameModel').value = game.model || '';
-            document.getElementById('gameShell').value = game.shell || '';
-            document.getElementById('gameButtons').value = game.buttons || '';
-            document.getElementById('gameLabel').value = game.label || '';
-            document.getElementById('gameBattery').value = game.battery || '';
-            document.getElementById('gameAudio').value = game.audio || '';
-            document.getElementById('gameDisplay').value = game.display || '';
-            document.getElementById('gameLed').value = game.led || '';
-            document.getElementById('gameBox').value = game.box || '';
-            document.getElementById('gameCover').value = game.cover || '';
-            document.getElementById('gameOther').value = game.other || '';
+            const fields = [
+                'gameName', 'gameCategory', 'gamePrice', 'gameModel',
+                'gameShell', 'gameButtons', 'gameLabel', 'gameBattery',
+                'gameAudio', 'gameDisplay', 'gameLed', 'gameBox',
+                'gameCover', 'gameOther'
+            ];
+
+            fields.forEach(field => {
+                const element = document.getElementById(field);
+                const key = field.replace('game', '').toLowerCase();
+                if (element && game[key] !== undefined) {
+                    element.value = game[key] || '';
+                }
+            });
             
             // Gestisci immagine
             if (game.image) {
@@ -1230,8 +1801,8 @@
                 preview.src = game.image;
                 preview.style.display = 'block';
                 document.getElementById('fileInputDisplay').innerHTML = `
-                    <i class="fas fa-check-circle" style="color: var(--accent-secondary);"></i>
-                    <div>Immagine già caricata</div>
+                    <i class="fas fa-check-circle" style="color: var(--accent-secondary); font-size: 2rem;"></i>
+                    <div><strong>✅ Immagine già caricata</strong></div>
                     <small>Seleziona un nuovo file per sostituirla</small>
                 `;
             }
@@ -1239,104 +1810,128 @@
             document.getElementById('formModal').style.display = 'block';
         }
 
-        // Elimina game
         function deleteGame(id) {
+            if (!isAuthenticated) {
+                showToast('🔒 Accedi come admin per eliminare', 'error');
+                return;
+            }
+
             const game = games.find(g => g.id === id);
             if (!game) return;
             
-            if (confirm(`Sei sicuro di voler eliminare "${game.name}"?`)) {
+            if (confirm(`🗑️ Sei sicuro di voler eliminare "${game.name}"?\n\nQuesta azione non può essere annullata.`)) {
                 games = games.filter(g => g.id !== id);
                 saveData();
                 renderGallery();
+                updateStats();
+                showToast('🗑️ Progetto eliminato', 'success');
             }
         }
 
-        // Gestione submit form
+        // Form submission
         function handleFormSubmit(e) {
             e.preventDefault();
             
-            const gameData = {
-                id: editingId || Date.now().toString(),
-                name: document.getElementById('gameName').value.trim(),
-                category: document.getElementById('gameCategory').value,
-                image: document.getElementById('gameImage').value,
-                price: parseFloat(document.getElementById('gamePrice').value) || 0,
-                model: document.getElementById('gameModel').value.trim(),
-                shell: document.getElementById('gameShell').value.trim(),
-                buttons: document.getElementById('gameButtons').value.trim(),
-                label: document.getElementById('gameLabel').value.trim(),
-                battery: document.getElementById('gameBattery').value.trim(),
-                audio: document.getElementById('gameAudio').value.trim(),
-                display: document.getElementById('gameDisplay').value.trim(),
-                led: document.getElementById('gameLed').value.trim(),
-                box: document.getElementById('gameBox').value.trim(),
-                cover: document.getElementById('gameCover').value.trim(),
-                other: document.getElementById('gameOther').value.trim(),
-                createdAt: editingId ? games.find(g => g.id === editingId).createdAt : new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-
-            if (editingId) {
-                const index = games.findIndex(g => g.id === editingId);
-                games[index] = gameData;
-            } else {
-                games.unshift(gameData); // Aggiungi all'inizio
+            if (!isAuthenticated) {
+                showToast('🔒 Accesso non autorizzato', 'error');
+                return;
             }
 
-            saveData();
-            closeModal('formModal');
-            renderGallery();
-            
-            // Toast notification
-            showToast(editingId ? 'Game Boy aggiornato!' : 'Game Boy aggiunto!');
+            showLoading('💾 Salvataggio in corso...');
+
+            try {
+                const gameData = {
+                    id: editingId || Date.now().toString(),
+                    name: document.getElementById('gameName').value.trim(),
+                    category: document.getElementById('gameCategory').value,
+                    image: document.getElementById('gameImage').value,
+                    price: parseFloat(document.getElementById('gamePrice').value) || 0,
+                    model: document.getElementById('gameModel').value.trim(),
+                    shell: document.getElementById('gameShell').value.trim(),
+                    buttons: document.getElementById('gameButtons').value.trim(),
+                    label: document.getElementById('gameLabel').value.trim(),
+                    battery: document.getElementById('gameBattery').value.trim(),
+                    audio: document.getElementById('gameAudio').value.trim(),
+                    display: document.getElementById('gameDisplay').value.trim(),
+                    led: document.getElementById('gameLed').value.trim(),
+                    box: document.getElementById('gameBox').value.trim(),
+                    cover: document.getElementById('gameCover').value.trim(),
+                    other: document.getElementById('gameOther').value.trim(),
+                    createdAt: editingId ? games.find(g => g.id === editingId).createdAt : new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+
+                if (editingId) {
+                    const index = games.findIndex(g => g.id === editingId);
+                    games[index] = gameData;
+                    showToast('✅ Progetto aggiornato con successo!', 'success');
+                } else {
+                    games.unshift(gameData);
+                    showToast('🎉 Nuovo progetto aggiunto!', 'success');
+                }
+
+                saveData();
+                closeModal('formModal');
+                renderGallery();
+                updateStats();
+            } catch (error) {
+                console.error('Errore nel salvataggio:', error);
+                showToast('❌ Errore nel salvataggio', 'error');
+            } finally {
+                hideLoading();
+            }
         }
 
-        // Toast notification
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, var(--accent-secondary), #00cc6a);
-                color: var(--bg-primary);
-                padding: 1rem 1.5rem;
-                border-radius: 10px;
-                font-weight: 600;
-                z-index: 2000;
-                animation: slideIn 0.3s ease;
-            `;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => document.body.removeChild(toast), 300);
-            }, 3000);
-        }
-
-        // Export data
+        // Data export/import
         function exportData() {
+            if (!isAuthenticated) {
+                showToast('🔒 Accedi come admin per esportare', 'error');
+                return;
+            }
+
             if (games.length === 0) {
-                alert('Nessun dato da esportare!');
+                showToast('⚠️ Nessun dato da esportare!', 'error');
                 return;
             }
             
-            const dataStr = JSON.stringify(games, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `retroavia_backup_${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            
-            URL.revokeObjectURL(url);
-            showToast('Dati esportati con successo!');
+            try {
+                const exportData = {
+                    version: '1.0',
+                    timestamp: new Date().toISOString(),
+                    games: games,
+                    stats: {
+                        total: games.length,
+                        byCategory: {
+                            color: games.filter(g => g.category === 'color').length,
+                            advance: games.filter(g => g.category === 'advance').length,
+                            sp: games.filter(g => g.category === 'sp').length
+                        }
+                    }
+                };
+
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `retroavia_backup_${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                showToast('💾 Dati esportati con successo!', 'success');
+            } catch (error) {
+                console.error('Errore esportazione:', error);
+                showToast('❌ Errore durante l\'esportazione', 'error');
+            }
         }
 
-        // Import data
         function importData() {
+            if (!isAuthenticated) {
+                showToast('🔒 Accedi come admin per importare', 'error');
+                return;
+            }
+
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.json';
@@ -1345,34 +1940,61 @@
                 const file = e.target.files[0];
                 if (!file) return;
                 
+                showLoading('📤 Importazione in corso...');
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     try {
-                        const importedGames = JSON.parse(e.target.result);
-                        if (Array.isArray(importedGames)) {
-                            const confirm = window.confirm(
-                                `Trovati ${importedGames.length} Game Boy nel file.\nVuoi sostituire i dati attuali o aggiungerli?`
-                            );
-                            
-                            if (confirm === true) {
-                                games = importedGames;
-                            } else {
-                                // Merge data
-                                importedGames.forEach(game => {
-                                    if (!games.find(g => g.id === game.id)) {
-                                        games.push(game);
-                                    }
-                                });
-                            }
-                            
-                            saveData();
-                            renderGallery();
-                            showToast(`${importedGames.length} Game Boy importati!`);
+                        const importedData = JSON.parse(e.target.result);
+                        let importedGames = [];
+
+                        // Supporta diversi formati
+                        if (Array.isArray(importedData)) {
+                            importedGames = importedData;
+                        } else if (importedData.games && Array.isArray(importedData.games)) {
+                            importedGames = importedData.games;
                         } else {
-                            throw new Error('Formato file non valido');
+                            throw new Error('Formato non riconosciuto');
                         }
+
+                        if (importedGames.length === 0) {
+                            throw new Error('Nessun progetto trovato nel file');
+                        }
+
+                        const action = confirm(
+                            `📤 Trovati ${importedGames.length} progetti nel file.\n\n` +
+                            `Clicca OK per sostituire tutti i dati attuali\n` +
+                            `Clicca Annulla per aggiungere ai progetti esistenti`
+                        );
+                        
+                        if (action === true) {
+                            // Sostituisci
+                            games = importedGames;
+                        } else if (action === false) {
+                            // Merge - evita duplicati
+                            importedGames.forEach(game => {
+                                if (!games.find(g => g.id === game.id)) {
+                                    games.push(game);
+                                }
+                            });
+                        } else {
+                            // Annullato
+                            hideLoading();
+                            return;
+                        }
+                        
+                        // Ordina per data di creazione
+                        games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                        
+                        saveData();
+                        renderGallery();
+                        updateStats();
+                        showToast(`🎉 ${importedGames.length} progetti importati!`, 'success');
                     } catch (error) {
-                        alert('Errore nell\'importazione: file non valido!');
+                        console.error('Errore importazione:', error);
+                        showToast(`❌ Errore nell'importazione: ${error.message}`, 'error');
+                    } finally {
+                        hideLoading();
                     }
                 };
                 reader.readAsText(file);
@@ -1381,7 +2003,55 @@
             input.click();
         }
 
-        // Chiudi modal
+        function clearAllData() {
+            if (!isAuthenticated) {
+                showToast('🔒 Accedi come admin per cancellare', 'error');
+                return;
+            }
+
+            if (games.length === 0) {
+                showToast('ℹ️ Nessun dato da cancellare', 'info');
+                return;
+            }
+
+            const confirmation = prompt(
+                `🚨 ATTENZIONE: Stai per eliminare TUTTI i ${games.length} progetti!\n\n` +
+                `Questa operazione è IRREVERSIBILE!\n\n` +
+                `Per confermare, scrivi: ELIMINA TUTTO`
+            );
+
+            if (confirmation === 'ELIMINA TUTTO') {
+                games = [];
+                saveData();
+                renderGallery();
+                updateStats();
+                showToast('🗑️ Tutti i dati sono stati eliminati', 'success');
+            } else if (confirmation !== null) {
+                showToast('❌ Operazione annullata - testo non corretto', 'error');
+            }
+        }
+
+        // Event handlers
+        function handleOutsideClick(e) {
+            if (e.target.classList.contains('modal') || e.target.classList.contains('form-modal')) {
+                e.target.style.display = 'none';
+            }
+        }
+
+        function handleKeyboardShortcuts(e) {
+            if (e.key === 'Escape') {
+                closeModal('detailModal');
+                closeModal('formModal');
+                closeAuthModal();
+            }
+            
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        }
+
+        // Modal management
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
             if (modalId === 'formModal') {
@@ -1390,19 +2060,29 @@
             }
         }
 
-        // Aggiungi stili per animazioni toast
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
+        // Toast notifications
+        function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                existingToast.remove();
             }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.animation = 'slideOutRight 0.3s ease';
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.remove();
+                        }
+                    }, 300);
+                }
+            }, 4000);
+        }
     </script>
 </body>
 </html>
