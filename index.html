@@ -187,62 +187,55 @@
         }
 
         /* Status e controlli migliorati */
-        .sync-status {
+        /* Admin header controls */
+        .admin-header-controls {
             position: fixed;
             top: 25px;
             right: 25px;
             background: var(--bg-glass);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            color: var(--text-secondary);
-            padding: 0.75rem 1.25rem;
             border-radius: 25px;
-            font-size: 0.85rem;
-            font-weight: 500;
+            padding: 0.75rem 1rem;
             z-index: 1500;
             border: 1px solid var(--border-secondary);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            transition: var(--transition-normal);
+            gap: 1rem;
             box-shadow: 0 8px 25px var(--shadow-primary);
         }
 
-        .sync-status:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px var(--shadow-primary);
+        .admin-header-controls .auth-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
 
-        .sync-status.syncing {
-            color: var(--accent-tertiary);
-            border-color: rgba(255, 170, 0, 0.4);
-            background: linear-gradient(135deg, rgba(255, 170, 0, 0.1), var(--bg-glass));
+        .admin-header-controls .auth-btn {
+            background: linear-gradient(135deg, var(--accent-info), #0088cc);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: var(--transition-bounce);
+            margin: 0;
         }
 
-        .sync-status.synced {
-            color: var(--accent-secondary);
-            border-color: rgba(0, 255, 136, 0.4);
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), var(--bg-glass));
+        .admin-header-controls .auth-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 20px var(--shadow-glow-blue);
         }
 
-        .sync-status.error {
-            color: var(--accent-error);
-            border-color: rgba(255, 68, 68, 0.4);
-            background: linear-gradient(135deg, rgba(255, 68, 68, 0.1), var(--bg-glass));
+        .admin-header-controls .auth-btn.logout {
+            background: var(--gradient-primary);
         }
 
-        .sync-status.local {
-            color: var(--text-muted);
-            border-color: var(--border-secondary);
-        }
-
-        .sync-spinner {
-            width: 14px;
-            height: 14px;
-            border: 2px solid transparent;
-            border-top: 2px solid currentColor;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .admin-header-controls .auth-btn.logout:hover {
+            box-shadow: 0 10px 20px var(--shadow-glow);
         }
 
         @keyframes spin {
@@ -250,72 +243,110 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Sezioni migliorate */
-        .auth-section {
+        /* Controlli ricerca e filtri migliorati */
+        .search-filters-container {
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            padding: 1.5rem;
-            text-align: center;
             border-bottom: 1px solid var(--border-secondary);
-            transition: var(--transition-normal);
+            padding: 1.5rem 2rem;
         }
 
-        .auth-status {
-            display: inline-flex;
+        .search-filters-wrapper {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.5rem;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .filters-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+            min-width: 200px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.25rem 1rem 3.5rem;
+            border: 1px solid var(--border-secondary);
             border-radius: 25px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: var(--transition-normal);
+            background: var(--bg-glass);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition-normal);
+            font-family: inherit;
         }
 
-        .auth-status.logged-out {
-            background: linear-gradient(135deg, rgba(255, 170, 0, 0.15), rgba(255, 170, 0, 0.05));
-            color: var(--accent-tertiary);
-            border: 1px solid rgba(255, 170, 0, 0.3);
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px var(--shadow-glow-soft);
+            background: var(--bg-glass-strong);
         }
 
-        .auth-status.logged-in {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 255, 136, 0.05));
-            color: var(--accent-secondary);
-            border: 1px solid rgba(0, 255, 136, 0.3);
+        .search-input::placeholder {
+            color: var(--text-muted);
         }
 
-        .auth-btn {
-            background: linear-gradient(135deg, var(--accent-info), #0088cc);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 20px;
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: var(--transition-normal);
+        }
+
+        .search-input:focus + .search-icon {
+            color: var(--accent-primary);
+        }
+
+        .sort-dropdown {
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--border-secondary);
+            border-radius: 25px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            font-size: 0.95rem;
             cursor: pointer;
-            font-weight: 600;
-            margin-left: 1.25rem;
+            transition: var(--transition-normal);
+            min-width: 150px;
+        }
+
+        .sort-dropdown:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px var(--shadow-glow-soft);
+        }
+
+        .filter-label {
+            color: var(--text-secondary);
             font-size: 0.9rem;
-            transition: var(--transition-bounce);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .auth-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 30px var(--shadow-glow-blue);
-        }
-
-        .auth-btn:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
-        .auth-btn.logout {
-            background: var(--gradient-primary);
-        }
-
-        .auth-btn.logout:hover {
-            box-shadow: 0 15px 30px var(--shadow-glow);
+            font-weight: 500;
+            white-space: nowrap;
         }
 
         /* Statistiche migliorate */
@@ -539,20 +570,12 @@
             padding: 2.5rem;
         }
 
-        .gallery-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2.5rem;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
-
         .gallery-title {
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-primary);
             position: relative;
+            white-space: nowrap;
         }
 
         .gallery-title::after {
@@ -564,78 +587,6 @@
             height: 3px;
             background: var(--gradient-primary);
             border-radius: 2px;
-        }
-
-        .search-sort-container {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .search-box {
-            position: relative;
-            max-width: 320px;
-            width: 100%;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 1rem 1.25rem 1rem 3.5rem;
-            border: 1px solid var(--border-secondary);
-            border-radius: 25px;
-            background: var(--bg-glass);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: var(--transition-normal);
-            font-family: inherit;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 20px var(--shadow-glow-soft);
-            background: var(--bg-glass-strong);
-        }
-
-        .search-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1.25rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            transition: var(--transition-normal);
-        }
-
-        .search-input:focus + .search-icon {
-            color: var(--accent-primary);
-        }
-
-        .sort-dropdown {
-            padding: 1rem 1.25rem;
-            border: 1px solid var(--border-secondary);
-            border-radius: 25px;
-            background: var(--bg-glass);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: var(--transition-normal);
-            min-width: 150px;
-        }
-
-        .sort-dropdown:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 20px var(--shadow-glow-soft);
         }
 
         /* Cards galleria migliorate */
@@ -1562,7 +1513,7 @@
             100% { background-position: -200% 0; }
         }
 
-        /* Responsive migliorato */
+        /* Responsive migliorato per il nuovo layout */
         @media (max-width: 768px) {
             .header {
                 padding: 2rem 0;
@@ -1570,6 +1521,49 @@
             
             .header h1 {
                 font-size: 2.5rem;
+            }
+
+            .admin-header-controls {
+                top: 15px;
+                right: 15px;
+                padding: 0.5rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .admin-header-controls .auth-status {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .admin-header-controls .auth-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .search-filters-wrapper {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: stretch;
+            }
+
+            .search-section {
+                flex-direction: column;
+                gap: 1rem;
+                max-width: none;
+            }
+
+            .filters-section {
+                justify-content: center;
+            }
+
+            .gallery-title {
+                text-align: center;
+                font-size: 1.5rem;
+            }
+
+            .search-box {
+                max-width: none;
             }
             
             .gallery {
@@ -1607,22 +1601,6 @@
                 gap: 1.5rem;
             }
             
-            .gallery-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 1rem;
-            }
-            
-            .search-sort-container {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .search-box,
-            .sort-dropdown {
-                max-width: 100%;
-            }
-            
             .gallery-nav {
                 width: 45px;
                 height: 45px;
@@ -1642,18 +1620,39 @@
             .btn {
                 width: 100%;
             }
-            
-            .sync-status {
-                top: 15px;
-                right: 15px;
-                padding: 0.5rem 1rem;
-                font-size: 0.8rem;
-            }
         }
 
         @media (max-width: 480px) {
             .gallery-container {
                 padding: 1.5rem;
+            }
+
+            .search-filters-container {
+                padding: 1rem;
+            }
+
+            .search-filters-wrapper {
+                gap: 1rem;
+            }
+
+            .gallery-title {
+                font-size: 1.3rem;
+            }
+
+            .admin-header-controls {
+                top: 10px;
+                right: 10px;
+                padding: 0.4rem;
+            }
+
+            .admin-header-controls .auth-status {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .admin-header-controls .auth-btn {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.6rem;
             }
             
             .modal,
@@ -1686,6 +1685,10 @@
                 right: 20px;
                 left: 20px;
                 max-width: none;
+            }
+
+            .filter-label {
+                display: none;
             }
         }
 
@@ -1737,9 +1740,19 @@
     </style>
 </head>
 <body>
-    <div class="sync-status" id="syncStatus">
+    <div class="sync-status" id="syncStatus" style="display: none;">
         <i class="fas fa-cloud" id="syncIcon"></i>
         <span id="syncText">Inizializzazione...</span>
+    </div>
+
+    <div class="admin-header-controls" id="adminHeaderControls">
+        <div class="auth-status" id="authStatus">
+            <i class="fas fa-lock" id="authIcon"></i>
+            <span id="authText">Modalità Visitatore</span>
+        </div>
+        <button class="auth-btn" id="authButton" onclick="showAuthModal()">
+            <i class="fas fa-sign-in-alt"></i> Accedi Admin
+        </button>
     </div>
 
     <div class="loading" id="loading">
@@ -1767,16 +1780,6 @@
         <h1>RetroAvia</h1>
         <p class="subtitle">Galleria progetti Game Boy personalizzati · Creazioni uniche e modifiche professionali</p>
     </header>
-
-    <div class="auth-section">
-        <div class="auth-status" id="authStatus">
-            <i class="fas fa-lock" id="authIcon"></i>
-            <span id="authText">Modalità Visitatore</span>
-        </div>
-        <button class="auth-btn" id="authButton" onclick="showAuthModal()">
-            <i class="fas fa-sign-in-alt"></i> Accedi Admin
-        </button>
-    </div>
 
     <div class="stats-bar">
         <div class="stats-container">
@@ -1837,14 +1840,17 @@
         </button>
     </div>
 
-    <div class="gallery-container">
-        <div class="gallery-header">
-            <h2 class="gallery-title" id="galleryTitle">Tutti i Progetti</h2>
-            <div class="search-sort-container">
+    <div class="search-filters-container">
+        <div class="search-filters-wrapper">
+            <div class="search-section">
+                <h2 class="gallery-title" id="galleryTitle">Tutti i Progetti</h2>
                 <div class="search-box">
                     <input type="text" class="search-input" id="searchInput" placeholder="Cerca progetti, modelli, componenti...">
                     <i class="fas fa-search search-icon"></i>
                 </div>
+            </div>
+            <div class="filters-section">
+                <span class="filter-label">Ordina per:</span>
                 <select class="sort-dropdown" id="sortDropdown">
                     <option value="date-desc">Più recenti</option>
                     <option value="date-asc">Più vecchi</option>
@@ -1855,6 +1861,9 @@
                 </select>
             </div>
         </div>
+    </div>
+
+    <div class="gallery-container">
         <div class="gallery" id="gallery">
             <div class="empty-state">
                 <i class="fas fa-gamepad"></i>
@@ -2193,6 +2202,15 @@
                 return false;
             },
 
+            getErrorMessage: (error) => {
+                if (typeof error === 'string') return error;
+                if (error.message) return error.message;
+                if (error.error_description) return error.error_description;
+                if (error.details) return error.details;
+                if (error.hint) return error.hint;
+                return 'Errore sconosciuto';
+            },
+
             syncToCloud: async (notify = false) => {
                 if (!STATE.cloudSyncEnabled || !STATE.supabase) {
                     UI.updateSyncStatus('local', 'Locale');
@@ -2250,10 +2268,11 @@
                     
                     return true;
                 } catch (error) {
-                    console.error('Errore sync cloud:', error);
+                    const errorMsg = SupabaseManager.getErrorMessage(error);
+                    console.error('Errore sync cloud:', errorMsg, error);
                     UI.updateSyncStatus('error', 'Errore sync');
                     if (notify) {
-                        UI.showToast('Errore durante la sincronizzazione', 'error');
+                        UI.showToast(`Errore sincronizzazione: ${errorMsg}`, 'error');
                     }
                     return false;
                 }
@@ -2312,7 +2331,8 @@
                     
                     return true;
                 } catch (error) {
-                    console.error('Errore caricamento cloud:', error);
+                    const errorMsg = SupabaseManager.getErrorMessage(error);
+                    console.error('Errore caricamento cloud:', errorMsg, error);
                     UI.updateSyncStatus('error', 'Errore caricamento');
                     return false;
                 }
@@ -2422,6 +2442,9 @@
                 
                 if (!syncStatus || !syncIcon || !syncText) return;
                 
+                // Mostra sync status solo per admin
+                syncStatus.style.display = STATE.isAuthenticated ? 'flex' : 'none';
+                
                 syncStatus.className = `sync-status ${status}`;
                 syncText.textContent = text;
                 
@@ -2449,7 +2472,8 @@
                     authButton: document.getElementById('authButton'),
                     authIcon: document.getElementById('authIcon'),
                     authText: document.getElementById('authText'),
-                    adminControls: document.getElementById('adminControls')
+                    adminControls: document.getElementById('adminControls'),
+                    syncStatus: document.getElementById('syncStatus')
                 };
 
                 if (STATE.isAuthenticated) {
@@ -2459,6 +2483,7 @@
                     elements.authButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Disconnetti';
                     elements.authButton.className = 'auth-btn logout';
                     elements.adminControls.classList.add('show');
+                    elements.syncStatus.style.display = 'flex';
                 } else {
                     elements.authStatus.className = 'auth-status logged-out';
                     elements.authIcon.className = 'fas fa-lock';
@@ -2466,6 +2491,7 @@
                     elements.authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Accedi Admin';
                     elements.authButton.className = 'auth-btn';
                     elements.adminControls.classList.remove('show');
+                    elements.syncStatus.style.display = 'none';
                 }
             },
 
@@ -2547,14 +2573,14 @@
                     
                     return `
                         <div class="game-card" 
-                             onclick="UI.showDetails('${game.id}')" 
+                             onclick="showDetails('${game.id}')" 
                              style="--i: ${index}; animation-delay: ${index * 0.05}s">
                             ${STATE.editMode ? `
                                 <div class="edit-controls">
-                                    <button class="edit-btn" onclick="event.stopPropagation(); UI.editGame('${game.id}')" title="Modifica progetto">
+                                    <button class="edit-btn" onclick="event.stopPropagation(); editGame('${game.id}')" title="Modifica progetto">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="edit-btn delete" onclick="event.stopPropagation(); UI.deleteGame('${game.id}')" title="Elimina progetto">
+                                    <button class="edit-btn delete" onclick="event.stopPropagation(); deleteGame('${game.id}')" title="Elimina progetto">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -2660,7 +2686,7 @@
                 if (indicators && showControls) {
                     indicators.innerHTML = STATE.currentGameImages.map((_, index) => `
                         <div class="gallery-dot ${index === STATE.currentSlide ? 'active' : ''}" 
-                             onclick="UI.goToSlide(${index})" title="Vai all'immagine ${index + 1}"></div>
+                             onclick="goToSlide(${index})" title="Vai all'immagine ${index + 1}"></div>
                     `).join('');
                 }
             },
@@ -3403,7 +3429,7 @@
             }
         };
 
-        // Global functions per HTML onclick - ESSENZIALI
+        // Global functions per HTML onclick - CORREZIONI CRITICHE
         window.showAuthModal = AuthManager.showModal;
         window.closeAuthModal = AuthManager.closeModal;
         window.authenticate = AuthManager.authenticate;
@@ -3423,8 +3449,20 @@
         window.changeSlide = UI.changeSlide;
         window.goToSlide = UI.goToSlide;
         window.showDetails = UI.showDetails;
-        window.editGame = FormManager.editGame;
-        window.deleteGame = AdminManager.deleteGame;
+        window.editGame = (id) => {
+            if (!STATE.isAuthenticated) {
+                UI.showToast('Accesso amministratore richiesto', 'error');
+                return;
+            }
+            FormManager.editGame(id);
+        };
+        window.deleteGame = (id) => {
+            if (!STATE.isAuthenticated) {
+                UI.showToast('Accesso amministratore richiesto', 'error');
+                return;
+            }
+            AdminManager.deleteGame(id);
+        };
         window.removeImage = FormManager.removeImage;
 
         // Inizializzazione app
