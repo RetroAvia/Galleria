@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RetroAvia - Gallery Game Boy 🎮</title>
+    <title>RetroAvia - Gallery Game Boy</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         :root {
             --bg-primary: #0a0a0a;
@@ -40,7 +42,6 @@
             overflow-x: hidden;
         }
 
-        /* Animated background */
         body::before {
             content: '';
             position: fixed;
@@ -62,7 +63,6 @@
             100% { opacity: 1; }
         }
 
-        /* Header */
         .header {
             background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(26, 26, 26, 0.95) 100%);
             backdrop-filter: blur(20px);
@@ -113,11 +113,10 @@
             margin: 0 auto;
         }
 
-        /* Sync Status */
         .sync-status {
             position: fixed;
             top: 20px;
-            left: 20px;
+            right: 20px;
             background: rgba(0, 0, 0, 0.8);
             color: var(--text-secondary);
             padding: 0.5rem 1rem;
@@ -149,7 +148,7 @@
         }
 
         .sync-status.local {
-            color: var(--text-secondary);
+            color: var(--text-muted);
             border-color: var(--border-color);
         }
 
@@ -162,7 +161,6 @@
             animation: spin 1s linear infinite;
         }
 
-        /* Auth Section */
         .auth-section {
             background: rgba(17, 17, 17, 0.9);
             padding: 1rem;
@@ -214,7 +212,6 @@
             background: linear-gradient(135deg, var(--accent-primary), #cc0040);
         }
 
-        /* Navigation */
         .nav-container {
             padding: 1.5rem;
             background: rgba(17, 17, 17, 0.8);
@@ -245,21 +242,6 @@
             overflow: hidden;
         }
 
-        .nav-tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .nav-tab:hover::before {
-            left: 100%;
-        }
-
         .nav-tab:hover {
             border-color: var(--accent-primary);
             transform: translateY(-2px);
@@ -273,7 +255,6 @@
             box-shadow: 0 0 20px var(--shadow-glow);
         }
 
-        /* Stats Bar */
         .stats-bar {
             background: rgba(26, 26, 26, 0.8);
             padding: 1rem;
@@ -309,16 +290,16 @@
             letter-spacing: 0.5px;
         }
 
-        /* Admin Controls */
         .admin-controls {
             padding: 2rem;
             text-align: center;
             background: rgba(17, 17, 17, 0.5);
             border-bottom: 1px solid var(--border-color);
+            display: none;
         }
 
-        .admin-controls.hidden {
-            display: none;
+        .admin-controls.show {
+            display: block;
         }
 
         .admin-btn {
@@ -361,7 +342,6 @@
             background: linear-gradient(135deg, var(--accent-info), #0088cc);
         }
 
-        /* Gallery */
         .gallery-container {
             max-width: 1600px;
             margin: 0 auto;
@@ -433,26 +413,6 @@
             backdrop-filter: blur(10px);
         }
 
-        .game-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 20px;
-            padding: 1px;
-            background: linear-gradient(135deg, transparent, var(--accent-primary), transparent);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .game-card:hover::before {
-            opacity: 1;
-        }
-
         .game-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 
@@ -488,21 +448,6 @@
             font-size: 4rem;
             color: var(--text-muted);
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-        }
-
-        .game-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .game-card:hover .game-overlay {
-            opacity: 1;
         }
 
         .image-indicator {
@@ -589,7 +534,6 @@
             backdrop-filter: blur(10px);
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -648,7 +592,6 @@
             color: white;
         }
 
-        /* Image Gallery in Modal */
         .modal-gallery {
             position: relative;
             width: 100%;
@@ -814,7 +757,6 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Form Modal */
         .form-modal {
             display: none;
             position: fixed;
@@ -896,7 +838,6 @@
             background: rgba(0, 0, 0, 0.7);
         }
 
-        /* Multiple Images Upload */
         .images-upload-container {
             border: 2px dashed var(--border-color);
             border-radius: 12px;
@@ -1010,24 +951,6 @@
             overflow: hidden;
         }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s ease, height 0.3s ease;
-        }
-
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
         .btn-primary {
             background: linear-gradient(135deg, var(--accent-primary), #cc0040);
             color: white;
@@ -1049,7 +972,6 @@
             color: var(--text-primary);
         }
 
-        /* Empty state */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -1073,7 +995,6 @@
             font-size: 1.1rem;
         }
 
-        /* Loading state */
         .loading {
             position: fixed;
             top: 0;
@@ -1108,7 +1029,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Auth Modal */
         .auth-modal {
             display: none;
             position: fixed;
@@ -1155,7 +1075,6 @@
             box-shadow: 0 0 15px var(--shadow-glow);
         }
 
-        /* Toast */
         .toast {
             position: fixed;
             top: 20px;
@@ -1188,111 +1107,47 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
-            }
-            
-            .gallery {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .modal-content,
-            .form-content {
-                margin: 1rem;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-tabs {
-                flex-direction: column;
-            }
-            
-            .admin-btn {
-                display: block;
-                width: 100%;
-                max-width: 250px;
-                margin: 0.5rem auto;
-            }
-
-            .stats-container {
-                gap: 1rem;
-            }
-
-            .gallery-header {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .search-box {
-                max-width: 100%;
-            }
-
-            .sync-status {
-                position: relative;
-                top: auto;
-                left: auto;
-                margin-bottom: 1rem;
-            }
-
-            .gallery-nav {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-
-            .images-preview {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            }
+            .header h1 { font-size: 2.5rem; }
+            .gallery { grid-template-columns: 1fr; gap: 1.5rem; }
+            .modal-content, .form-content { margin: 1rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .nav-tabs { flex-direction: column; }
+            .admin-btn { display: block; width: 100%; max-width: 250px; margin: 0.5rem auto; }
+            .stats-container { gap: 1rem; }
+            .gallery-header { flex-direction: column; text-align: center; }
+            .search-box { max-width: 100%; }
+            .gallery-nav { width: 40px; height: 40px; font-size: 1rem; }
+            .images-preview { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
         }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-        }
-
-        ::-webkit-scrollbar-thumb {
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { 
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             border-radius: 4px;
         }
-
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(135deg, #cc0040, #00cc6a);
         }
     </style>
 </head>
 <body>
-    <!-- Sync Status -->
     <div class="sync-status" id="syncStatus">
         <i class="fas fa-cloud" id="syncIcon"></i>
-        <span id="syncText">Locale</span>
+        <span id="syncText">Inizializzazione...</span>
     </div>
 
-    <!-- Loading Overlay -->
     <div class="loading" id="loading">
         <div class="spinner"></div>
-        <div class="loading-text">Caricamento in corso...</div>
+        <div class="loading-text">Caricamento...</div>
     </div>
 
-    <!-- Auth Modal -->
     <div class="auth-modal" id="authModal">
         <div class="auth-content">
-            <h3>🔐 Accesso Admin</h3>
-            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Inserisci la password per accedere alle funzioni di modifica</p>
-            <input type="password" id="authPassword" placeholder="Password Admin" autocomplete="current-password">
+            <h3>Accesso Admin</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Inserisci la password per accedere</p>
+            <input type="password" id="authPassword" placeholder="Password">
             <div style="display: flex; gap: 1rem; margin-top: 1rem;">
                 <button class="btn btn-secondary" onclick="closeAuthModal()">Annulla</button>
                 <button class="btn btn-primary" onclick="authenticate()">Accedi</button>
@@ -1301,8 +1156,8 @@
     </div>
 
     <header class="header">
-        <h1>RetroAvia 🎮</h1>
-        <p class="subtitle">Galleria dei miei lavori personalizzati - Trova ispirazione per il tuo prossimo Game Boy modificato</p>
+        <h1>RetroAvia</h1>
+        <p class="subtitle">Galleria progetti Game Boy personalizzati</p>
     </header>
 
     <div class="auth-section">
@@ -1319,19 +1174,19 @@
         <div class="stats-container">
             <div class="stat-item">
                 <div class="stat-number" id="totalGames">0</div>
-                <div class="stat-label">🎮 Totale Progetti</div>
+                <div class="stat-label">Totale Progetti</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number" id="colorGames">0</div>
-                <div class="stat-label">🌈 Game Boy Color</div>
+                <div class="stat-label">Game Boy Color</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number" id="advanceGames">0</div>
-                <div class="stat-label">📱 Game Boy Advance</div>
+                <div class="stat-label">Game Boy Advance</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number" id="spGames">0</div>
-                <div class="stat-label">💻 Game Boy Advance SP</div>
+                <div class="stat-label">Game Boy Advance SP</div>
             </div>
         </div>
     </div>
@@ -1353,30 +1208,30 @@
         </nav>
     </div>
 
-    <div class="admin-controls hidden" id="adminControls">
+    <div class="admin-controls" id="adminControls">
         <button class="admin-btn" onclick="openAddModal()">
-            <i class="fas fa-plus"></i> 🎮 Aggiungi Progetto
+            <i class="fas fa-plus"></i> Aggiungi Progetto
         </button>
         <button class="admin-btn" id="editModeBtn" onclick="toggleEditMode()">
-            <i class="fas fa-edit"></i> ✏️ Modalità Modifica
+            <i class="fas fa-edit"></i> Modalità Modifica
         </button>
         <button class="admin-btn sync" onclick="forceSyncData()">
-            <i class="fas fa-sync-alt"></i> ☁️ Sincronizza Cloud
+            <i class="fas fa-sync-alt"></i> Sincronizza
         </button>
         <button class="admin-btn export" onclick="exportData()">
-            <i class="fas fa-download"></i> 💾 Esporta Dati
+            <i class="fas fa-download"></i> Esporta
         </button>
         <button class="admin-btn import" onclick="importData()">
-            <i class="fas fa-upload"></i> 📤 Importa Dati
+            <i class="fas fa-upload"></i> Importa
         </button>
         <button class="admin-btn clear" onclick="clearAllData()">
-            <i class="fas fa-trash-alt"></i> 🗑️ Cancella Tutto
+            <i class="fas fa-trash-alt"></i> Cancella Tutto
         </button>
     </div>
 
     <div class="gallery-container">
         <div class="gallery-header">
-            <h2 class="gallery-title" id="galleryTitle">🎮 Tutti i Progetti</h2>
+            <h2 class="gallery-title" id="galleryTitle">Tutti i Progetti</h2>
             <div class="search-box">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" class="search-input" id="searchInput" placeholder="Cerca progetti...">
@@ -1385,13 +1240,12 @@
         <div class="gallery" id="gallery">
             <div class="empty-state">
                 <i class="fas fa-gamepad"></i>
-                <h3>Nessun progetto ancora aggiunto</h3>
-                <p>I progetti RetroAvia appariranno qui una volta aggiunti</p>
+                <h3>Nessun progetto</h3>
+                <p>I progetti RetroAvia appariranno qui</p>
             </div>
         </div>
     </div>
 
-    <!-- Modal Dettagli -->
     <div class="modal" id="detailModal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal('detailModal')">
@@ -1415,48 +1269,44 @@
                 <div class="gallery-indicators" id="galleryIndicators"></div>
             </div>
             <div class="modal-info">
-                <h2 class="modal-title" id="modalTitle">Titolo Progetto</h2>
-                <div class="spec-grid" id="specGrid">
-                    <!-- Specifiche verranno inserite dinamicamente -->
-                </div>
+                <h2 class="modal-title" id="modalTitle">Progetto</h2>
+                <div class="spec-grid" id="specGrid"></div>
                 <div class="modal-price" id="modalPrice">€ 0</div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Form -->
     <div class="form-modal" id="formModal">
         <div class="form-content">
             <span class="modal-close" onclick="closeModal('formModal')">
                 <i class="fas fa-times"></i>
             </span>
-            <h2 class="form-title" id="formTitle">🎮 Aggiungi Progetto</h2>
+            <h2 class="form-title" id="formTitle">Aggiungi Progetto</h2>
             <form id="gameForm">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="gameName"><i class="fas fa-tag"></i> Nome Progetto</label>
-                        <input type="text" id="gameName" required placeholder="Es. Game Boy Color Pikachu Edition">
+                        <label for="gameName">Nome Progetto</label>
+                        <input type="text" id="gameName" required placeholder="Game Boy Color Custom">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="gameCategory"><i class="fas fa-list"></i> Categoria</label>
+                        <label for="gameCategory">Categoria</label>
                         <select id="gameCategory" required>
                             <option value="">Seleziona categoria</option>
-                            <option value="color">🌈 Game Boy Color</option>
-                            <option value="advance">📱 Game Boy Advance</option>
-                            <option value="sp">💻 Game Boy Advance SP</option>
+                            <option value="color">Game Boy Color</option>
+                            <option value="advance">Game Boy Advance</option>
+                            <option value="sp">Game Boy Advance SP</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="gameImages"><i class="fas fa-images"></i> Immagini Progetto (Max 10)</label>
+                    <label for="gameImages">Immagini (Max 10)</label>
                     <div class="images-upload-container" id="imagesUploadContainer">
                         <input type="file" id="gameImages" class="images-input" accept="image/*" multiple>
                         <div class="upload-placeholder" id="uploadPlaceholder">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            <div><strong>Clicca o trascina per caricare immagini</strong></div>
-                            <small>JPG, PNG, GIF - Max 10 immagini (5MB ciascuna)</small>
+                            <div><strong>Carica immagini</strong></div>
+                            <small>JPG, PNG, GIF - Max 10 immagini</small>
                         </div>
                         <div class="images-preview" id="imagesPreview"></div>
                         <div class="image-count" id="imageCount">0 / 10 immagini</div>
@@ -1465,72 +1315,58 @@
 
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="gamePrice"><i class="fas fa-euro-sign"></i> Prezzo Realizzazione</label>
+                        <label for="gamePrice">Prezzo</label>
                         <input type="number" id="gamePrice" step="0.01" required placeholder="120.00">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="gameModel"><i class="fas fa-microchip"></i> Modello Base</label>
-                        <input type="text" id="gameModel" required placeholder="Es. CGB-001">
+                        <label for="gameModel">Modello Base</label>
+                        <input type="text" id="gameModel" required placeholder="CGB-001">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="gameShell"><i class="fas fa-mobile-alt"></i> Scocca</label>
-                        <input type="text" id="gameShell" placeholder="Es. Trasparente fumé custom">
+                        <label for="gameShell">Scocca</label>
+                        <input type="text" id="gameShell" placeholder="Trasparente custom">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="gameButtons"><i class="fas fa-circle"></i> Pulsanti</label>
-                        <input type="text" id="gameButtons" placeholder="Es. Custom colorati">
+                        <label for="gameButtons">Pulsanti</label>
+                        <input type="text" id="gameButtons" placeholder="Custom colorati">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="gameLabel"><i class="fas fa-tag"></i> Etichetta</label>
-                        <input type="text" id="gameLabel" placeholder="Es. Olografica personalizzata">
+                        <label for="gameLabel">Etichetta</label>
+                        <input type="text" id="gameLabel" placeholder="Personalizzata">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="gameBattery"><i class="fas fa-battery-full"></i> Batteria</label>
-                        <input type="text" id="gameBattery" placeholder="Es. Li-ion 1200mAh estesa">
+                        <label for="gameBattery">Batteria</label>
+                        <input type="text" id="gameBattery" placeholder="Li-ion 1200mAh">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="gameAudio"><i class="fas fa-volume-up"></i> Audio</label>
-                        <input type="text" id="gameAudio" placeholder="Es. Speaker potenziato + jack 3.5mm">
+                        <label for="gameAudio">Audio</label>
+                        <input type="text" id="gameAudio" placeholder="Speaker + jack 3.5mm">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="gameDisplay"><i class="fas fa-tv"></i> Display</label>
-                        <input type="text" id="gameDisplay" placeholder="Es. IPS V2 con controllo luminosità">
+                        <label for="gameDisplay">Display</label>
+                        <input type="text" id="gameDisplay" placeholder="IPS V2">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="gameLed"><i class="fas fa-lightbulb"></i> Kit LED</label>
-                        <input type="text" id="gameLed" placeholder="Es. RGB programmabile">
+                        <label for="gameLed">Kit LED</label>
+                        <input type="text" id="gameLed" placeholder="RGB programmabile">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="gameBox"><i class="fas fa-box"></i> Accessori</label>
-                        <input type="text" id="gameBox" placeholder="Es. Box originale restaurato">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="gameCover"><i class="fas fa-shield-alt"></i> Protezioni</label>
-                        <input type="text" id="gameCover" placeholder="Es. Cover protettiva trasparente">
+                        <label for="gameBox">Accessori</label>
+                        <input type="text" id="gameBox" placeholder="Box originale">
                     </div>
                 </div>
                 
                 <div class="form-group full-width">
-                    <label for="gameOther"><i class="fas fa-plus-circle"></i> Note e Modifiche Extra</label>
-                    <textarea id="gameOther" rows="3" placeholder="Descrivi modifiche speciali, personalizzazioni uniche, dettagli tecnici..."></textarea>
+                    <label for="gameOther">Note Extra</label>
+                    <textarea id="gameOther" rows="3" placeholder="Modifiche speciali, personalizzazioni..."></textarea>
                 </div>
                 
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('formModal')">
-                        <i class="fas fa-times"></i> Annulla
+                        Annulla
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> 💾 Salva Progetto
+                        Salva Progetto
                     </button>
                 </div>
             </form>
@@ -1538,20 +1374,15 @@
     </div>
 
     <script>
-        // Configurazione
+        // Configuration
         const ADMIN_PASSWORD = 'RetroAvia2024!';
-        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+        const MAX_FILE_SIZE = 5 * 1024 * 1024;
         const MAX_IMAGES = 10;
-        
-        // Supabase configuration
-        let CLOUD_SYNC_ENABLED = true;
         const SUPABASE_URL = 'https://moenkmmkpogjapsyiuat.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vZW5rbW1rcG9namFwc3lpdWF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0OTYyMTYsImV4cCI6MjA3MjA3MjIxNn0.RdFnDxJVIgESel9I6s84KRR3F6yPFL7rk0ycFP_q0pg';
         
-        // Initialize Supabase client - wait for the script to load
+        // Global variables
         let supabase = null;
-        
-        // Variabili globali - dichiarate tutte insieme
         let games = [];
         let editMode = false;
         let currentCategory = 'all';
@@ -1561,166 +1392,112 @@
         let currentSlide = 0;
         let currentGameImages = [];
         let uploadedImages = [];
+        let CLOUD_SYNC_ENABLED = true;
 
-        // Initialize Supabase when window loads
+        // Initialize Supabase
         function initSupabase() {
-            if (typeof window.supabase !== 'undefined') {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                console.log('✅ Supabase initialized successfully');
-                return true;
-            } else {
-                console.error('❌ Supabase SDK not loaded');
+            try {
+                if (window.supabase && window.supabase.createClient) {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                    return true;
+                }
+            } catch (error) {
                 return false;
             }
+            return false;
         }
 
-        // Inizializzazione
+        // Initialize app
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize app with retry logic for Supabase
-            let retries = 0;
-            const maxRetries = 5;
+            updateSyncStatus('syncing', 'Inizializzazione...');
             
-            function tryInitialize() {
-                if (typeof window.supabase !== 'undefined') {
-                    if (initSupabase()) {
-                        initializeApp();
-                        return;
-                    }
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            const tryInit = () => {
+                attempts++;
+                if (initSupabase()) {
+                    initializeApp();
+                    return;
                 }
                 
-                retries++;
-                if (retries < maxRetries) {
-                    setTimeout(tryInitialize, 200 * retries); // Increasing delay
+                if (attempts < maxAttempts) {
+                    setTimeout(tryInit, 200);
                 } else {
-                    console.warn('⚠️ Supabase failed to load after retries, running in local mode');
                     CLOUD_SYNC_ENABLED = false;
                     initializeApp();
                 }
-            }
+            };
             
-            tryInitialize();
+            setTimeout(tryInit, 100);
         });
 
         function initializeApp() {
-            loadData();
+            loadDataLocal();
             setupEventListeners();
             updateStats();
             updateAuthUI();
             
-            // Only sync from cloud if enabled and supabase is available
             if (CLOUD_SYNC_ENABLED && supabase) {
-                syncFromCloud(); 
+                syncFromCloud();
             } else {
-                updateSyncStatus('local', 'Solo Locale');
+                updateSyncStatus('local', 'Locale');
             }
         }
 
-        // Supabase Sync Functions
-        async function syncToCloud(showNotifications = true) {
-            if (!CLOUD_SYNC_ENABLED || !supabase) {
-                if (showNotifications) {
-                    showToast('ℹ️ Sincronizzazione cloud non disponibile', 'info');
-                }
-                updateSyncStatus('local', 'Solo Locale');
-                return;
-            }
+        // Setup event listeners
+        function setupEventListeners() {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchCategory(tab.dataset.category, tab));
+            });
 
-            if (games.length === 0) {
-                if (showNotifications) updateSyncStatus('synced', 'Nessun dato da sincronizzare');
-                return;
+            document.getElementById('gameForm').addEventListener('submit', handleFormSubmit);
+            document.getElementById('gameImages').addEventListener('change', handleImagesSelect);
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            document.getElementById('authPassword').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') authenticate();
+            });
+            
+            const uploadContainer = document.getElementById('imagesUploadContainer');
+            uploadContainer.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.currentTarget.classList.add('dragover');
+            });
+            uploadContainer.addEventListener('dragleave', (e) => {
+                e.currentTarget.classList.remove('dragover');
+            });
+            uploadContainer.addEventListener('drop', handleImagesDrop);
+
+            window.addEventListener('click', handleOutsideClick);
+            document.addEventListener('keydown', handleKeyboard);
+        }
+
+        // Sync functions
+        async function syncToCloud(notify = false) {
+            if (!CLOUD_SYNC_ENABLED || !supabase) {
+                updateSyncStatus('local', 'Locale');
+                return false;
             }
 
             try {
                 updateSyncStatus('syncing', 'Sincronizzazione...');
                 
-                // Clear existing data and insert all games
                 const { error: deleteError } = await supabase
                     .from('games')
                     .delete()
-                    .neq('id', 'impossible_id'); // Delete all rows
+                    .neq('id', 'none');
 
-                if (deleteError && !deleteError.message.includes('No rows found')) {
+                if (deleteError && !deleteError.message.includes('No rows')) {
                     throw deleteError;
                 }
 
-                // Insert all games
-                const gamesForSupabase = games.map(game => ({
-                    id: game.id,
-                    name: game.name,
-                    category: game.category,
-                    images: game.images || [],
-                    price: game.price,
-                    model: game.model || '',
-                    shell: game.shell || '',
-                    buttons: game.buttons || '',
-                    label: game.label || '',
-                    battery: game.battery || '',
-                    audio: game.audio || '',
-                    display: game.display || '',
-                    led: game.led || '',
-                    box: game.box || '',
-                    cover: game.cover || '',
-                    other: game.other || '',
-                    created_at: game.createdAt,
-                    updated_at: game.updatedAt
-                }));
-
-                const { error: insertError } = await supabase
-                    .from('games')
-                    .insert(gamesForSupabase);
-
-                if (insertError) throw insertError;
-
-                localStorage.setItem('retroavia_last_sync', new Date().toISOString());
-                updateSyncStatus('synced', 'Sincronizzato');
-                if (showNotifications) showToast('☁️ Dati sincronizzati su Supabase!', 'success');
-            } catch (error) {
-                console.error('Errore sync to Supabase:', error);
-                updateSyncStatus('error', 'Errore sync');
-                if (showNotifications) {
-                    if (error.message.includes('relation "games" does not exist')) {
-                        showToast('⚠️ Tabella "games" non trovata su Supabase. Creala prima!', 'error');
-                    } else {
-                        showToast(`⚠️ Errore sincronizzazione: ${error.message}`, 'error');
-                    }
-                }
-            }
-        }
-
-        async function syncFromCloud(showNotifications = false) {
-            if (!CLOUD_SYNC_ENABLED || !supabase) {
-                updateSyncStatus('local', 'Solo Locale');
-                return;
-            }
-
-            try {
-                updateSyncStatus('syncing', 'Caricamento...');
-                
-                // Fetch all games from Supabase
-                const { data: cloudGames, error } = await supabase
-                    .from('games')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (error) {
-                    if (error.message.includes('relation "games" does not exist')) {
-                        updateSyncStatus('error', 'Tabella mancante');
-                        if (showNotifications) {
-                            showToast('⚠️ Tabella "games" non esiste su Supabase. Creala prima!', 'error');
-                        }
-                        return;
-                    }
-                    throw error;
-                }
-
-                if (cloudGames && cloudGames.length > 0) {
-                    // Convert Supabase format back to app format
-                    const convertedGames = cloudGames.map(game => ({
+                if (games.length > 0) {
+                    const gamesData = games.map(game => ({
                         id: game.id,
                         name: game.name,
                         category: game.category,
                         images: game.images || [],
-                        price: game.price,
+                        price: parseFloat(game.price) || 0,
                         model: game.model || '',
                         shell: game.shell || '',
                         buttons: game.buttons || '',
@@ -1730,38 +1507,89 @@
                         display: game.display || '',
                         led: game.led || '',
                         box: game.box || '',
-                        cover: game.cover || '',
+                        other: game.other || '',
+                        created_at: game.createdAt,
+                        updated_at: game.updatedAt || new Date().toISOString()
+                    }));
+
+                    const { error: insertError } = await supabase
+                        .from('games')
+                        .insert(gamesData);
+
+                    if (insertError) throw insertError;
+                }
+
+                localStorage.setItem('retroavia_last_sync', new Date().toISOString());
+                updateSyncStatus('synced', `Sincronizzato (${games.length})`);
+                
+                if (notify) {
+                    showToast('Sincronizzazione completata', 'success');
+                }
+                
+                return true;
+            } catch (error) {
+                updateSyncStatus('error', 'Errore sync');
+                if (notify) {
+                    showToast('Errore sincronizzazione', 'error');
+                }
+                return false;
+            }
+        }
+
+        async function syncFromCloud() {
+            if (!CLOUD_SYNC_ENABLED || !supabase) {
+                updateSyncStatus('local', 'Locale');
+                return false;
+            }
+
+            try {
+                updateSyncStatus('syncing', 'Caricamento...');
+                
+                const { data: cloudGames, error } = await supabase
+                    .from('games')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (cloudGames && cloudGames.length > 0) {
+                    const convertedGames = cloudGames.map(game => ({
+                        id: game.id,
+                        name: game.name,
+                        category: game.category,
+                        images: Array.isArray(game.images) ? game.images : [],
+                        price: parseFloat(game.price) || 0,
+                        model: game.model || '',
+                        shell: game.shell || '',
+                        buttons: game.buttons || '',
+                        label: game.label || '',
+                        battery: game.battery || '',
+                        audio: game.audio || '',
+                        display: game.display || '',
+                        led: game.led || '',
+                        box: game.box || '',
                         other: game.other || '',
                         createdAt: game.created_at,
                         updatedAt: game.updated_at
                     }));
 
-                    // Update local games if cloud has data or local is empty
                     if (games.length === 0 || convertedGames.length > games.length) {
                         games = convertedGames;
                         saveDataLocal();
                         renderGallery();
                         updateStats();
-                        
-                        localStorage.setItem('retroavia_last_sync', new Date().toISOString());
-                        updateSyncStatus('synced', 'Sincronizzato');
-                        
-                        if (showNotifications && games.length > 0) {
-                            showToast(`☁️ ${games.length} progetti caricati da Supabase!`, 'success');
-                        }
-                    } else {
-                        updateSyncStatus('synced', 'Aggiornato');
                     }
+                    
+                    localStorage.setItem('retroavia_last_sync', new Date().toISOString());
+                    updateSyncStatus('synced', `Caricato (${games.length})`);
                 } else {
                     updateSyncStatus('synced', 'Cloud vuoto');
                 }
+                
+                return true;
             } catch (error) {
-                console.error('Errore sync from Supabase:', error);
-                updateSyncStatus('error', `Errore: ${error.message}`);
-                // In caso di errore, usa i dati locali
-                if (games.length === 0) {
-                    loadDataLocal();
-                }
+                updateSyncStatus('error', 'Errore caricamento');
+                return false;
             }
         }
 
@@ -1785,149 +1613,618 @@
                     break;
                 case 'local':
                     syncIcon.className = 'fas fa-hard-drive';
-                    syncStatus.className = 'sync-status local';
                     break;
                 default:
                     syncIcon.className = 'fas fa-cloud';
             }
         }
 
-        async function forceSyncData() {
+        // Global functions for HTML onclick
+        window.showAuthModal = () => {
+            if (isAuthenticated) {
+                logout();
+            } else {
+                document.getElementById('authModal').style.display = 'flex';
+                document.getElementById('authPassword').focus();
+            }
+        };
+
+        window.closeAuthModal = () => {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('authPassword').value = '';
+        };
+
+        window.authenticate = () => {
+            const password = document.getElementById('authPassword');
+            if (password.value === ADMIN_PASSWORD) {
+                isAuthenticated = true;
+                updateAuthUI();
+                closeAuthModal();
+                showToast('Accesso effettuato', 'success');
+                if (CLOUD_SYNC_ENABLED && supabase) {
+                    syncFromCloud();
+                }
+            } else {
+                showToast('Password errata', 'error');
+                password.value = '';
+                password.focus();
+            }
+        };
+
+        function logout() {
+            isAuthenticated = false;
+            editMode = false;
+            updateAuthUI();
+            renderGallery();
+            showToast('Disconnesso', 'info');
+        }
+
+        function updateAuthUI() {
+            const authStatus = document.getElementById('authStatus');
+            const authButton = document.getElementById('authButton');
+            const authIcon = document.getElementById('authIcon');
+            const authText = document.getElementById('authText');
+            const adminControls = document.getElementById('adminControls');
+
+            if (isAuthenticated) {
+                authStatus.className = 'auth-status logged-in';
+                authIcon.className = 'fas fa-unlock';
+                authText.textContent = 'Modalità Admin';
+                authButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Disconnetti';
+                authButton.className = 'auth-btn logout';
+                adminControls.classList.add('show');
+            } else {
+                authStatus.className = 'auth-status logged-out';
+                authIcon.className = 'fas fa-lock';
+                authText.textContent = 'Modalità Visitatore';
+                authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Accedi Admin';
+                authButton.className = 'auth-btn';
+                adminControls.classList.remove('show');
+            }
+        }
+
+        // Admin functions
+        window.openAddModal = () => {
             if (!isAuthenticated) {
-                showToast('🔒 Accedi come admin per sincronizzare', 'error');
+                showToast('Accesso richiesto', 'error');
+                return;
+            }
+            editingId = null;
+            document.getElementById('formTitle').textContent = 'Aggiungi Progetto';
+            resetForm();
+            document.getElementById('formModal').style.display = 'block';
+        };
+
+        window.toggleEditMode = () => {
+            if (!isAuthenticated) {
+                showToast('Accesso richiesto', 'error');
+                return;
+            }
+            editMode = !editMode;
+            const btn = document.getElementById('editModeBtn');
+            if (editMode) {
+                btn.innerHTML = '<i class="fas fa-times"></i> Esci Modifica';
+                btn.classList.add('edit-mode');
+                showToast('Modalità modifica attiva', 'info');
+            } else {
+                btn.innerHTML = '<i class="fas fa-edit"></i> Modalità Modifica';
+                btn.classList.remove('edit-mode');
+                showToast('Modalità visualizzazione', 'info');
+            }
+            renderGallery();
+        };
+
+        window.forceSyncData = () => {
+            if (!isAuthenticated) {
+                showToast('Accesso richiesto', 'error');
+                return;
+            }
+            syncToCloud(true);
+        };
+
+        window.exportData = () => {
+            if (!isAuthenticated) return;
+            if (games.length === 0) {
+                showToast('Nessun dato da esportare', 'error');
                 return;
             }
             
-            if (!CLOUD_SYNC_ENABLED || !supabase) {
-                showToast('ℹ️ Sincronizzazione cloud non disponibile', 'info');
-                return;
-            }
+            const exportData = {
+                version: '2.1',
+                exportDate: new Date().toISOString(),
+                games: games
+            };
+
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
             
-            await syncToCloud(true);
-        }
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `retroavia_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('Dati esportati', 'success');
+        };
 
-        // Setup event listeners
-        function setupEventListeners() {
-            // Navigation tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.addEventListener('click', () => switchCategory(tab.dataset.category, tab));
-            });
-
-            // Form submission
-            document.getElementById('gameForm').addEventListener('submit', handleFormSubmit);
-
-            // Multiple images input
-            const imagesInput = document.getElementById('gameImages');
-            const uploadContainer = document.getElementById('imagesUploadContainer');
+        window.importData = () => {
+            if (!isAuthenticated) return;
             
-            imagesInput.addEventListener('change', handleMultipleImagesSelect);
-            
-            // Drag and drop for images
-            uploadContainer.addEventListener('dragover', handleDragOver);
-            uploadContainer.addEventListener('dragleave', handleDragLeave);
-            uploadContainer.addEventListener('drop', handleMultipleImagesDrop);
-
-            // Search
-            document.getElementById('searchInput').addEventListener('input', handleSearch);
-
-            // Auth password enter key
-            document.getElementById('authPassword').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') authenticate();
-            });
-
-            // Close modals on outside click
-            window.addEventListener('click', handleOutsideClick);
-
-            // Keyboard shortcuts
-            document.addEventListener('keydown', handleKeyboardShortcuts);
-
-            // Auto-sync ogni 5 minuti (solo se cloud sync è abilitato e supabase è inizializzato)
-            if (CLOUD_SYNC_ENABLED && supabase) {
-                setInterval(() => {
-                    if (games.length > 0 && supabase) {
-                        syncToCloud(false);
-                    }
-                }, 5 * 60 * 1000);
-            }
-        }
-
-        // Multiple Images Handling
-        function handleMultipleImagesSelect(e) {
-            const files = Array.from(e.target.files);
-            processMultipleImages(files);
-        }
-
-        function handleMultipleImagesDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('dragover');
-            
-            const files = Array.from(e.dataTransfer.files).filter(file => file.type.match('image.*'));
-            processMultipleImages(files);
-        }
-
-        function processMultipleImages(files) {
-            if (uploadedImages.length + files.length > MAX_IMAGES) {
-                showToast(`⚠️ Massimo ${MAX_IMAGES} immagini consentite`, 'error');
-                return;
-            }
-
-            showLoading('🖼️ Ottimizzazione immagini...');
-            
-            const loadPromises = files.map(file => {
-                return new Promise(async (resolve, reject) => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                showLoading('Importazione...');
+                
+                const reader = new FileReader();
+                reader.onload = async (e) => {
                     try {
-                        if (!file.type.match('image.*')) {
-                            reject(new Error('Formato non supportato'));
-                            return;
+                        const importedData = JSON.parse(e.target.result);
+                        let importedGames = Array.isArray(importedData) ? importedData : importedData.games || [];
+                        
+                        if (importedGames.length === 0) {
+                            throw new Error('Nessun progetto trovato');
                         }
 
-                        if (file.size > MAX_FILE_SIZE) {
-                            reject(new Error('File troppo grande'));
-                            return;
-                        }
-
-                        // Compress image if larger than 1MB
-                        let finalData;
-                        if (file.size > 1024 * 1024) {
-                            finalData = await compressImage(file, 0.8);
+                        const replace = confirm(`Sostituire ${games.length} progetti con ${importedGames.length} nuovi?`);
+                        
+                        if (replace) {
+                            games = importedGames;
                         } else {
-                            finalData = await new Promise(resolve => {
-                                const reader = new FileReader();
-                                reader.onload = e => resolve(e.target.result);
-                                reader.readAsDataURL(file);
+                            importedGames.forEach(game => {
+                                if (!games.find(g => g.id === game.id)) {
+                                    games.push(game);
+                                }
                             });
                         }
-
-                        resolve({
-                            data: finalData,
-                            name: file.name,
-                            size: file.size
-                        });
+                        
+                        games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                        saveDataLocal();
+                        if (CLOUD_SYNC_ENABLED && supabase) {
+                            await syncToCloud(false);
+                        }
+                        renderGallery();
+                        updateStats();
+                        showToast('Progetti importati', 'success');
                     } catch (error) {
-                        reject(error);
+                        showToast('Errore importazione', 'error');
+                    } finally {
+                        hideLoading();
                     }
-                });
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        };
+
+        window.clearAllData = () => {
+            if (!isAuthenticated) return;
+            if (games.length === 0) {
+                showToast('Nessun dato da cancellare', 'info');
+                return;
+            }
+
+            const confirmation = prompt(`ELIMINA TUTTO i ${games.length} progetti?\n\nScrivi: ELIMINA TUTTO`);
+            if (confirmation === 'ELIMINA TUTTO') {
+                games = [];
+                saveDataLocal();
+                if (CLOUD_SYNC_ENABLED && supabase) {
+                    syncToCloud(false);
+                }
+                renderGallery();
+                updateStats();
+                showToast('Tutti i dati eliminati', 'success');
+            }
+        };
+
+        window.closeModal = (modalId) => {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'formModal') {
+                resetForm();
+                editingId = null;
+            }
+        };
+
+        window.changeSlide = (direction) => {
+            if (currentGameImages.length <= 1) return;
+            currentSlide = (currentSlide + direction + currentGameImages.length) % currentGameImages.length;
+            updateModalGallery();
+        };
+
+        window.goToSlide = (index) => {
+            currentSlide = index;
+            updateModalGallery();
+        };
+
+        window.showDetails = (id) => {
+            if (editMode) return;
+            const game = games.find(g => g.id === id);
+            if (!game) return;
+
+            document.getElementById('modalTitle').textContent = game.name;
+            document.getElementById('modalPrice').textContent = `€ ${parseFloat(game.price || 0).toFixed(2)}`;
+            
+            currentGameImages = Array.isArray(game.images) ? game.images : [];
+            currentSlide = 0;
+            updateModalGallery();
+
+            const specs = [
+                { label: 'Modello', value: game.model, icon: 'microchip' },
+                { label: 'Scocca', value: game.shell, icon: 'mobile-alt' },
+                { label: 'Pulsanti', value: game.buttons, icon: 'circle' },
+                { label: 'Etichetta', value: game.label, icon: 'tag' },
+                { label: 'Batteria', value: game.battery, icon: 'battery-full' },
+                { label: 'Audio', value: game.audio, icon: 'volume-up' },
+                { label: 'Display', value: game.display, icon: 'tv' },
+                { label: 'LED', value: game.led, icon: 'lightbulb' },
+                { label: 'Accessori', value: game.box, icon: 'box' },
+                { label: 'Note', value: game.other, icon: 'plus-circle' }
+            ].filter(spec => spec.value && spec.value.trim() !== '');
+
+            document.getElementById('specGrid').innerHTML = specs.map(spec => `
+                <div class="spec-item">
+                    <div class="spec-label">
+                        <i class="fas fa-${spec.icon}"></i> ${spec.label}
+                    </div>
+                    <div class="spec-value">${spec.value}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('detailModal').style.display = 'block';
+        };
+
+        window.editGame = (id) => {
+            if (!isAuthenticated) return;
+            const game = games.find(g => g.id === id);
+            if (!game) return;
+
+            editingId = id;
+            document.getElementById('formTitle').textContent = 'Modifica Progetto';
+            
+            const fields = ['gameName', 'gameCategory', 'gamePrice', 'gameModel', 'gameShell', 'gameButtons', 'gameLabel', 'gameBattery', 'gameAudio', 'gameDisplay', 'gameLed', 'gameBox', 'gameOther'];
+            const gameKeys = ['name', 'category', 'price', 'model', 'shell', 'buttons', 'label', 'battery', 'audio', 'display', 'led', 'box', 'other'];
+            
+            fields.forEach((fieldId, i) => {
+                const element = document.getElementById(fieldId);
+                if (element) {
+                    element.value = game[gameKeys[i]] || '';
+                }
             });
+            
+            uploadedImages = (game.images || []).map((img, i) => ({
+                data: img,
+                name: `Immagine ${i + 1}`,
+                size: 0
+            }));
+            updateImagesPreview();
+            
+            document.getElementById('formModal').style.display = 'block';
+        };
 
-            Promise.allSettled(loadPromises)
-                .then(results => {
-                    const successful = results.filter(r => r.status === 'fulfilled').map(r => r.value);
-                    const failed = results.filter(r => r.status === 'rejected');
+        window.deleteGame = (id) => {
+            if (!isAuthenticated) return;
+            const game = games.find(g => g.id === id);
+            if (!game) return;
+            
+            if (confirm(`Eliminare "${game.name}"?`)) {
+                games = games.filter(g => g.id !== id);
+                saveDataLocal();
+                if (CLOUD_SYNC_ENABLED && supabase) {
+                    syncToCloud(false);
+                }
+                renderGallery();
+                updateStats();
+                showToast('Progetto eliminato', 'success');
+            }
+        };
 
-                    if (failed.length > 0) {
-                        showToast(`⚠️ ${failed.length} immagini non elaborate`, 'error');
+        window.removeImage = (index) => {
+            uploadedImages.splice(index, 1);
+            updateImagesPreview();
+        };
+
+        // Data management
+        function loadDataLocal() {
+            try {
+                const saved = localStorage.getItem('retroavia_games');
+                if (saved) {
+                    games = JSON.parse(saved).map(game => ({
+                        id: game.id || Date.now().toString(),
+                        name: game.name || 'Progetto',
+                        category: game.category || 'color',
+                        images: Array.isArray(game.images) ? game.images : [],
+                        price: parseFloat(game.price) || 0,
+                        model: game.model || '',
+                        shell: game.shell || '',
+                        buttons: game.buttons || '',
+                        label: game.label || '',
+                        battery: game.battery || '',
+                        audio: game.audio || '',
+                        display: game.display || '',
+                        led: game.led || '',
+                        box: game.box || '',
+                        other: game.other || '',
+                        createdAt: game.createdAt || new Date().toISOString(),
+                        updatedAt: game.updatedAt || new Date().toISOString()
+                    }));
+                    games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                }
+                renderGallery();
+                updateStats();
+            } catch (error) {
+                games = [];
+            }
+        }
+
+        function saveDataLocal() {
+            try {
+                localStorage.setItem('retroavia_games', JSON.stringify(games));
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        // UI Updates
+        function updateStats() {
+            const total = games.length;
+            const color = games.filter(g => g.category === 'color').length;
+            const advance = games.filter(g => g.category === 'advance').length;
+            const sp = games.filter(g => g.category === 'sp').length;
+
+            document.getElementById('totalGames').textContent = total;
+            document.getElementById('colorGames').textContent = color;
+            document.getElementById('advanceGames').textContent = advance;
+            document.getElementById('spGames').textContent = sp;
+        }
+
+        function switchCategory(category, tabElement) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            tabElement.classList.add('active');
+            currentCategory = category;
+            
+            const titles = {
+                'all': 'Tutti i Progetti',
+                'color': 'Game Boy Color',
+                'advance': 'Game Boy Advance',
+                'sp': 'Game Boy Advance SP'
+            };
+            
+            document.getElementById('galleryTitle').textContent = titles[category];
+            renderGallery();
+        }
+
+        function filterGames() {
+            let filtered = currentCategory === 'all' ? games : games.filter(g => g.category === currentCategory);
+            
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                filtered = filtered.filter(game => 
+                    game.name.toLowerCase().includes(query) ||
+                    game.model.toLowerCase().includes(query) ||
+                    (game.shell && game.shell.toLowerCase().includes(query))
+                );
+            }
+            
+            return filtered;
+        }
+
+        function renderGallery() {
+            const gallery = document.getElementById('gallery');
+            const filteredGames = filterGames();
+
+            if (filteredGames.length === 0) {
+                const message = searchQuery ? `Nessun risultato per "${searchQuery}"` : 'Nessun progetto';
+                gallery.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-gamepad"></i>
+                        <h3>${message}</h3>
+                        <p>Aggiungi progetti per iniziare</p>
+                    </div>
+                `;
+                return;
+            }
+
+            gallery.innerHTML = filteredGames.map(game => {
+                const date = new Date(game.createdAt).toLocaleDateString('it-IT');
+                const imageCount = game.images ? game.images.length : 0;
+                const firstImage = imageCount > 0 ? game.images[0] : null;
+                const price = parseFloat(game.price) || 0;
+                
+                return `
+                    <div class="game-card" onclick="showDetails('${game.id}')">
+                        ${editMode ? `
+                            <div class="edit-controls">
+                                <button class="edit-btn" onclick="event.stopPropagation(); editGame('${game.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="edit-btn delete" onclick="event.stopPropagation(); deleteGame('${game.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        ` : ''}
+                        <div class="game-image-container">
+                            ${firstImage ? 
+                                `<img src="${firstImage}" alt="${game.name}" class="game-image" loading="lazy">` : 
+                                `<div class="game-placeholder"><i class="fas fa-gamepad"></i></div>`
+                            }
+                            ${imageCount > 1 ? `<div class="image-indicator">${imageCount} foto</div>` : ''}
+                            <div class="game-date">${date}</div>
+                        </div>
+                        <div class="game-info">
+                            <div class="game-title">${game.name}</div>
+                            <div class="game-model">${game.model}</div>
+                            <div class="game-price">€ ${price.toFixed(2)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateModalGallery() {
+            const container = document.getElementById('galleryContainerModal');
+            const counter = document.getElementById('galleryCounter');
+            const indicators = document.getElementById('galleryIndicators');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            const showControls = currentGameImages.length > 1;
+            if (prevBtn) prevBtn.style.display = showControls ? 'flex' : 'none';
+            if (nextBtn) nextBtn.style.display = showControls ? 'flex' : 'none';
+            if (indicators) indicators.style.display = showControls ? 'flex' : 'none';
+            
+            if (currentGameImages.length === 0) return;
+            
+            container.innerHTML = currentGameImages.map(img => `
+                <div class="gallery-slide">
+                    <img src="${img}" alt="Game Boy" class="modal-image" loading="lazy">
+                </div>
+            `).join('');
+            
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            if (counter) {
+                counter.textContent = `${currentSlide + 1} / ${currentGameImages.length}`;
+            }
+            
+            if (indicators && showControls) {
+                indicators.innerHTML = currentGameImages.map((_, index) => `
+                    <div class="gallery-dot ${index === currentSlide ? 'active' : ''}" 
+                         onclick="goToSlide(${index})"></div>
+                `).join('');
+            }
+        }
+
+        // Form handling
+        function resetForm() {
+            document.getElementById('gameForm').reset();
+            uploadedImages = [];
+            updateImagesPreview();
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            if (!isAuthenticated || uploadedImages.length === 0) {
+                showToast('Aggiungi almeno un\'immagine', 'error');
+                return;
+            }
+
+            const nameInput = document.getElementById('gameName');
+            const categoryInput = document.getElementById('gameCategory');
+            const priceInput = document.getElementById('gamePrice');
+            
+            if (!nameInput.value.trim() || !categoryInput.value) {
+                showToast('Compila i campi obbligatori', 'error');
+                return;
+            }
+
+            showLoading('Salvataggio...');
+
+            try {
+                const gameData = {
+                    id: editingId || `game_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                    name: nameInput.value.trim(),
+                    category: categoryInput.value,
+                    images: uploadedImages.map(img => img.data),
+                    price: parseFloat(priceInput.value) || 0,
+                    model: document.getElementById('gameModel').value.trim(),
+                    shell: document.getElementById('gameShell').value.trim(),
+                    buttons: document.getElementById('gameButtons').value.trim(),
+                    label: document.getElementById('gameLabel').value.trim(),
+                    battery: document.getElementById('gameBattery').value.trim(),
+                    audio: document.getElementById('gameAudio').value.trim(),
+                    display: document.getElementById('gameDisplay').value.trim(),
+                    led: document.getElementById('gameLed').value.trim(),
+                    box: document.getElementById('gameBox').value.trim(),
+                    other: document.getElementById('gameOther').value.trim(),
+                    createdAt: editingId ? (games.find(g => g.id === editingId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+
+                if (editingId) {
+                    const index = games.findIndex(g => g.id === editingId);
+                    if (index !== -1) {
+                        games[index] = gameData;
+                        showToast('Progetto aggiornato', 'success');
+                    }
+                } else {
+                    games.unshift(gameData);
+                    showToast('Progetto aggiunto', 'success');
+                }
+
+                saveDataLocal();
+                if (CLOUD_SYNC_ENABLED && supabase) {
+                    await syncToCloud(false);
+                }
+                
+                closeModal('formModal');
+                renderGallery();
+                updateStats();
+                
+            } catch (error) {
+                showToast('Errore nel salvataggio', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Image handling
+        function handleImagesSelect(e) {
+            processImages(Array.from(e.target.files));
+        }
+
+        function handleImagesDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files).filter(f => f.type.match('image.*'));
+            processImages(files);
+        }
+
+        async function processImages(files) {
+            if (uploadedImages.length + files.length > MAX_IMAGES) {
+                showToast(`Massimo ${MAX_IMAGES} immagini`, 'error');
+                return;
+            }
+
+            if (files.length === 0) return;
+
+            showLoading('Elaborazione immagini...');
+            
+            const results = [];
+            for (const file of files) {
+                try {
+                    if (!file.type.match('image.*') || file.size > MAX_FILE_SIZE) continue;
+
+                    let finalData;
+                    if (file.size > 1024 * 1024) {
+                        finalData = await compressImage(file);
+                    } else {
+                        finalData = await fileToBase64(file);
                     }
 
-                    uploadedImages.push(...successful);
-                    updateImagesPreview();
-                    
-                    if (successful.length > 0) {
-                        showToast(`✅ ${successful.length} immagini ottimizzate!`, 'success');
-                    }
-                })
-                .finally(() => {
-                    hideLoading();
-                });
+                    results.push({
+                        data: finalData,
+                        name: file.name,
+                        size: file.size
+                    });
+                } catch (error) {
+                    // Skip file on error
+                }
+            }
+
+            uploadedImages.push(...results);
+            updateImagesPreview();
+            hideLoading();
+            
+            if (results.length > 0) {
+                showToast(`${results.length} immagini elaborate`, 'success');
+            }
         }
 
         function updateImagesPreview() {
@@ -1946,733 +2243,85 @@
             placeholder.style.display = 'none';
             preview.innerHTML = uploadedImages.map((img, index) => `
                 <div class="image-preview-item">
-                    <img src="${img.data}" alt="${img.name}" class="image-preview-img">
-                    <button type="button" class="image-remove" onclick="removeImage(${index})" title="Rimuovi immagine">
+                    <img src="${img.data}" alt="${img.name}" class="image-preview-img" loading="lazy">
+                    <button type="button" class="image-remove" onclick="removeImage(${index})">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
             `).join('');
         }
 
-        function removeImage(index) {
-            uploadedImages.splice(index, 1);
-            updateImagesPreview();
-            showToast('🗑️ Immagine rimossa', 'info');
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.currentTarget.classList.add('dragover');
-        }
-
-        function handleDragLeave(e) {
-            e.currentTarget.classList.remove('dragover');
-        }
-
-        // Gallery Navigation for Modal
-        function changeSlide(direction) {
-            if (currentGameImages.length <= 1) return;
-            
-            currentSlide = (currentSlide + direction + currentGameImages.length) % currentGameImages.length;
-            updateModalGallery();
-        }
-
-        function goToSlide(index) {
-            currentSlide = index;
-            updateModalGallery();
-        }
-
-        function updateModalGallery() {
-            const container = document.getElementById('galleryContainerModal');
-            const counter = document.getElementById('galleryCounter');
-            const indicators = document.getElementById('galleryIndicators');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            // Nascondi controlli se c'è solo un'immagine
-            const showControls = currentGameImages.length > 1;
-            prevBtn.style.display = showControls ? 'flex' : 'none';
-            nextBtn.style.display = showControls ? 'flex' : 'none';
-            indicators.style.display = showControls ? 'flex' : 'none';
-            
-            if (currentGameImages.length === 0) return;
-            
-            // Update slides
-            container.innerHTML = currentGameImages.map((img, index) => `
-                <div class="gallery-slide">
-                    <img src="${img}" alt="Game Boy ${index + 1}" class="modal-image">
-                </div>
-            `).join('');
-            
-            // Update position
-            container.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            // Update counter
-            counter.textContent = `${currentSlide + 1} / ${currentGameImages.length}`;
-            
-            // Update indicators
-            if (showControls) {
-                indicators.innerHTML = currentGameImages.map((_, index) => `
-                    <div class="gallery-dot ${index === currentSlide ? 'active' : ''}" 
-                         onclick="goToSlide(${index})"></div>
-                `).join('');
-            }
-        }
-
-        // Authentication
-        function showAuthModal() {
-            if (isAuthenticated) {
-                logout();
-            } else {
-                document.getElementById('authModal').style.display = 'flex';
-                document.getElementById('authPassword').focus();
-            }
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-            document.getElementById('authPassword').value = '';
-        }
-
-        function authenticate() {
-            const password = document.getElementById('authPassword').value;
-            if (password === ADMIN_PASSWORD) {
-                isAuthenticated = true;
-                updateAuthUI();
-                closeAuthModal();
-                showToast('🎉 Accesso effettuato con successo!', 'success');
-            } else {
-                showToast('🚫 Password non corretta', 'error');
-                document.getElementById('authPassword').value = '';
-                document.getElementById('authPassword').focus();
-            }
-        }
-
-        function logout() {
-            isAuthenticated = false;
-            editMode = false;
-            updateAuthUI();
-            renderGallery();
-            showToast('👋 Disconnesso dalla modalità admin', 'info');
-        }
-
-        function updateAuthUI() {
-            const authStatus = document.getElementById('authStatus');
-            const authButton = document.getElementById('authButton');
-            const authIcon = document.getElementById('authIcon');
-            const authText = document.getElementById('authText');
-            const adminControls = document.getElementById('adminControls');
-
-            if (isAuthenticated) {
-                authStatus.className = 'auth-status logged-in';
-                authIcon.className = 'fas fa-unlock';
-                authText.textContent = 'Modalità Admin Attiva';
-                authButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Disconnetti';
-                authButton.className = 'auth-btn logout';
-                adminControls.classList.remove('hidden');
-            } else {
-                authStatus.className = 'auth-status logged-out';
-                authIcon.className = 'fas fa-lock';
-                authText.textContent = 'Modalità Visitatore';
-                authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Accedi Admin';
-                authButton.className = 'auth-btn';
-                adminControls.classList.add('hidden');
-            }
-        }
-
-        // Loading states
-        function showLoading(text = 'Caricamento in corso...') {
-            const loading = document.getElementById('loading');
-            const loadingText = document.querySelector('.loading-text');
-            loadingText.textContent = text;
-            loading.style.display = 'flex';
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        // Data management
-        function loadData() {
-            loadDataLocal();
-        }
-
-        function loadDataLocal() {
-            try {
-                const saved = localStorage.getItem('retroavia_games');
-                if (saved) {
-                    games = JSON.parse(saved);
-                    games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                }
-                renderGallery();
-                updateStats();
-            } catch (error) {
-                console.error('Errore nel caricamento dei dati:', error);
-                games = [];
-                showToast('⚠️ Errore nel caricamento dei dati', 'error');
-            }
-        }
-
-        function saveDataLocal() {
-            try {
-                localStorage.setItem('retroavia_games', JSON.stringify(games));
-            } catch (error) {
-                console.error('Errore nel salvataggio:', error);
-                showToast('❌ Errore nel salvataggio dei dati!', 'error');
-            }
-        }
-
-        // Stats
-        function updateStats() {
-            const total = games.length;
-            const color = games.filter(g => g.category === 'color').length;
-            const advance = games.filter(g => g.category === 'advance').length;
-            const sp = games.filter(g => g.category === 'sp').length;
-
-            document.getElementById('totalGames').textContent = total;
-            document.getElementById('colorGames').textContent = color;
-            document.getElementById('advanceGames').textContent = advance;
-            document.getElementById('spGames').textContent = sp;
-        }
-
-        // Search
-        function handleSearch(e) {
-            searchQuery = e.target.value.toLowerCase();
-            renderGallery();
-        }
-
-        function filterGames() {
-            let filteredGames = currentCategory === 'all' 
-                ? games 
-                : games.filter(game => game.category === currentCategory);
-
-            if (searchQuery) {
-                filteredGames = filteredGames.filter(game => 
-                    game.name.toLowerCase().includes(searchQuery) ||
-                    game.model.toLowerCase().includes(searchQuery) ||
-                    (game.shell && game.shell.toLowerCase().includes(searchQuery)) ||
-                    (game.other && game.other.toLowerCase().includes(searchQuery))
-                );
-            }
-
-            return filteredGames;
-        }
-
-        // Category switching
-        function switchCategory(category, tabElement) {
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            tabElement.classList.add('active');
-            currentCategory = category;
-            
-            const titles = {
-                'all': '🎮 Tutti i Progetti',
-                'color': '🌈 Game Boy Color',
-                'advance': '📱 Game Boy Advance',
-                'sp': '💻 Game Boy Advance SP'
-            };
-            
-            document.getElementById('galleryTitle').textContent = titles[category];
-            renderGallery();
-        }
-
-        // Gallery rendering
-        function renderGallery() {
-            const gallery = document.getElementById('gallery');
-            const filteredGames = filterGames();
-
-            if (filteredGames.length === 0) {
-                const emptyMessage = searchQuery 
-                    ? `Nessun progetto trovato per "${searchQuery}"`
-                    : currentCategory === 'all' 
-                        ? 'Nessun progetto ancora aggiunto'
-                        : 'Nessun progetto in questa categoria';
-
-                gallery.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-gamepad"></i>
-                        <h3>${emptyMessage}</h3>
-                        <p>${searchQuery ? 'Prova a modificare i termini di ricerca' : 'I progetti RetroAvia appariranno qui una volta aggiunti'}</p>
-                    </div>
-                `;
-                return;
-            }
-
-            gallery.innerHTML = filteredGames.map(game => {
-                const createdDate = new Date(game.createdAt).toLocaleDateString('it-IT');
-                const imageCount = game.images ? game.images.length : 0;
-                const firstImage = imageCount > 0 ? game.images[0] : null;
-                
-                return `
-                    <div class="game-card" onclick="showDetails('${game.id}')">
-                        ${editMode ? `
-                            <div class="edit-controls">
-                                <button class="edit-btn" onclick="event.stopPropagation(); editGame('${game.id}')" title="Modifica Progetto">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="edit-btn delete" onclick="event.stopPropagation(); deleteGame('${game.id}')" title="Elimina Progetto">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        ` : ''}
-                        <div class="game-image-container">
-                            ${firstImage ? 
-                                `<img src="${firstImage}" alt="${game.name}" class="game-image">` : 
-                                `<div class="game-placeholder"><i class="fas fa-gamepad"></i></div>`
-                            }
-                            ${imageCount > 1 ? `<div class="image-indicator">📸 ${imageCount} foto</div>` : ''}
-                            <div class="game-overlay"></div>
-                            <div class="game-date">${createdDate}</div>
-                        </div>
-                        <div class="game-info">
-                            <div class="game-title">${game.name}</div>
-                            <div class="game-model">${game.model}</div>
-                            <div class="game-price">€ ${parseFloat(game.price).toFixed(2)}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Detail modal
-        function showDetails(id) {
-            if (editMode) return;
-            
-            const game = games.find(g => g.id === id);
-            if (!game) return;
-
-            document.getElementById('modalTitle').textContent = game.name;
-            document.getElementById('modalPrice').textContent = `€ ${parseFloat(game.price).toFixed(2)}`;
-            
-            // Setup images
-            currentGameImages = game.images || [];
-            currentSlide = 0;
-            updateModalGallery();
-
-            if (currentGameImages.length === 0) {
-                const galleryContainer = document.getElementById('galleryContainerModal');
-                galleryContainer.innerHTML = `
-                    <div class="gallery-slide">
-                        <div class="modal-image-placeholder">
-                            <i class="fas fa-gamepad"></i>
-                        </div>
-                    </div>
-                `;
-                document.getElementById('galleryCounter').textContent = '0 / 0';
-            }
-
-            const specs = [
-                { label: 'Modello Base', value: game.model, icon: 'microchip' },
-                { label: 'Scocca', value: game.shell, icon: 'mobile-alt' },
-                { label: 'Pulsanti', value: game.buttons, icon: 'circle' },
-                { label: 'Etichetta', value: game.label, icon: 'tag' },
-                { label: 'Batteria', value: game.battery, icon: 'battery-full' },
-                { label: 'Audio', value: game.audio, icon: 'volume-up' },
-                { label: 'Display', value: game.display, icon: 'tv' },
-                { label: 'Kit LED', value: game.led, icon: 'lightbulb' },
-                { label: 'Accessori', value: game.box, icon: 'box' },
-                { label: 'Protezioni', value: game.cover, icon: 'shield-alt' },
-                { label: 'Note Extra', value: game.other, icon: 'plus-circle' }
-            ].filter(spec => spec.value && spec.value.trim() !== '');
-
-            document.getElementById('specGrid').innerHTML = specs.map(spec => `
-                <div class="spec-item">
-                    <div class="spec-label">
-                        <i class="fas fa-${spec.icon}"></i> ${spec.label}
-                    </div>
-                    <div class="spec-value">${spec.value}</div>
-                </div>
-            `).join('');
-
-            document.getElementById('detailModal').style.display = 'block';
-            
-            // Add touch listeners
-            addTouchListeners();
-        }
-
-        // Edit mode
-        function toggleEditMode() {
-            if (!isAuthenticated) {
-                showToast('🔒 Accedi come admin per modificare', 'error');
-                return;
-            }
-
-            editMode = !editMode;
-            const btn = document.getElementById('editModeBtn');
-            
-            if (editMode) {
-                btn.innerHTML = '<i class="fas fa-times"></i> ❌ Esci da Modifica';
-                btn.classList.add('edit-mode');
-                showToast('✏️ Modalità modifica attivata', 'info');
-            } else {
-                btn.innerHTML = '<i class="fas fa-edit"></i> ✏️ Modalità Modifica';
-                btn.classList.remove('edit-mode');
-                showToast('👁️ Modalità visualizzazione attivata', 'info');
-            }
-            
-            renderGallery();
-        }
-
-        // Form management
-        function openAddModal() {
-            if (!isAuthenticated) {
-                showToast('🔒 Accedi come admin per aggiungere progetti', 'error');
-                return;
-            }
-            
-            editingId = null;
-            document.getElementById('formTitle').textContent = '🎮 Aggiungi Nuovo Progetto';
-            resetForm();
-            document.getElementById('formModal').style.display = 'block';
-            
-            // Setup auto-save and load draft
-            autoSaveDraft();
-            setTimeout(loadDraft, 100);
-        }
-
-        function resetForm() {
-            document.getElementById('gameForm').reset();
-            uploadedImages = [];
-            updateImagesPreview();
-        }
-
-        function editGame(id) {
-            if (!isAuthenticated) {
-                showToast('🔒 Accedi come admin per modificare', 'error');
-                return;
-            }
-
-            const game = games.find(g => g.id === id);
-            if (!game) return;
-
-            editingId = id;
-            document.getElementById('formTitle').textContent = '✏️ Modifica Progetto';
-            
-            // Popola form
-            const fields = [
-                'gameName', 'gameCategory', 'gamePrice', 'gameModel',
-                'gameShell', 'gameButtons', 'gameLabel', 'gameBattery',
-                'gameAudio', 'gameDisplay', 'gameLed', 'gameBox',
-                'gameCover', 'gameOther'
-            ];
-
-            fields.forEach(field => {
-                const element = document.getElementById(field);
-                const key = field.replace('game', '').toLowerCase();
-                if (element && game[key] !== undefined) {
-                    element.value = game[key] || '';
-                }
-            });
-            
-            // Gestisci immagini
-            uploadedImages = [];
-            if (game.images && game.images.length > 0) {
-                uploadedImages = game.images.map((img, index) => ({
-                    data: img,
-                    name: `Immagine ${index + 1}`,
-                    size: 0
-                }));
-            }
-            updateImagesPreview();
-            
-            document.getElementById('formModal').style.display = 'block';
-        }
-
-        function deleteGame(id) {
-            if (!isAuthenticated) {
-                showToast('🔒 Accedi come admin per eliminare', 'error');
-                return;
-            }
-
-            const game = games.find(g => g.id === id);
-            if (!game) return;
-            
-            if (confirm(`🗑️ Sei sicuro di voler eliminare "${game.name}"?\n\nQuesta azione non può essere annullata.`)) {
-                games = games.filter(g => g.id !== id);
-                saveDataLocal();
-                // Only sync to cloud if enabled
-                if (CLOUD_SYNC_ENABLED) {
-                    syncToCloud(false);
-                }
-                renderGallery();
-                updateStats();
-                showToast('🗑️ Progetto eliminato', 'success');
-            }
-        }
-
-        // Form submission
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            
-            if (!isAuthenticated) {
-                showToast('🔒 Accesso non autorizzato', 'error');
-                return;
-            }
-
-            if (uploadedImages.length === 0) {
-                showToast('📸 Aggiungi almeno un\'immagine al progetto', 'error');
-                return;
-            }
-
-            showLoading('💾 Salvataggio in corso...');
-
-            try {
-                const gameData = {
-                    id: editingId || Date.now().toString(),
-                    name: document.getElementById('gameName').value.trim(),
-                    category: document.getElementById('gameCategory').value,
-                    images: uploadedImages.map(img => img.data),
-                    price: parseFloat(document.getElementById('gamePrice').value) || 0,
-                    model: document.getElementById('gameModel').value.trim(),
-                    shell: document.getElementById('gameShell').value.trim(),
-                    buttons: document.getElementById('gameButtons').value.trim(),
-                    label: document.getElementById('gameLabel').value.trim(),
-                    battery: document.getElementById('gameBattery').value.trim(),
-                    audio: document.getElementById('gameAudio').value.trim(),
-                    display: document.getElementById('gameDisplay').value.trim(),
-                    led: document.getElementById('gameLed').value.trim(),
-                    box: document.getElementById('gameBox').value.trim(),
-                    cover: document.getElementById('gameCover').value.trim(),
-                    other: document.getElementById('gameOther').value.trim(),
-                    createdAt: editingId ? games.find(g => g.id === editingId).createdAt : new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-
-                if (editingId) {
-                    const index = games.findIndex(g => g.id === editingId);
-                    games[index] = gameData;
-                    showToast('✅ Progetto aggiornato con successo!', 'success');
-                } else {
-                    games.unshift(gameData);
-                    showToast('🎉 Nuovo progetto aggiunto!', 'success');
-                }
-
-                saveDataLocal();
-                // Only sync to cloud if enabled
-                if (CLOUD_SYNC_ENABLED) {
-                    await syncToCloud(false);
-                }
-                closeModal('formModal');
-                renderGallery();
-                updateStats();
-                
-                // Clear draft on successful save
-                clearDraft();
-            } catch (error) {
-                console.error('Errore nel salvataggio:', error);
-                showToast('❌ Errore nel salvataggio', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // Data export/import
-        function exportData() {
-            if (!isAuthenticated) {
-                showToast('🔒 Accedi come admin per esportare', 'error');
-                return;
-            }
-
-            if (games.length === 0) {
-                showToast('⚠️ Nessun dato da esportare!', 'error');
-                return;
-            }
-            
-            try {
-                const exportData = {
-                    version: '2.0',
-                    timestamp: new Date().toISOString(),
-                    games: games,
-                    stats: {
-                        total: games.length,
-                        byCategory: {
-                            color: games.filter(g => g.category === 'color').length,
-                            advance: games.filter(g => g.category === 'advance').length,
-                            sp: games.filter(g => g.category === 'sp').length
-                        },
-                        totalImages: games.reduce((acc, game) => acc + (game.images ? game.images.length : 0), 0)
-                    }
-                };
-
-                const dataStr = JSON.stringify(exportData, null, 2);
-                const dataBlob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(dataBlob);
-                
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `retroavia_backup_${new Date().toISOString().split('T')[0]}.json`;
-                link.click();
-                
-                URL.revokeObjectURL(url);
-                showToast('💾 Dati esportati con successo!', 'success');
-            } catch (error) {
-                console.error('Errore esportazione:', error);
-                showToast('❌ Errore durante l\'esportazione', 'error');
-            }
-        }
-
-        function importData() {
-            if (!isAuthenticated) {
-                showToast('🔒 Accedi come admin per importare', 'error');
-                return;
-            }
-
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                showLoading('📤 Importazione in corso...');
-                
+        // Utility functions
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onload = async function(e) {
-                    try {
-                        const importedData = JSON.parse(e.target.result);
-                        let importedGames = [];
+                reader.onload = e => resolve(e.target.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
 
-                        // Supporta diversi formati
-                        if (Array.isArray(importedData)) {
-                            importedGames = importedData;
-                        } else if (importedData.games && Array.isArray(importedData.games)) {
-                            importedGames = importedData.games;
-                        } else {
-                            throw new Error('Formato non riconosciuto');
-                        }
-
-                        if (importedGames.length === 0) {
-                            throw new Error('Nessun progetto trovato nel file');
-                        }
-
-                        const action = confirm(
-                            `📤 Trovati ${importedGames.length} progetti nel file.\n\n` +
-                            `Clicca OK per sostituire tutti i dati attuali\n` +
-                            `Clicca Annulla per aggiungere ai progetti esistenti`
-                        );
-                        
-                        if (action === true) {
-                            // Sostituisci
-                            games = importedGames;
-                        } else if (action === false) {
-                            // Merge - evita duplicati
-                            importedGames.forEach(game => {
-                                if (!games.find(g => g.id === game.id)) {
-                                    games.push(game);
-                                }
-                            });
-                        } else {
-                            // Annullato
-                            hideLoading();
-                            return;
-                        }
-                        
-                        // Ordina per data di creazione
-                        games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                        
-                        saveDataLocal();
-                        // Only sync to cloud if enabled
-                        if (CLOUD_SYNC_ENABLED) {
-                            await syncToCloud(false);
-                        }
-                        renderGallery();
-                        updateStats();
-                        showToast(`🎉 ${importedGames.length} progetti importati!`, 'success');
-                    } catch (error) {
-                        console.error('Errore importazione:', error);
-                        showToast(`❌ Errore nell'importazione: ${error.message}`, 'error');
-                    } finally {
-                        hideLoading();
+        function compressImage(file, quality = 0.8, maxDim = 1920) {
+            return new Promise((resolve, reject) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                img.onload = () => {
+                    let { width, height } = img;
+                    
+                    if (width > height && width > maxDim) {
+                        height = (height * maxDim) / width;
+                        width = maxDim;
+                    } else if (height > maxDim) {
+                        width = (width * maxDim) / height;
+                        height = maxDim;
                     }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', quality));
                 };
-                reader.readAsText(file);
-            };
-            
-            input.click();
+                
+                img.onerror = reject;
+                img.src = URL.createObjectURL(file);
+            });
         }
 
-        function clearAllData() {
-            if (!isAuthenticated) {
-                showToast('🔒 Accedi come admin per cancellare', 'error');
-                return;
-            }
-
-            if (games.length === 0) {
-                showToast('ℹ️ Nessun dato da cancellare', 'info');
-                return;
-            }
-
-            const confirmation = prompt(
-                `🚨 ATTENZIONE: Stai per eliminare TUTTI i ${games.length} progetti!\n\n` +
-                `Questa operazione è IRREVERSIBILE!\n\n` +
-                `Per confermare, scrivi: ELIMINA TUTTO`
-            );
-
-            if (confirmation === 'ELIMINA TUTTO') {
-                games = [];
-                saveDataLocal();
-                // Only sync to cloud if enabled
-                if (CLOUD_SYNC_ENABLED) {
-                    syncToCloud(false);
-                }
-                renderGallery();
-                updateStats();
-                showToast('🗑️ Tutti i dati sono stati eliminati', 'success');
-            } else if (confirmation !== null) {
-                showToast('❌ Operazione annullata - testo non corretto', 'error');
-            }
+        function handleSearch(e) {
+            searchQuery = e.target.value.toLowerCase().trim();
+            renderGallery();
         }
 
-        // Event handlers
         function handleOutsideClick(e) {
-            if (e.target.classList.contains('modal') || e.target.classList.contains('form-modal')) {
+            if (e.target.classList.contains('modal') || e.target.classList.contains('form-modal') || e.target.classList.contains('auth-modal')) {
                 e.target.style.display = 'none';
             }
         }
 
-        function handleKeyboardShortcuts(e) {
+        function handleKeyboard(e) {
             if (e.key === 'Escape') {
                 closeModal('detailModal');
                 closeModal('formModal');
                 closeAuthModal();
             }
-            
-            if (e.ctrlKey && e.key === 'k') {
-                e.preventDefault();
-                document.getElementById('searchInput').focus();
-            }
-
-            // Arrow keys for gallery navigation
-            if (document.getElementById('detailModal').style.display === 'block') {
-                if (e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    changeSlide(-1);
-                }
-                if (e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    changeSlide(1);
-                }
-            }
         }
 
-        // Modal management
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            if (modalId === 'formModal') {
-                resetForm();
-                editingId = null;
-            }
-            if (modalId === 'detailModal') {
-                removeTouchListeners();
-            }
+        function showLoading(text = 'Caricamento...') {
+            const loading = document.getElementById('loading');
+            const loadingText = document.querySelector('.loading-text');
+            if (loading) loading.style.display = 'flex';
+            if (loadingText) loadingText.textContent = text;
         }
 
-        // Toast notifications
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            if (loading) loading.style.display = 'none';
+        }
+
         function showToast(message, type = 'success') {
-            const existingToast = document.querySelector('.toast');
-            if (existingToast) {
-                existingToast.remove();
-            }
+            document.querySelectorAll('.toast').forEach(toast => toast.remove());
 
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
@@ -2680,277 +2329,9 @@
             document.body.appendChild(toast);
             
             setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.style.animation = 'slideOutRight 0.3s ease';
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            toast.remove();
-                        }
-                    }, 300);
-                }
-            }, 4000);
-        }
-
-        // Utility functions
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // Touch/swipe support for mobile gallery
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        function handleTouchStart(e) {
-            touchStartX = e.changedTouches[0].screenX;
-        }
-
-        function handleTouchEnd(e) {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipeGesture();
-        }
-
-        function handleSwipeGesture() {
-            if (currentGameImages.length <= 1) return;
-            
-            const swipeThreshold = 50;
-            const diff = touchStartX - touchEndX;
-            
-            if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0) {
-                    // Swipe left - next image
-                    changeSlide(1);
-                } else {
-                    // Swipe right - previous image
-                    changeSlide(-1);
-                }
-            }
-        }
-
-        // Add touch listeners when modal opens
-        function addTouchListeners() {
-            const modalGallery = document.getElementById('modalGallery');
-            if (modalGallery) {
-                modalGallery.addEventListener('touchstart', handleTouchStart, {passive: true});
-                modalGallery.addEventListener('touchend', handleTouchEnd, {passive: true});
-            }
-        }
-
-        function removeTouchListeners() {
-            const modalGallery = document.getElementById('modalGallery');
-            if (modalGallery) {
-                modalGallery.removeEventListener('touchstart', handleTouchStart);
-                modalGallery.removeEventListener('touchend', handleTouchEnd);
-            }
-        }
-
-        // Add touch listeners when modal opens (integrated into showDetails)
-        // Remove the problematic function redefinitions
-
-        // Auto-save draft while typing (for long descriptions)
-        let draftTimer;
-        function autoSaveDraft() {
-            const textareas = document.querySelectorAll('#gameForm textarea, #gameForm input[type="text"]');
-            textareas.forEach(textarea => {
-                textarea.addEventListener('input', () => {
-                    clearTimeout(draftTimer);
-                    draftTimer = setTimeout(() => {
-                        const formData = new FormData(document.getElementById('gameForm'));
-                        const draft = Object.fromEntries(formData);
-                        localStorage.setItem('retroavia_draft', JSON.stringify(draft));
-                    }, 1000);
-                });
-            });
-        }
-
-        // Load draft
-        function loadDraft() {
-            const draft = localStorage.getItem('retroavia_draft');
-            if (draft && !editingId) {
-                try {
-                    const data = JSON.parse(draft);
-                    if (confirm('🎮 Trovata bozza salvata. Vuoi ripristinarla?')) {
-                        Object.keys(data).forEach(key => {
-                            const element = document.getElementById(key);
-                            if (element && data[key]) {
-                                element.value = data[key];
-                            }
-                        });
-                    }
-                    localStorage.removeItem('retroavia_draft');
-                } catch (e) {
-                    console.log('Errore nel caricamento bozza:', e);
-                }
-            }
-        }
-
-        // Clear draft on successful save
-        function clearDraft() {
-            localStorage.removeItem('retroavia_draft');
-        }
-
-        // Auto-save and draft functionality integrated into openAddModal and handleFormSubmit functions
-
-        // Progressive Web App features
-        function initPWA() {
-            // Service Worker registration disabled for now
-            // You can enable this by creating a sw.js file in your root directory
-            /*
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js')
-                        .then(registration => {
-                            console.log('SW registered: ', registration);
-                        })
-                        .catch(registrationError => {
-                            console.log('SW registration failed: ', registrationError);
-                        });
-                });
-            }
-            */
-
-            // Add to home screen prompt
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                showInstallPrompt();
-            });
-
-            function showInstallPrompt() {
-                const installBar = document.createElement('div');
-                installBar.style.cssText = `
-                    position: fixed;
-                    bottom: 20px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: linear-gradient(135deg, var(--accent-primary), #cc0040);
-                    color: white;
-                    padding: 1rem 2rem;
-                    border-radius: 25px;
-                    z-index: 1500;
-                    font-weight: 600;
-                    cursor: pointer;
-                    animation: slideInUp 0.3s ease;
-                    max-width: 90%;
-                    text-align: center;
-                `;
-                installBar.innerHTML = '📱 Installa RetroAvia come app!';
-                
-                installBar.addEventListener('click', async () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        if (outcome === 'accepted') {
-                            showToast('🎉 App installata con successo!', 'success');
-                        }
-                        deferredPrompt = null;
-                        installBar.remove();
-                    }
-                });
-
-                document.body.appendChild(installBar);
-                
-                // Auto-hide after 10 seconds
-                setTimeout(() => {
-                    if (installBar.parentNode) {
-                        installBar.remove();
-                    }
-                }, 10000);
-            }
-        }
-
-        // Image optimization
-        function compressImage(file, quality = 0.8) {
-            return new Promise((resolve) => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const img = new Image();
-                
-                img.onload = function() {
-                    // Calculate optimal dimensions
-                    let { width, height } = img;
-                    const maxDimension = 1920; // Max width or height
-                    
-                    if (width > height && width > maxDimension) {
-                        height = (height * maxDimension) / width;
-                        width = maxDimension;
-                    } else if (height > maxDimension) {
-                        width = (width * maxDimension) / height;
-                        height = maxDimension;
-                    }
-                    
-                    canvas.width = width;
-                    canvas.height = height;
-                    
-                    // Draw and compress
-                    ctx.drawImage(img, 0, 0, width, height);
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-                    resolve(compressedDataUrl);
-                };
-                
-                img.src = URL.createObjectURL(file);
-            });
-        }
-
-        // Image processing with compression integrated
-
-        // Initialize PWA features
-        document.addEventListener('DOMContentLoaded', () => {
-            initPWA();
-        });
-
-        // Keyboard navigation improvements
-        document.addEventListener('keydown', (e) => {
-            // Quick admin login with Ctrl+Shift+A
-            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                e.preventDefault();
-                if (!isAuthenticated) {
-                    showAuthModal();
-                }
-            }
-            
-            // Quick add project with Ctrl+N (when authenticated)
-            if (e.ctrlKey && e.key === 'n' && isAuthenticated) {
-                e.preventDefault();
-                openAddModal();
-            }
-        });
-
-        // Debug info for development
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            console.log('🎮 RetroAvia Gallery v2.0 - Development Mode with Supabase');
-            console.log('🔧 Debug commands:');
-            console.log('  - retroavia.games: View all games');
-            console.log('  - retroavia.stats(): View statistics');
-            console.log('  - retroavia.clearCache(): Clear all data');
-            console.log('  - retroavia.supabase: Access Supabase client');
-            
-            window.retroavia = {
-                games: () => games,
-                supabase: () => supabase,
-                stats: () => ({
-                    total: games.length,
-                    categories: {
-                        color: games.filter(g => g.category === 'color').length,
-                        advance: games.filter(g => g.category === 'advance').length,
-                        sp: games.filter(g => g.category === 'sp').length
-                    },
-                    totalImages: games.reduce((acc, game) => acc + (game.images ? game.images.length : 0), 0)
-                }),
-                clearCache: () => {
-                    localStorage.clear();
-                    location.reload();
-                }
-            };
+                if (toast.parentNode) toast.remove();
+            }, 3000);
         }
     </script>
-
-    <!-- Add PWA manifest -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlJldHJvQXZpYSBHYWxsZXJ5IiwKICAic2hvcnRfbmFtZSI6ICJSZXRyb0F2aWEiLAogICJkZXNjcmlwdGlvbiI6ICJHYWxsZXJpYSBkZWkgbGF2b3JpIHBlcnNvbmFsaXp6YXRpIFJldHJvQXZpYSIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGEwYTBhIiwKICAidGhlbWVfY29sb3IiOiAiI2ZmMDA1MCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1UY3lJaUJvWldsbmFIUTlJakUzTWlJZ2RtbGxkMEp2ZUQwaU1DQXdJREUzTWlBeE56SWlJR1pwYkd3OUltNXZibVVpSUdoMGJXdzlJbWgwZEhBNkx5OTNkM2N1ZDNND=="LAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
-    
 </body>
 </html>
