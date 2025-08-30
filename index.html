@@ -12,19 +12,48 @@
         :root {
             --bg-primary: #0a0a0a;
             --bg-secondary: #111111;
-            --bg-card: #1a1a1a;
-            --bg-card-hover: #222222;
+            --bg-tertiary: #1a1a1a;
+            --bg-card: #1e1e1e;
+            --bg-card-hover: #252525;
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --bg-glass-strong: rgba(255, 255, 255, 0.1);
+            
             --accent-primary: #ff0050;
             --accent-secondary: #00ff88;
-            --accent-warning: #ffaa00;
+            --accent-tertiary: #ffaa00;
             --accent-info: #00aaff;
+            --accent-success: #00cc6a;
+            --accent-error: #ff4444;
+            
             --text-primary: #ffffff;
-            --text-secondary: #cccccc;
-            --text-muted: #888888;
-            --border-color: #333333;
-            --shadow-glow: rgba(255, 0, 80, 0.3);
-            --shadow-glow-green: rgba(0, 255, 136, 0.3);
-            --shadow-glow-blue: rgba(0, 170, 255, 0.3);
+            --text-secondary: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --text-dim: #666666;
+            
+            --border-primary: #333333;
+            --border-secondary: rgba(255, 255, 255, 0.1);
+            --border-accent: rgba(255, 0, 80, 0.3);
+            
+            --shadow-primary: rgba(0, 0, 0, 0.4);
+            --shadow-glow: rgba(255, 0, 80, 0.4);
+            --shadow-glow-green: rgba(0, 255, 136, 0.4);
+            --shadow-glow-blue: rgba(0, 170, 255, 0.4);
+            --shadow-glow-soft: rgba(255, 0, 80, 0.2);
+            
+            --gradient-primary: linear-gradient(135deg, var(--accent-primary), #cc0040);
+            --gradient-secondary: linear-gradient(135deg, var(--accent-secondary), #00cc6a);
+            --gradient-glass: linear-gradient(135deg, var(--bg-glass), var(--bg-glass-strong));
+            --gradient-card: linear-gradient(135deg, var(--bg-card), rgba(34, 34, 34, 0.8));
+            
+            --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            
+            --border-radius-small: 8px;
+            --border-radius-medium: 12px;
+            --border-radius-large: 20px;
+            --border-radius-xl: 24px;
         }
 
         * {
@@ -40,6 +69,9 @@
             min-height: 100vh;
             line-height: 1.6;
             overflow-x: hidden;
+            font-feature-settings: 'liga', 'kern';
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         body::before {
@@ -50,24 +82,44 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 25% 25%, rgba(255, 0, 80, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(0, 170, 255, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at 20% 30%, rgba(255, 0, 80, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 136, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 40% 90%, rgba(0, 170, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 60% 10%, rgba(255, 170, 0, 0.06) 0%, transparent 40%);
             pointer-events: none;
             z-index: -1;
-            animation: backgroundPulse 10s ease-in-out infinite alternate;
+            animation: backgroundPulse 15s ease-in-out infinite alternate;
         }
 
         @keyframes backgroundPulse {
-            0% { opacity: 0.8; }
-            100% { opacity: 1; }
+            0% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1.05); }
         }
 
+        /* Scrollbar personalizzata */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { 
+            background: var(--bg-secondary); 
+            border-radius: var(--border-radius-small);
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--gradient-primary);
+            border-radius: var(--border-radius-small);
+            transition: var(--transition-normal);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gradient-secondary);
+            box-shadow: 0 0 10px var(--shadow-glow);
+        }
+
+        /* Header migliorato */
         .header {
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(26, 26, 26, 0.95) 100%);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 2rem 0;
+            background: var(--gradient-glass);
+            backdrop-filter: blur(25px) saturate(1.8);
+            -webkit-backdrop-filter: blur(25px) saturate(1.8);
+            border-bottom: 1px solid var(--border-secondary);
+            padding: 3rem 0;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -77,11 +129,15 @@
             content: '';
             position: absolute;
             top: 0;
-            left: -50%;
-            width: 200%;
+            left: -100%;
+            width: 300%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 0, 80, 0.1), transparent);
-            animation: shimmer 3s ease-in-out infinite;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 0, 80, 0.1) 30%, 
+                rgba(0, 255, 136, 0.1) 70%, 
+                transparent);
+            animation: shimmer 4s ease-in-out infinite;
         }
 
         @keyframes shimmer {
@@ -91,101 +147,141 @@
 
         .header h1 {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 3.5rem;
+            font-size: clamp(2.5rem, 8vw, 4rem);
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, 
+                var(--accent-primary) 0%, 
+                var(--accent-secondary) 50%, 
+                var(--accent-info) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px var(--shadow-glow);
+            text-shadow: none;
             position: relative;
             z-index: 1;
+            letter-spacing: -0.02em;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 20px rgba(255, 0, 80, 0.3)); }
+            100% { filter: drop-shadow(0 0 35px rgba(0, 255, 136, 0.4)); }
         }
 
         .header .subtitle {
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.3rem);
             color: var(--text-secondary);
-            font-weight: 300;
+            font-weight: 400;
             position: relative;
             z-index: 1;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
+            opacity: 0;
+            animation: subtitleFadeIn 1s ease 0.5s forwards;
         }
 
+        @keyframes subtitleFadeIn {
+            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(20px); }
+        }
+
+        /* Status e controlli migliorati */
         .sync-status {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
+            top: 25px;
+            right: 25px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             color: var(--text-secondary);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 25px;
+            font-size: 0.85rem;
             font-weight: 500;
             z-index: 1500;
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-secondary);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
+            gap: 0.75rem;
+            transition: var(--transition-normal);
+            box-shadow: 0 8px 25px var(--shadow-primary);
+        }
+
+        .sync-status:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px var(--shadow-primary);
         }
 
         .sync-status.syncing {
-            color: var(--accent-warning);
-            border-color: var(--accent-warning);
+            color: var(--accent-tertiary);
+            border-color: rgba(255, 170, 0, 0.4);
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.1), var(--bg-glass));
         }
 
         .sync-status.synced {
             color: var(--accent-secondary);
-            border-color: var(--accent-secondary);
+            border-color: rgba(0, 255, 136, 0.4);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), var(--bg-glass));
         }
 
         .sync-status.error {
-            color: var(--accent-primary);
-            border-color: var(--accent-primary);
+            color: var(--accent-error);
+            border-color: rgba(255, 68, 68, 0.4);
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.1), var(--bg-glass));
         }
 
         .sync-status.local {
             color: var(--text-muted);
-            border-color: var(--border-color);
+            border-color: var(--border-secondary);
         }
 
         .sync-spinner {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border: 2px solid transparent;
             border-top: 2px solid currentColor;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Sezioni migliorate */
         .auth-section {
-            background: rgba(17, 17, 17, 0.9);
-            padding: 1rem;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 1.5rem;
             text-align: center;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-secondary);
+            transition: var(--transition-normal);
         }
 
         .auth-status {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.95rem;
             font-weight: 500;
+            transition: var(--transition-normal);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .auth-status.logged-out {
-            background: linear-gradient(135deg, rgba(255, 170, 0, 0.2), rgba(255, 170, 0, 0.1));
-            color: var(--accent-warning);
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.15), rgba(255, 170, 0, 0.05));
+            color: var(--accent-tertiary);
             border: 1px solid rgba(255, 170, 0, 0.3);
         }
 
         .auth-status.logged-in {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 255, 136, 0.05));
             color: var(--accent-secondary);
             border: 1px solid rgba(0, 255, 136, 0.3);
         }
@@ -194,136 +290,230 @@
             background: linear-gradient(135deg, var(--accent-info), #0088cc);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: 500;
-            margin-left: 1rem;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .auth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px var(--shadow-glow-blue);
-        }
-
-        .auth-btn.logout {
-            background: linear-gradient(135deg, var(--accent-primary), #cc0040);
-        }
-
-        .nav-container {
-            padding: 1.5rem;
-            background: rgba(17, 17, 17, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .nav-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .nav-tab {
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
             padding: 0.75rem 1.5rem;
-            border-radius: 12px;
+            border-radius: 20px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
+            margin-left: 1.25rem;
             font-size: 0.9rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition-bounce);
             position: relative;
             overflow: hidden;
         }
 
-        .nav-tab:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        .auth-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px var(--shadow-glow-blue);
         }
 
-        .nav-tab.active {
-            background: linear-gradient(135deg, var(--accent-primary), #cc0040);
-            color: white;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 20px var(--shadow-glow);
+        .auth-btn:active {
+            transform: translateY(-1px) scale(1.02);
         }
 
+        .auth-btn.logout {
+            background: var(--gradient-primary);
+        }
+
+        .auth-btn.logout:hover {
+            box-shadow: 0 15px 30px var(--shadow-glow);
+        }
+
+        /* Statistiche migliorate */
         .stats-bar {
-            background: rgba(26, 26, 26, 0.8);
-            padding: 1rem;
+            background: linear-gradient(135deg, var(--bg-tertiary), rgba(42, 42, 42, 0.8));
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 2rem 1rem;
             text-align: center;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-secondary);
+            position: relative;
         }
 
         .stats-container {
             display: flex;
             justify-content: center;
-            gap: 2rem;
+            gap: 3rem;
             flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
         .stat-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: var(--border-radius-large);
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-secondary);
+            transition: var(--transition-normal);
+            min-width: 120px;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            background: var(--bg-glass-strong);
+            box-shadow: 0 15px 35px var(--shadow-primary);
         }
 
         .stat-number {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: var(--accent-primary);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-weight: 500;
         }
 
-        .admin-controls {
+        /* Navigazione migliorata */
+        .nav-container {
             padding: 2rem;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .nav-tab {
+            background: var(--gradient-glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-secondary);
+            padding: 1rem 1.75rem;
+            border-radius: var(--border-radius-medium);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: var(--transition-normal);
+        }
+
+        .nav-tab:hover::before {
+            left: 100%;
+        }
+
+        .nav-tab:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-primary);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 30px var(--shadow-primary);
+        }
+
+        .nav-tab.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 25px var(--shadow-glow);
+        }
+
+        .nav-tab.active:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px var(--shadow-glow);
+        }
+
+        /* Controlli admin migliorati */
+        .admin-controls {
+            padding: 2.5rem;
             text-align: center;
-            background: rgba(17, 17, 17, 0.5);
-            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(17, 17, 17, 0.8), rgba(34, 34, 34, 0.6));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-secondary);
             display: none;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .admin-controls.show {
-            display: block;
+            display: flex;
         }
 
         .admin-btn {
-            background: linear-gradient(135deg, var(--accent-secondary), #00cc6a);
+            background: var(--gradient-secondary);
             color: var(--bg-primary);
             border: none;
-            padding: 0.875rem 2rem;
-            border-radius: 12px;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius-medium);
             cursor: pointer;
             font-weight: 600;
-            margin: 0.5rem;
             font-size: 0.95rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition-bounce);
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .admin-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: var(--transition-normal);
+        }
+
+        .admin-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .admin-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px var(--shadow-glow-green);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 18px 40px var(--shadow-glow-green);
+        }
+
+        .admin-btn:active {
+            transform: translateY(-2px) scale(1.02);
         }
 
         .admin-btn.edit-mode {
-            background: linear-gradient(135deg, var(--accent-warning), #e69500);
+            background: linear-gradient(135deg, var(--accent-tertiary), #e69500);
         }
 
         .admin-btn.export {
@@ -342,223 +532,135 @@
             background: linear-gradient(135deg, var(--accent-info), #0088cc);
         }
 
+        /* Galleria migliorata */
         .gallery-container {
-            max-width: 1600px;
+            max-width: 1800px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2.5rem;
         }
 
         .gallery-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .gallery-title {
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: 1.8rem;
+            font-weight: 700;
             color: var(--text-primary);
+            position: relative;
+        }
+
+        .gallery-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .search-sort-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .search-box {
             position: relative;
-            max-width: 300px;
+            max-width: 320px;
             width: 100%;
         }
 
         .search-input {
             width: 100%;
-            padding: 0.75rem 1rem 0.75rem 3rem;
-            border: 1px solid var(--border-color);
+            padding: 1rem 1.25rem 1rem 3.5rem;
+            border: 1px solid var(--border-secondary);
             border-radius: 25px;
-            background: rgba(0, 0, 0, 0.5);
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: var(--text-primary);
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: var(--transition-normal);
+            font-family: inherit;
         }
 
         .search-input:focus {
             outline: none;
             border-color: var(--accent-primary);
-            box-shadow: 0 0 15px var(--shadow-glow);
-            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 20px var(--shadow-glow-soft);
+            background: var(--bg-glass-strong);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
         }
 
         .search-icon {
             position: absolute;
-            left: 1rem;
+            left: 1.25rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: var(--transition-normal);
         }
 
+        .search-input:focus + .search-icon {
+            color: var(--accent-primary);
+        }
+
+        .sort-dropdown {
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--border-secondary);
+            border-radius: 25px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            min-width: 150px;
+        }
+
+        .sort-dropdown:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px var(--shadow-glow-soft);
+        }
+
+        /* Cards galleria migliorate */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
         }
 
         .game-card {
-            background: linear-gradient(135deg, var(--bg-card), rgba(34, 34, 34, 0.8));
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
+            background: var(--gradient-card);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--border-radius-xl);
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition-slow);
             position: relative;
-            backdrop-filter: blur(10px);
+            opacity: 0;
+            animation: cardFadeIn 0.6s ease forwards;
         }
 
-        .game-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.4),
-                0 0 30px var(--shadow-glow);
-        }
-
-        .game-image-container {
-            position: relative;
-            width: 100%;
-            height: 280px;
-            overflow: hidden;
-            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-        }
-
-        .game-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-
-        .game-card:hover .game-image {
-            transform: scale(1.1);
-        }
-
-        .game-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            color: var(--text-muted);
-            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-        }
-
-        .image-indicator {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(0, 0, 0, 0.8);
-            color: var(--accent-secondary);
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-        }
-
-        .edit-controls {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 10;
-            display: flex;
-            gap: 8px;
-        }
-
-        .edit-btn {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--border-color);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .edit-btn:hover {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-        }
-
-        .edit-btn.delete:hover {
-            background: #ff4444;
-            border-color: #ff4444;
-        }
-
-        .game-info {
-            padding: 1.5rem;
-        }
-
-        .game-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .game-model {
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .game-price {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--accent-primary);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .game-date {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.8);
-            color: var(--text-muted);
-            padding: 0.25rem 0.5rem;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 1000;
-            overflow-y: auto;
-            backdrop-filter: blur(10px);
-        }
-
-        .modal-content {
-            max-width: 1200px;
-            margin: 3rem auto;
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
-            border-radius: 24px;
-            overflow: hidden;
-            position: relative;
-            border: 1px solid var(--border-color);
-            animation: modalSlideUp 0.4s ease;
-        }
-
-        @keyframes modalSlideUp {
+        @keyframes cardFadeIn {
             from {
                 opacity: 0;
                 transform: translateY(30px) scale(0.9);
@@ -569,41 +671,241 @@
             }
         }
 
+        .game-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.5),
+                0 0 40px var(--shadow-glow-soft),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-primary);
+        }
+
+        .game-image-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-slow);
+            filter: brightness(0.9) contrast(1.1);
+        }
+
+        .game-card:hover .game-image {
+            transform: scale(1.15);
+            filter: brightness(1) contrast(1.2);
+        }
+
+        .game-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4.5rem;
+            color: var(--text-dim);
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            position: relative;
+        }
+
+        .game-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        .image-indicator {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--accent-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .edit-controls {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-btn {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-secondary);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-bounce);
+            font-size: 0.9rem;
+        }
+
+        .edit-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px var(--shadow-glow);
+        }
+
+        .edit-btn.delete:hover {
+            background: var(--accent-error);
+            border-color: var(--accent-error);
+            box-shadow: 0 8px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .game-info {
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), transparent);
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .game-model {
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .game-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .game-date {
+            position: absolute;
+            bottom: 18px;
+            right: 18px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid var(--border-secondary);
+        }
+
+        /* Modal migliorato */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: var(--gradient-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius-xl);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-secondary);
+            animation: modalSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7);
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 25px;
+            top: 25px;
+            right: 30px;
             font-size: 1.5rem;
             color: var(--text-primary);
             cursor: pointer;
             z-index: 1001;
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: var(--transition-bounce);
+            border: 1px solid var(--border-secondary);
         }
 
         .modal-close:hover {
             background: var(--accent-primary);
             color: white;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px var(--shadow-glow);
         }
 
         .modal-gallery {
             position: relative;
             width: 100%;
-            height: 500px;
+            height: 550px;
             overflow: hidden;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
         }
 
         .gallery-container-modal {
             display: flex;
             width: 100%;
             height: 100%;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .gallery-slide {
@@ -616,6 +918,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: var(--transition-normal);
         }
 
         .modal-image-placeholder {
@@ -624,8 +927,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 5rem;
-            color: var(--text-muted);
+            font-size: 6rem;
+            color: var(--text-dim);
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
         }
 
@@ -634,91 +937,110 @@
             top: 50%;
             transform: translateY(-50%);
             background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
+            border: 1px solid var(--border-secondary);
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            font-size: 1.3rem;
+            transition: var(--transition-bounce);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .gallery-nav:hover {
             background: var(--accent-primary);
-            transform: translateY(-50%) scale(1.1);
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 10px 30px var(--shadow-glow);
         }
 
-        .gallery-nav.prev {
-            left: 20px;
-        }
-
-        .gallery-nav.next {
-            right: 20px;
-        }
+        .gallery-nav.prev { left: 25px; }
+        .gallery-nav.next { right: 25px; }
 
         .gallery-indicators {
             position: absolute;
-            bottom: 20px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .gallery-dot {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.4);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition-bounce);
         }
 
-        .gallery-dot.active {
+        .gallery-dot.active,
+        .gallery-dot:hover {
             background: var(--accent-primary);
-            transform: scale(1.2);
+            transform: scale(1.3);
+            box-shadow: 0 4px 15px var(--shadow-glow);
         }
 
         .gallery-counter {
             position: absolute;
-            top: 20px;
-            left: 25px;
+            top: 25px;
+            left: 30px;
             background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.25rem;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 1px solid var(--border-secondary);
         }
 
+        /* Info modal migliorate */
         .modal-info {
-            padding: 2.5rem;
+            padding: 3rem;
         }
 
         .modal-title {
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 4vw, 3rem);
             font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--accent-primary);
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-family: 'JetBrains Mono', monospace;
+            line-height: 1.2;
         }
 
         .spec-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.75rem;
+            margin-bottom: 2.5rem;
         }
 
         .spec-item {
-            background: linear-gradient(135deg, rgba(255, 0, 80, 0.1), rgba(0, 0, 0, 0.3));
-            padding: 1.5rem;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(255, 0, 80, 0.08), rgba(0, 0, 0, 0.3));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1.75rem;
+            border-radius: var(--border-radius-large);
+            border: 1px solid var(--border-secondary);
             position: relative;
             overflow: hidden;
+            transition: var(--transition-normal);
+        }
+
+        .spec-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow-primary);
+            border-color: var(--accent-primary);
         }
 
         .spec-item::before {
@@ -728,35 +1050,43 @@
             left: 0;
             width: 4px;
             height: 100%;
-            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+            background: var(--gradient-primary);
         }
 
         .spec-label {
             font-weight: 600;
             color: var(--accent-secondary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.75px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .spec-value {
             color: var(--text-primary);
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 500;
+            line-height: 1.4;
         }
 
         .modal-price {
-            font-size: 2.8rem;
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 700;
-            color: var(--accent-primary);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-color);
+            margin-top: 2.5rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--border-secondary);
             font-family: 'JetBrains Mono', monospace;
         }
 
+        /* Form migliorati */
         .form-modal {
             display: none;
             position: fixed;
@@ -765,27 +1095,35 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             z-index: 1000;
             overflow-y: auto;
-            backdrop-filter: blur(10px);
+            padding: 2rem;
         }
 
         .form-content {
-            max-width: 800px;
-            margin: 2rem auto;
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
-            border-radius: 24px;
-            padding: 2.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--gradient-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius-xl);
+            padding: 3rem;
             position: relative;
-            border: 1px solid var(--border-color);
-            animation: modalSlideUp 0.4s ease;
+            border: 1px solid var(--border-secondary);
+            animation: modalSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7);
         }
 
         .form-title {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 2rem;
-            color: var(--accent-primary);
+            margin-bottom: 2.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             text-align: center;
             font-family: 'JetBrains Mono', monospace;
         }
@@ -793,12 +1131,12 @@
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .form-group.full-width {
@@ -810,7 +1148,7 @@
             margin-bottom: 0.75rem;
             color: var(--accent-secondary);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -819,13 +1157,15 @@
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 1rem 1.25rem;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.5);
+            padding: 1.25rem;
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--border-radius-medium);
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: var(--text-primary);
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: var(--transition-normal);
             font-family: 'Space Grotesk', sans-serif;
         }
 
@@ -834,28 +1174,53 @@
         .form-group textarea:focus {
             outline: none;
             border-color: var(--accent-primary);
-            box-shadow: 0 0 15px var(--shadow-glow);
-            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 20px var(--shadow-glow-soft);
+            background: var(--bg-glass-strong);
         }
 
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Upload area migliorata */
         .images-upload-container {
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 2rem 1rem;
+            border: 2px dashed var(--border-secondary);
+            border-radius: var(--border-radius-large);
+            padding: 3rem 2rem;
             text-align: center;
-            background: rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: var(--transition-normal);
             position: relative;
+            overflow: hidden;
+        }
+
+        .images-upload-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: var(--transition-normal);
         }
 
         .images-upload-container:hover {
             border-color: var(--accent-primary);
-            background: rgba(255, 0, 80, 0.1);
+            background: linear-gradient(135deg, rgba(255, 0, 80, 0.1), var(--bg-glass));
+        }
+
+        .images-upload-container:hover::before {
+            left: 100%;
         }
 
         .images-upload-container.dragover {
             border-color: var(--accent-secondary);
-            background: rgba(0, 255, 136, 0.1);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), var(--bg-glass));
+            transform: scale(1.02);
         }
 
         .images-input {
@@ -874,24 +1239,44 @@
         }
 
         .upload-placeholder i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-primary);
+            opacity: 0.7;
+        }
+
+        .upload-placeholder div {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-placeholder small {
             color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
         .images-preview {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.5rem;
         }
 
         .image-preview-item {
             position: relative;
-            border-radius: 12px;
+            border-radius: var(--border-radius-medium);
             overflow: hidden;
             aspect-ratio: 1;
-            border: 2px solid var(--border-color);
+            border: 2px solid var(--border-secondary);
+            transition: var(--transition-normal);
+        }
+
+        .image-preview-item:hover {
+            border-color: var(--accent-primary);
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px var(--shadow-primary);
         }
 
         .image-preview-img {
@@ -902,119 +1287,140 @@
 
         .image-remove {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            background: var(--accent-primary);
+            top: 8px;
+            right: 8px;
+            background: var(--accent-error);
             color: white;
             border: none;
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 0.8rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: var(--transition-bounce);
+            opacity: 0.9;
         }
 
         .image-remove:hover {
-            background: #ff4444;
-            transform: scale(1.1);
+            background: #ff6666;
+            transform: scale(1.2);
+            box-shadow: 0 4px 15px rgba(255, 68, 68, 0.5);
+            opacity: 1;
         }
 
         .image-count {
             color: var(--accent-secondary);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 600;
         }
 
+        /* Bottoni migliorati */
         .form-actions {
             display: flex;
-            gap: 1rem;
+            gap: 1.25rem;
             justify-content: flex-end;
-            margin-top: 2.5rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--border-secondary);
         }
 
         .btn {
-            padding: 1rem 2rem;
+            padding: 1.25rem 2.5rem;
             border: none;
-            border-radius: 12px;
+            border-radius: var(--border-radius-medium);
             cursor: pointer;
             font-weight: 600;
             font-size: 1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition-bounce);
             font-family: 'Space Grotesk', sans-serif;
             position: relative;
             overflow: hidden;
+            min-width: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent-primary), #cc0040);
+            background: var(--gradient-primary);
             color: white;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px var(--shadow-glow);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px var(--shadow-glow);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, var(--bg-secondary), #333333);
+            background: var(--gradient-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: var(--text-secondary);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-secondary);
         }
 
         .btn-secondary:hover {
-            background: var(--bg-card-hover);
+            background: var(--bg-glass-strong);
             color: var(--text-primary);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 30px var(--shadow-primary);
         }
 
+        /* Stati vuoti migliorati */
         .empty-state {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 5rem 2rem;
             color: var(--text-muted);
             grid-column: 1 / -1;
         }
 
         .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.5;
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            opacity: 0.4;
+            color: var(--accent-primary);
         }
 
         .empty-state h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
             color: var(--text-secondary);
+            font-weight: 600;
         }
 
         .empty-state p {
             font-size: 1.1rem;
+            line-height: 1.6;
         }
 
+        /* Loading migliorato */
         .loading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 2000;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--border-color);
-            border-top: 3px solid var(--accent-primary);
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border-secondary);
+            border-top: 4px solid var(--accent-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -1022,13 +1428,10 @@
         .loading-text {
             color: var(--text-secondary);
             font-weight: 500;
+            font-size: 1.1rem;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        /* Auth modal migliorato */
         .auth-modal {
             display: none;
             position: fixed;
@@ -1037,63 +1440,94 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 2rem;
         }
 
         .auth-content {
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
-            border-radius: 20px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 400px;
+            background: var(--gradient-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius-large);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
             text-align: center;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-secondary);
+            animation: modalSlideUp 0.4s ease;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
         }
 
         .auth-content h3 {
-            color: var(--accent-primary);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .auth-content p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1rem;
         }
 
         .auth-content input {
             width: 100%;
-            padding: 1rem;
-            margin: 1rem 0;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.5);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--border-radius-medium);
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: var(--text-primary);
             font-size: 1rem;
+            transition: var(--transition-normal);
         }
 
         .auth-content input:focus {
             outline: none;
             border-color: var(--accent-primary);
-            box-shadow: 0 0 15px var(--shadow-glow);
+            box-shadow: 0 0 20px var(--shadow-glow-soft);
         }
 
+        .auth-content .btn {
+            margin: 0.5rem;
+            flex: 1;
+        }
+
+        /* Toast migliorati */
         .toast {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
+            top: 30px;
+            right: 30px;
+            padding: 1.25rem 2rem;
+            border-radius: var(--border-radius-medium);
             font-weight: 600;
+            font-size: 0.95rem;
             z-index: 2000;
-            animation: slideInRight 0.3s ease;
-            max-width: 300px;
+            animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 400px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-secondary);
+            box-shadow: 0 10px 30px var(--shadow-primary);
         }
 
         .toast.success {
             background: linear-gradient(135deg, var(--accent-secondary), #00cc6a);
-            color: var(--bg-primary);
+            color: white;
         }
 
         .toast.error {
-            background: linear-gradient(135deg, #ff4444, #cc0000);
+            background: linear-gradient(135deg, var(--accent-error), #cc0000);
             color: white;
         }
 
@@ -1103,32 +1537,202 @@
         }
 
         @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from { 
+                transform: translateX(100%) scale(0.8); 
+                opacity: 0; 
+            }
+            to { 
+                transform: translateX(0) scale(1); 
+                opacity: 1; 
+            }
         }
 
+        /* Skeleton loaders */
+        .skeleton {
+            background: linear-gradient(90deg, 
+                var(--bg-card) 25%, 
+                rgba(255, 255, 255, 0.05) 50%, 
+                var(--bg-card) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive migliorato */
         @media (max-width: 768px) {
-            .header h1 { font-size: 2.5rem; }
-            .gallery { grid-template-columns: 1fr; gap: 1.5rem; }
-            .modal-content, .form-content { margin: 1rem; }
-            .form-grid { grid-template-columns: 1fr; }
-            .nav-tabs { flex-direction: column; }
-            .admin-btn { display: block; width: 100%; max-width: 250px; margin: 0.5rem auto; }
-            .stats-container { gap: 1rem; }
-            .gallery-header { flex-direction: column; text-align: center; }
-            .search-box { max-width: 100%; }
-            .gallery-nav { width: 40px; height: 40px; font-size: 1rem; }
-            .images-preview { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
+            .header {
+                padding: 2rem 0;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .modal-content,
+            .form-content {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .admin-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .admin-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .stats-container {
+                gap: 1.5rem;
+            }
+            
+            .gallery-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .search-sort-container {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .search-box,
+            .sort-dropdown {
+                max-width: 100%;
+            }
+            
+            .gallery-nav {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+            
+            .images-preview {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 1rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .sync-status {
+                top: 15px;
+                right: 15px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-        ::-webkit-scrollbar-thumb { 
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 4px;
+        @media (max-width: 480px) {
+            .gallery-container {
+                padding: 1.5rem;
+            }
+            
+            .modal,
+            .form-modal,
+            .auth-modal {
+                padding: 1rem;
+            }
+            
+            .modal-content,
+            .form-content,
+            .auth-content {
+                padding: 1.5rem;
+            }
+            
+            .modal-gallery {
+                height: 400px;
+            }
+            
+            .gallery-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .gallery-nav.prev { left: 15px; }
+            .gallery-nav.next { right: 15px; }
+            
+            .toast {
+                top: 20px;
+                right: 20px;
+                left: 20px;
+                max-width: none;
+            }
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #cc0040, #00cc6a);
+
+        /* Dark mode ottimizzato */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #000000;
+                --bg-secondary: #0f0f0f;
+                --text-primary: #ffffff;
+                --text-secondary: #f0f0f0;
+            }
+        }
+
+        /* Animazioni personalizzate per diversi elementi */
+        .nav-tab {
+            animation-delay: calc(var(--i, 0) * 0.1s);
+        }
+
+        .game-card {
+            animation-delay: calc(var(--i, 0) * 0.05s);
+        }
+
+        .stat-item {
+            animation-delay: calc(var(--i, 0) * 0.1s);
+        }
+
+        /* Utility classes */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .slide-up {
+            transform: translateY(30px);
+            opacity: 0;
+            animation: slideUp 0.6s ease forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -1146,18 +1750,22 @@
     <div class="auth-modal" id="authModal">
         <div class="auth-content">
             <h3>Accesso Admin</h3>
-            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Inserisci la password per accedere</p>
-            <input type="password" id="authPassword" placeholder="Password">
+            <p>Inserisci la password per accedere alle funzionalità di amministrazione</p>
+            <input type="password" id="authPassword" placeholder="Password admin" autocomplete="current-password">
             <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                <button class="btn btn-secondary" onclick="closeAuthModal()">Annulla</button>
-                <button class="btn btn-primary" onclick="authenticate()">Accedi</button>
+                <button class="btn btn-secondary" onclick="closeAuthModal()">
+                    <i class="fas fa-times"></i> Annulla
+                </button>
+                <button class="btn btn-primary" onclick="authenticate()">
+                    <i class="fas fa-sign-in-alt"></i> Accedi
+                </button>
             </div>
         </div>
     </div>
 
     <header class="header">
         <h1>RetroAvia</h1>
-        <p class="subtitle">Galleria progetti Game Boy personalizzati</p>
+        <p class="subtitle">Galleria progetti Game Boy personalizzati · Creazioni uniche e modifiche professionali</p>
     </header>
 
     <div class="auth-section">
@@ -1172,19 +1780,19 @@
 
     <div class="stats-bar">
         <div class="stats-container">
-            <div class="stat-item">
+            <div class="stat-item" style="--i: 0">
                 <div class="stat-number" id="totalGames">0</div>
                 <div class="stat-label">Totale Progetti</div>
             </div>
-            <div class="stat-item">
+            <div class="stat-item" style="--i: 1">
                 <div class="stat-number" id="colorGames">0</div>
                 <div class="stat-label">Game Boy Color</div>
             </div>
-            <div class="stat-item">
+            <div class="stat-item" style="--i: 2">
                 <div class="stat-number" id="advanceGames">0</div>
                 <div class="stat-label">Game Boy Advance</div>
             </div>
-            <div class="stat-item">
+            <div class="stat-item" style="--i: 3">
                 <div class="stat-number" id="spGames">0</div>
                 <div class="stat-label">Game Boy Advance SP</div>
             </div>
@@ -1193,16 +1801,16 @@
 
     <div class="nav-container">
         <nav class="nav-tabs">
-            <button class="nav-tab active" data-category="all">
+            <button class="nav-tab active" data-category="all" style="--i: 0">
                 <i class="fas fa-gamepad"></i> Tutti i Progetti
             </button>
-            <button class="nav-tab" data-category="color">
+            <button class="nav-tab" data-category="color" style="--i: 1">
                 <i class="fas fa-palette"></i> Game Boy Color
             </button>
-            <button class="nav-tab" data-category="advance">
+            <button class="nav-tab" data-category="advance" style="--i: 2">
                 <i class="fas fa-mobile-alt"></i> Game Boy Advance
             </button>
-            <button class="nav-tab" data-category="sp">
+            <button class="nav-tab" data-category="sp" style="--i: 3">
                 <i class="fas fa-laptop"></i> Game Boy Advance SP
             </button>
         </nav>
@@ -1232,20 +1840,31 @@
     <div class="gallery-container">
         <div class="gallery-header">
             <h2 class="gallery-title" id="galleryTitle">Tutti i Progetti</h2>
-            <div class="search-box">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" id="searchInput" placeholder="Cerca progetti...">
+            <div class="search-sort-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Cerca progetti, modelli, componenti...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <select class="sort-dropdown" id="sortDropdown">
+                    <option value="date-desc">Più recenti</option>
+                    <option value="date-asc">Più vecchi</option>
+                    <option value="name-asc">Nome A-Z</option>
+                    <option value="name-desc">Nome Z-A</option>
+                    <option value="price-desc">Prezzo alto</option>
+                    <option value="price-asc">Prezzo basso</option>
+                </select>
             </div>
         </div>
         <div class="gallery" id="gallery">
             <div class="empty-state">
                 <i class="fas fa-gamepad"></i>
-                <h3>Nessun progetto</h3>
-                <p>I progetti RetroAvia appariranno qui</p>
+                <h3>Nessun progetto disponibile</h3>
+                <p>I progetti RetroAvia appariranno qui una volta aggiunti</p>
             </div>
         </div>
     </div>
 
+    <!-- Modal dettaglio progetto -->
     <div class="modal" id="detailModal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal('detailModal')">
@@ -1259,10 +1878,10 @@
                         </div>
                     </div>
                 </div>
-                <button class="gallery-nav prev" id="prevBtn" onclick="changeSlide(-1)">
+                <button class="gallery-nav prev" id="prevBtn" onclick="changeSlide(-1)" aria-label="Immagine precedente">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <button class="gallery-nav next" id="nextBtn" onclick="changeSlide(1)">
+                <button class="gallery-nav next" id="nextBtn" onclick="changeSlide(1)" aria-label="Immagine successiva">
                     <i class="fas fa-chevron-right"></i>
                 </button>
                 <div class="gallery-counter" id="galleryCounter">1 / 1</div>
@@ -1276,6 +1895,7 @@
         </div>
     </div>
 
+    <!-- Modal form progetto -->
     <div class="form-modal" id="formModal">
         <div class="form-content">
             <span class="modal-close" onclick="closeModal('formModal')">
@@ -1285,11 +1905,15 @@
             <form id="gameForm">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="gameName">Nome Progetto</label>
-                        <input type="text" id="gameName" required placeholder="Game Boy Color Custom">
+                        <label for="gameName">
+                            <i class="fas fa-gamepad"></i> Nome Progetto *
+                        </label>
+                        <input type="text" id="gameName" required placeholder="Game Boy Color Custom Retro" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="gameCategory">Categoria</label>
+                        <label for="gameCategory">
+                            <i class="fas fa-tags"></i> Categoria *
+                        </label>
                         <select id="gameCategory" required>
                             <option value="">Seleziona categoria</option>
                             <option value="color">Game Boy Color</option>
@@ -1300,13 +1924,15 @@
                 </div>
 
                 <div class="form-group full-width">
-                    <label for="gameImages">Immagini (Max 10)</label>
+                    <label for="gameImages">
+                        <i class="fas fa-images"></i> Immagini Progetto (Max 10) *
+                    </label>
                     <div class="images-upload-container" id="imagesUploadContainer">
                         <input type="file" id="gameImages" class="images-input" accept="image/*" multiple>
                         <div class="upload-placeholder" id="uploadPlaceholder">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            <div><strong>Carica immagini</strong></div>
-                            <small>JPG, PNG, GIF - Max 10 immagini</small>
+                            <div>Carica o trascina le immagini</div>
+                            <small>JPG, PNG, GIF · Max 5MB per immagine · Max 10 immagini</small>
                         </div>
                         <div class="images-preview" id="imagesPreview"></div>
                         <div class="image-count" id="imageCount">0 / 10 immagini</div>
@@ -1315,58 +1941,80 @@
 
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="gamePrice">Prezzo</label>
-                        <input type="number" id="gamePrice" step="0.01" required placeholder="120.00">
+                        <label for="gamePrice">
+                            <i class="fas fa-euro-sign"></i> Prezzo *
+                        </label>
+                        <input type="number" id="gamePrice" step="0.01" min="0" required placeholder="120.00" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="gameModel">Modello Base</label>
-                        <input type="text" id="gameModel" required placeholder="CGB-001">
+                        <label for="gameModel">
+                            <i class="fas fa-microchip"></i> Modello Base *
+                        </label>
+                        <input type="text" id="gameModel" required placeholder="CGB-001" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="gameShell">Scocca</label>
-                        <input type="text" id="gameShell" placeholder="Trasparente custom">
+                        <label for="gameShell">
+                            <i class="fas fa-mobile-alt"></i> Scocca
+                        </label>
+                        <input type="text" id="gameShell" placeholder="Trasparente custom fumé" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="gameButtons">Pulsanti</label>
-                        <input type="text" id="gameButtons" placeholder="Custom colorati">
+                        <label for="gameButtons">
+                            <i class="fas fa-circle"></i> Pulsanti
+                        </label>
+                        <input type="text" id="gameButtons" placeholder="Custom colorati RGB" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="gameLabel">Etichetta</label>
-                        <input type="text" id="gameLabel" placeholder="Personalizzata">
+                        <label for="gameLabel">
+                            <i class="fas fa-tag"></i> Etichetta
+                        </label>
+                        <input type="text" id="gameLabel" placeholder="Personalizzata retroilluminata" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="gameBattery">Batteria</label>
-                        <input type="text" id="gameBattery" placeholder="Li-ion 1200mAh">
+                        <label for="gameBattery">
+                            <i class="fas fa-battery-full"></i> Batteria
+                        </label>
+                        <input type="text" id="gameBattery" placeholder="Li-ion 1200mAh ricaricabile USB-C" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="gameAudio">Audio</label>
-                        <input type="text" id="gameAudio" placeholder="Speaker + jack 3.5mm">
+                        <label for="gameAudio">
+                            <i class="fas fa-volume-up"></i> Audio
+                        </label>
+                        <input type="text" id="gameAudio" placeholder="Speaker + jack 3.5mm + amplificatore" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="gameDisplay">Display</label>
-                        <input type="text" id="gameDisplay" placeholder="IPS V2">
+                        <label for="gameDisplay">
+                            <i class="fas fa-tv"></i> Display
+                        </label>
+                        <input type="text" id="gameDisplay" placeholder="IPS V2 retroilluminato con filtri" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="gameLed">Kit LED</label>
-                        <input type="text" id="gameLed" placeholder="RGB programmabile">
+                        <label for="gameLed">
+                            <i class="fas fa-lightbulb"></i> Kit LED
+                        </label>
+                        <input type="text" id="gameLed" placeholder="RGB programmabile con effetti" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="gameBox">Accessori</label>
-                        <input type="text" id="gameBox" placeholder="Box originale">
+                        <label for="gameBox">
+                            <i class="fas fa-box"></i> Accessori
+                        </label>
+                        <input type="text" id="gameBox" placeholder="Box originale + manuale + cavo USB-C" autocomplete="off">
                     </div>
                 </div>
                 
                 <div class="form-group full-width">
-                    <label for="gameOther">Note Extra</label>
-                    <textarea id="gameOther" rows="3" placeholder="Modifiche speciali, personalizzazioni..."></textarea>
+                    <label for="gameOther">
+                        <i class="fas fa-plus-circle"></i> Note Aggiuntive
+                    </label>
+                    <textarea id="gameOther" rows="3" placeholder="Modifiche speciali, personalizzazioni uniche, dettagli tecnici aggiuntivi..."></textarea>
                 </div>
                 
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('formModal')">
-                        Annulla
+                        <i class="fas fa-times"></i> Annulla
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        Salva Progetto
+                        <i class="fas fa-save"></i> Salva Progetto
                     </button>
                 </div>
             </form>
@@ -1374,765 +2022,847 @@
     </div>
 
     <script>
-        // Configuration
-        const ADMIN_PASSWORD = 'RetroAvia2024!';
-        const MAX_FILE_SIZE = 5 * 1024 * 1024;
-        const MAX_IMAGES = 10;
-        const SUPABASE_URL = 'https://moenkmmkpogjapsyiuat.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vZW5rbW1rcG9namFwc3lpdWF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0OTYyMTYsImV4cCI6MjA3MjA3MjIxNn0.RdFnDxJVIgESel9I6s84KRR3F6yPFL7rk0ycFP_q0pg';
-        
-        // Global variables
-        let supabase = null;
-        let games = [];
-        let editMode = false;
-        let currentCategory = 'all';
-        let editingId = null;
-        let isAuthenticated = false;
-        let searchQuery = '';
-        let currentSlide = 0;
-        let currentGameImages = [];
-        let uploadedImages = [];
-        let CLOUD_SYNC_ENABLED = true;
-
-        // Initialize Supabase
-        function initSupabase() {
-            try {
-                if (window.supabase && window.supabase.createClient) {
-                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                    return true;
-                }
-            } catch (error) {
-                return false;
+        // Configuration migliorata
+        const CONFIG = {
+            ADMIN_PASSWORD: 'RetroAvia2024!',
+            MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
+            MAX_IMAGES: 10,
+            SUPABASE_URL: 'https://moenkmmkpogjapsyiuat.supabase.co',
+            SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vZW5rbW1rcG9namFwc3lpdWF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0OTYyMTYsImV4cCI6MjA3MjA3MjIxNn0.RdFnDxJVIgESel9I6s84KRR3F6yPFL7rk0ycFP_q0pg',
+            AUTO_SYNC_INTERVAL: 300000, // 5 minuti
+            TOAST_DURATION: 4000,
+            SEARCH_DEBOUNCE: 300,
+            IMAGE_COMPRESSION: {
+                quality: 0.8,
+                maxDimension: 1920
             }
-            return false;
-        }
+        };
+        
+        // Stato globale ottimizzato
+        const STATE = {
+            supabase: null,
+            games: [],
+            editMode: false,
+            currentCategory: 'all',
+            editingId: null,
+            isAuthenticated: false,
+            searchQuery: '',
+            sortBy: 'date-desc',
+            currentSlide: 0,
+            currentGameImages: [],
+            uploadedImages: [],
+            cloudSyncEnabled: true,
+            searchDebounceTimer: null,
+            autoSyncTimer: null
+        };
 
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', () => {
-            updateSyncStatus('syncing', 'Inizializzazione...');
-            
-            let attempts = 0;
-            const maxAttempts = 10;
-            
-            const tryInit = () => {
-                attempts++;
-                if (initSupabase()) {
-                    initializeApp();
+        // Utility functions ottimizzate
+        const Utils = {
+            // Debounce migliorato
+            debounce: (func, wait) => {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            },
+
+            // Throttle per scroll/resize
+            throttle: (func, limit) => {
+                let inThrottle;
+                return function() {
+                    const args = arguments;
+                    const context = this;
+                    if (!inThrottle) {
+                        func.apply(context, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
+            },
+
+            // Generazione ID unico
+            generateId: () => `game_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+
+            // Formattazione data
+            formatDate: (dateString) => {
+                return new Date(dateString).toLocaleDateString('it-IT', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            },
+
+            // Formattazione prezzo
+            formatPrice: (price) => {
+                const num = parseFloat(price) || 0;
+                return new Intl.NumberFormat('it-IT', {
+                    style: 'currency',
+                    currency: 'EUR'
+                }).format(num);
+            },
+
+            // Sanitizzazione input
+            sanitizeInput: (str) => {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            },
+
+            // Compression immagini migliorata
+            compressImage: (file, quality = CONFIG.IMAGE_COMPRESSION.quality, maxDim = CONFIG.IMAGE_COMPRESSION.maxDimension) => {
+                return new Promise((resolve, reject) => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    
+                    img.onload = () => {
+                        let { width, height } = img;
+                        
+                        // Calcolo proporzioni
+                        const ratio = Math.min(maxDim / width, maxDim / height);
+                        if (ratio < 1) {
+                            width *= ratio;
+                            height *= ratio;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        // Miglioramenti qualità rendering
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        const result = canvas.toDataURL('image/jpeg', quality);
+                        resolve(result);
+                    };
+                    
+                    img.onerror = reject;
+                    img.src = URL.createObjectURL(file);
+                });
+            },
+
+            // File to base64
+            fileToBase64: (file) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            },
+
+            // Lazy loading images
+            setupLazyLoading: () => {
+                if ('IntersectionObserver' in window) {
+                    const imageObserver = new IntersectionObserver((entries, observer) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                const img = entry.target;
+                                img.src = img.dataset.src;
+                                img.classList.remove('lazy');
+                                observer.unobserve(img);
+                            }
+                        });
+                    });
+
+                    document.querySelectorAll('img[data-src]').forEach(img => {
+                        imageObserver.observe(img);
+                    });
+                }
+            }
+        };
+
+        // Gestione Supabase ottimizzata
+        const SupabaseManager = {
+            initialize: () => {
+                try {
+                    if (window.supabase && window.supabase.createClient) {
+                        STATE.supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+                        return true;
+                    }
+                } catch (error) {
+                    console.error('Errore inizializzazione Supabase:', error);
+                    return false;
+                }
+                return false;
+            },
+
+            syncToCloud: async (notify = false) => {
+                if (!STATE.cloudSyncEnabled || !STATE.supabase) {
+                    UI.updateSyncStatus('local', 'Locale');
+                    return false;
+                }
+
+                try {
+                    UI.updateSyncStatus('syncing', 'Sincronizzazione...');
+                    
+                    // Cancella dati esistenti
+                    const { error: deleteError } = await STATE.supabase
+                        .from('games')
+                        .delete()
+                        .neq('id', 'none');
+
+                    if (deleteError && !deleteError.message.includes('No rows')) {
+                        throw deleteError;
+                    }
+
+                    // Inserisce nuovi dati se presenti
+                    if (STATE.games.length > 0) {
+                        const gamesData = STATE.games.map(game => ({
+                            id: game.id,
+                            name: game.name,
+                            category: game.category,
+                            images: Array.isArray(game.images) ? game.images : [],
+                            price: parseFloat(game.price) || 0,
+                            model: game.model || '',
+                            shell: game.shell || '',
+                            buttons: game.buttons || '',
+                            label: game.label || '',
+                            battery: game.battery || '',
+                            audio: game.audio || '',
+                            display: game.display || '',
+                            led: game.led || '',
+                            box: game.box || '',
+                            other: game.other || '',
+                            created_at: game.createdAt,
+                            updated_at: game.updatedAt || new Date().toISOString()
+                        }));
+
+                        const { error: insertError } = await STATE.supabase
+                            .from('games')
+                            .insert(gamesData);
+
+                        if (insertError) throw insertError;
+                    }
+
+                    localStorage.setItem('retroavia_last_sync', new Date().toISOString());
+                    UI.updateSyncStatus('synced', `Sincronizzato (${STATE.games.length})`);
+                    
+                    if (notify) {
+                        UI.showToast('Sincronizzazione completata con successo', 'success');
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Errore sync cloud:', error);
+                    UI.updateSyncStatus('error', 'Errore sync');
+                    if (notify) {
+                        UI.showToast('Errore durante la sincronizzazione', 'error');
+                    }
+                    return false;
+                }
+            },
+
+            syncFromCloud: async () => {
+                if (!STATE.cloudSyncEnabled || !STATE.supabase) {
+                    UI.updateSyncStatus('local', 'Locale');
+                    return false;
+                }
+
+                try {
+                    UI.updateSyncStatus('syncing', 'Caricamento...');
+                    
+                    const { data: cloudGames, error } = await STATE.supabase
+                        .from('games')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+
+                    if (cloudGames && cloudGames.length > 0) {
+                        const convertedGames = cloudGames.map(game => ({
+                            id: game.id,
+                            name: game.name,
+                            category: game.category,
+                            images: Array.isArray(game.images) ? game.images : [],
+                            price: parseFloat(game.price) || 0,
+                            model: game.model || '',
+                            shell: game.shell || '',
+                            buttons: game.buttons || '',
+                            label: game.label || '',
+                            battery: game.battery || '',
+                            audio: game.audio || '',
+                            display: game.display || '',
+                            led: game.led || '',
+                            box: game.box || '',
+                            other: game.other || '',
+                            createdAt: game.created_at,
+                            updatedAt: game.updated_at
+                        }));
+
+                        // Aggiorna solo se i dati cloud sono più recenti o completi
+                        if (STATE.games.length === 0 || convertedGames.length > STATE.games.length) {
+                            STATE.games = convertedGames;
+                            DataManager.saveLocal();
+                            UI.renderGallery();
+                            UI.updateStats();
+                        }
+                        
+                        localStorage.setItem('retroavia_last_sync', new Date().toISOString());
+                        UI.updateSyncStatus('synced', `Caricato (${STATE.games.length})`);
+                    } else {
+                        UI.updateSyncStatus('synced', 'Cloud vuoto');
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Errore caricamento cloud:', error);
+                    UI.updateSyncStatus('error', 'Errore caricamento');
+                    return false;
+                }
+            }
+        };
+
+        // Gestione dati migliorata
+        const DataManager = {
+            loadLocal: () => {
+                try {
+                    const saved = localStorage.getItem('retroavia_games');
+                    if (saved) {
+                        const parsedGames = JSON.parse(saved);
+                        STATE.games = parsedGames.map(game => ({
+                            id: game.id || Utils.generateId(),
+                            name: game.name || 'Progetto',
+                            category: game.category || 'color',
+                            images: Array.isArray(game.images) ? game.images : [],
+                            price: parseFloat(game.price) || 0,
+                            model: game.model || '',
+                            shell: game.shell || '',
+                            buttons: game.buttons || '',
+                            label: game.label || '',
+                            battery: game.battery || '',
+                            audio: game.audio || '',
+                            display: game.display || '',
+                            led: game.led || '',
+                            box: game.box || '',
+                            other: game.other || '',
+                            createdAt: game.createdAt || new Date().toISOString(),
+                            updatedAt: game.updatedAt || new Date().toISOString()
+                        }));
+                        
+                        DataManager.sortGames();
+                    }
+                    
+                    UI.renderGallery();
+                    UI.updateStats();
+                } catch (error) {
+                    console.error('Errore caricamento locale:', error);
+                    STATE.games = [];
+                }
+            },
+
+            saveLocal: () => {
+                try {
+                    localStorage.setItem('retroavia_games', JSON.stringify(STATE.games));
+                    return true;
+                } catch (error) {
+                    console.error('Errore salvataggio locale:', error);
+                    UI.showToast('Errore nel salvataggio locale', 'error');
+                    return false;
+                }
+            },
+
+            filterGames: () => {
+                let filtered = STATE.currentCategory === 'all' ? 
+                    [...STATE.games] : 
+                    STATE.games.filter(g => g.category === STATE.currentCategory);
+                
+                if (STATE.searchQuery) {
+                    const query = STATE.searchQuery.toLowerCase();
+                    filtered = filtered.filter(game => 
+                        game.name.toLowerCase().includes(query) ||
+                        game.model.toLowerCase().includes(query) ||
+                        (game.shell && game.shell.toLowerCase().includes(query)) ||
+                        (game.buttons && game.buttons.toLowerCase().includes(query)) ||
+                        (game.display && game.display.toLowerCase().includes(query))
+                    );
+                }
+                
+                return DataManager.applySorting(filtered);
+            },
+
+            applySorting: (games) => {
+                const sortedGames = [...games];
+                
+                switch (STATE.sortBy) {
+                    case 'date-desc':
+                        return sortedGames.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    case 'date-asc':
+                        return sortedGames.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    case 'name-asc':
+                        return sortedGames.sort((a, b) => a.name.localeCompare(b.name));
+                    case 'name-desc':
+                        return sortedGames.sort((a, b) => b.name.localeCompare(a.name));
+                    case 'price-desc':
+                        return sortedGames.sort((a, b) => b.price - a.price);
+                    case 'price-asc':
+                        return sortedGames.sort((a, b) => a.price - b.price);
+                    default:
+                        return sortedGames;
+                }
+            },
+
+            sortGames: () => {
+                STATE.games = DataManager.applySorting(STATE.games);
+            }
+        };
+
+        // UI Manager ottimizzato
+        const UI = {
+            updateSyncStatus: (status, text) => {
+                const syncStatus = document.getElementById('syncStatus');
+                const syncIcon = document.getElementById('syncIcon');
+                const syncText = document.getElementById('syncText');
+                
+                if (!syncStatus || !syncIcon || !syncText) return;
+                
+                syncStatus.className = `sync-status ${status}`;
+                syncText.textContent = text;
+                
+                switch(status) {
+                    case 'syncing':
+                        syncIcon.innerHTML = '<div class="sync-spinner"></div>';
+                        break;
+                    case 'synced':
+                        syncIcon.className = 'fas fa-cloud-check';
+                        break;
+                    case 'error':
+                        syncIcon.className = 'fas fa-cloud-exclamation';
+                        break;
+                    case 'local':
+                        syncIcon.className = 'fas fa-hard-drive';
+                        break;
+                    default:
+                        syncIcon.className = 'fas fa-cloud';
+                }
+            },
+
+            updateAuthUI: () => {
+                const elements = {
+                    authStatus: document.getElementById('authStatus'),
+                    authButton: document.getElementById('authButton'),
+                    authIcon: document.getElementById('authIcon'),
+                    authText: document.getElementById('authText'),
+                    adminControls: document.getElementById('adminControls')
+                };
+
+                if (STATE.isAuthenticated) {
+                    elements.authStatus.className = 'auth-status logged-in';
+                    elements.authIcon.className = 'fas fa-unlock';
+                    elements.authText.textContent = 'Modalità Admin';
+                    elements.authButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Disconnetti';
+                    elements.authButton.className = 'auth-btn logout';
+                    elements.adminControls.classList.add('show');
+                } else {
+                    elements.authStatus.className = 'auth-status logged-out';
+                    elements.authIcon.className = 'fas fa-lock';
+                    elements.authText.textContent = 'Modalità Visitatore';
+                    elements.authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Accedi Admin';
+                    elements.authButton.className = 'auth-btn';
+                    elements.adminControls.classList.remove('show');
+                }
+            },
+
+            updateStats: () => {
+                const total = STATE.games.length;
+                const stats = {
+                    total: total,
+                    color: STATE.games.filter(g => g.category === 'color').length,
+                    advance: STATE.games.filter(g => g.category === 'advance').length,
+                    sp: STATE.games.filter(g => g.category === 'sp').length
+                };
+
+                // Animazione contatori
+                Object.entries(stats).forEach(([key, value], index) => {
+                    const element = document.getElementById(key === 'total' ? 'totalGames' : `${key}Games`);
+                    if (element) {
+                        setTimeout(() => {
+                            UI.animateCounter(element, parseInt(element.textContent) || 0, value);
+                        }, index * 100);
+                    }
+                });
+            },
+
+            animateCounter: (element, start, end, duration = 1000) => {
+                const range = end - start;
+                const increment = range / (duration / 16);
+                let current = start;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                        current = end;
+                        clearInterval(timer);
+                    }
+                    element.textContent = Math.floor(current);
+                }, 16);
+            },
+
+            switchCategory: (category, tabElement) => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tabElement.classList.add('active');
+                STATE.currentCategory = category;
+                
+                const titles = {
+                    'all': 'Tutti i Progetti',
+                    'color': 'Game Boy Color',
+                    'advance': 'Game Boy Advance',
+                    'sp': 'Game Boy Advance SP'
+                };
+                
+                document.getElementById('galleryTitle').textContent = titles[category];
+                UI.renderGallery();
+            },
+
+            renderGallery: () => {
+                const gallery = document.getElementById('gallery');
+                const filteredGames = DataManager.filterGames();
+
+                if (filteredGames.length === 0) {
+                    const message = STATE.searchQuery ? 
+                        `Nessun risultato per "${STATE.searchQuery}"` : 
+                        'Nessun progetto disponibile';
+                    
+                    gallery.innerHTML = `
+                        <div class="empty-state fade-in">
+                            <i class="fas fa-gamepad"></i>
+                            <h3>${message}</h3>
+                            <p>${STATE.searchQuery ? 'Prova con altri termini di ricerca' : 'I progetti RetroAvia appariranno qui una volta aggiunti'}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                gallery.innerHTML = filteredGames.map((game, index) => {
+                    const date = Utils.formatDate(game.createdAt);
+                    const imageCount = game.images ? game.images.length : 0;
+                    const firstImage = imageCount > 0 ? game.images[0] : null;
+                    const price = Utils.formatPrice(game.price);
+                    
+                    return `
+                        <div class="game-card" 
+                             onclick="UI.showDetails('${game.id}')" 
+                             style="--i: ${index}; animation-delay: ${index * 0.05}s">
+                            ${STATE.editMode ? `
+                                <div class="edit-controls">
+                                    <button class="edit-btn" onclick="event.stopPropagation(); UI.editGame('${game.id}')" title="Modifica progetto">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="edit-btn delete" onclick="event.stopPropagation(); UI.deleteGame('${game.id}')" title="Elimina progetto">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            ` : ''}
+                            <div class="game-image-container">
+                                ${firstImage ? 
+                                    `<img src="${firstImage}" alt="${Utils.sanitizeInput(game.name)}" class="game-image" loading="lazy">` : 
+                                    `<div class="game-placeholder"><i class="fas fa-gamepad"></i></div>`
+                                }
+                                ${imageCount > 1 ? `<div class="image-indicator">${imageCount} foto</div>` : ''}
+                                <div class="game-date">${date}</div>
+                            </div>
+                            <div class="game-info">
+                                <div class="game-title">${Utils.sanitizeInput(game.name)}</div>
+                                <div class="game-model">${Utils.sanitizeInput(game.model)}</div>
+                                <div class="game-price">${price}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Setup lazy loading per le nuove immagini
+                setTimeout(() => {
+                    Utils.setupLazyLoading();
+                }, 100);
+            },
+
+            showDetails: (id) => {
+                if (STATE.editMode) return;
+                
+                const game = STATE.games.find(g => g.id === id);
+                if (!game) return;
+
+                document.getElementById('modalTitle').textContent = game.name;
+                document.getElementById('modalPrice').textContent = Utils.formatPrice(game.price);
+                
+                STATE.currentGameImages = Array.isArray(game.images) ? game.images : [];
+                STATE.currentSlide = 0;
+                UI.updateModalGallery();
+
+                // Specche con icone
+                const specs = [
+                    { label: 'Modello', value: game.model, icon: 'microchip' },
+                    { label: 'Scocca', value: game.shell, icon: 'mobile-alt' },
+                    { label: 'Pulsanti', value: game.buttons, icon: 'circle' },
+                    { label: 'Etichetta', value: game.label, icon: 'tag' },
+                    { label: 'Batteria', value: game.battery, icon: 'battery-full' },
+                    { label: 'Audio', value: game.audio, icon: 'volume-up' },
+                    { label: 'Display', value: game.display, icon: 'tv' },
+                    { label: 'LED', value: game.led, icon: 'lightbulb' },
+                    { label: 'Accessori', value: game.box, icon: 'box' },
+                    { label: 'Note', value: game.other, icon: 'plus-circle' }
+                ].filter(spec => spec.value && spec.value.trim() !== '');
+
+                document.getElementById('specGrid').innerHTML = specs.map(spec => `
+                    <div class="spec-item slide-up" style="animation-delay: ${Math.random() * 0.3}s">
+                        <div class="spec-label">
+                            <i class="fas fa-${spec.icon}"></i> ${spec.label}
+                        </div>
+                        <div class="spec-value">${Utils.sanitizeInput(spec.value)}</div>
+                    </div>
+                `).join('');
+
+                document.getElementById('detailModal').style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Previene scroll background
+            },
+
+            updateModalGallery: () => {
+                const container = document.getElementById('galleryContainerModal');
+                const counter = document.getElementById('galleryCounter');
+                const indicators = document.getElementById('galleryIndicators');
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                const showControls = STATE.currentGameImages.length > 1;
+                if (prevBtn) prevBtn.style.display = showControls ? 'flex' : 'none';
+                if (nextBtn) nextBtn.style.display = showControls ? 'flex' : 'none';
+                if (indicators) indicators.style.display = showControls ? 'flex' : 'none';
+                
+                if (STATE.currentGameImages.length === 0) {
+                    container.innerHTML = `
+                        <div class="gallery-slide">
+                            <div class="modal-image-placeholder">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                        </div>
+                    `;
                     return;
                 }
                 
-                if (attempts < maxAttempts) {
-                    setTimeout(tryInit, 200);
-                } else {
-                    CLOUD_SYNC_ENABLED = false;
-                    initializeApp();
+                container.innerHTML = STATE.currentGameImages.map((img, index) => `
+                    <div class="gallery-slide">
+                        <img src="${img}" alt="Game Boy ${index + 1}" class="modal-image" loading="lazy">
+                    </div>
+                `).join('');
+                
+                container.style.transform = `translateX(-${STATE.currentSlide * 100}%)`;
+                
+                if (counter) {
+                    counter.textContent = `${STATE.currentSlide + 1} / ${STATE.currentGameImages.length}`;
                 }
-            };
-            
-            setTimeout(tryInit, 100);
-        });
+                
+                if (indicators && showControls) {
+                    indicators.innerHTML = STATE.currentGameImages.map((_, index) => `
+                        <div class="gallery-dot ${index === STATE.currentSlide ? 'active' : ''}" 
+                             onclick="UI.goToSlide(${index})" title="Vai all'immagine ${index + 1}"></div>
+                    `).join('');
+                }
+            },
 
-        function initializeApp() {
-            loadDataLocal();
-            setupEventListeners();
-            updateStats();
-            updateAuthUI();
-            
-            if (CLOUD_SYNC_ENABLED && supabase) {
-                syncFromCloud();
-            } else {
-                updateSyncStatus('local', 'Locale');
+            changeSlide: (direction) => {
+                if (STATE.currentGameImages.length <= 1) return;
+                STATE.currentSlide = (STATE.currentSlide + direction + STATE.currentGameImages.length) % STATE.currentGameImages.length;
+                UI.updateModalGallery();
+            },
+
+            goToSlide: (index) => {
+                if (index >= 0 && index < STATE.currentGameImages.length) {
+                    STATE.currentSlide = index;
+                    UI.updateModalGallery();
+                }
+            },
+
+            showLoading: (text = 'Caricamento...') => {
+                const loading = document.getElementById('loading');
+                const loadingText = document.querySelector('.loading-text');
+                if (loading) loading.style.display = 'flex';
+                if (loadingText) loadingText.textContent = text;
+            },
+
+            hideLoading: () => {
+                const loading = document.getElementById('loading');
+                if (loading) loading.style.display = 'none';
+            },
+
+            showToast: (message, type = 'success') => {
+                // Rimuovi toast esistenti
+                document.querySelectorAll('.toast').forEach(toast => toast.remove());
+
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `<i class="fas fa-${UI.getToastIcon(type)}"></i> ${message}`;
+                document.body.appendChild(toast);
+                
+                // Auto-remove
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.style.animation = 'slideOutRight 0.3s ease forwards';
+                        setTimeout(() => toast.remove(), 300);
+                    }
+                }, CONFIG.TOAST_DURATION);
+
+                // Click to dismiss
+                toast.addEventListener('click', () => {
+                    toast.style.animation = 'slideOutRight 0.3s ease forwards';
+                    setTimeout(() => toast.remove(), 300);
+                });
+            },
+
+            getToastIcon: (type) => {
+                const icons = {
+                    success: 'check-circle',
+                    error: 'exclamation-triangle',
+                    info: 'info-circle',
+                    warning: 'exclamation-circle'
+                };
+                return icons[type] || 'info-circle';
+            },
+
+            closeModal: (modalId) => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = ''; // Ripristina scroll
+                    
+                    if (modalId === 'formModal') {
+                        FormManager.reset();
+                        STATE.editingId = null;
+                    }
+                }
             }
-        }
+        };
 
-        // Setup event listeners
-        function setupEventListeners() {
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.addEventListener('click', () => switchCategory(tab.dataset.category, tab));
-            });
+        // Form Manager ottimizzato
+        const FormManager = {
+            reset: () => {
+                const form = document.getElementById('gameForm');
+                if (form) form.reset();
+                STATE.uploadedImages = [];
+                FormManager.updateImagesPreview();
+            },
 
-            document.getElementById('gameForm').addEventListener('submit', handleFormSubmit);
-            document.getElementById('gameImages').addEventListener('change', handleImagesSelect);
-            document.getElementById('searchInput').addEventListener('input', handleSearch);
-            document.getElementById('authPassword').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') authenticate();
-            });
-            
-            const uploadContainer = document.getElementById('imagesUploadContainer');
-            uploadContainer.addEventListener('dragover', (e) => {
+            openAdd: () => {
+                if (!STATE.isAuthenticated) {
+                    UI.showToast('Accesso amministratore richiesto', 'error');
+                    return;
+                }
+                
+                STATE.editingId = null;
+                document.getElementById('formTitle').textContent = 'Aggiungi Progetto';
+                FormManager.reset();
+                document.getElementById('formModal').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                
+                // Focus primo campo
+                setTimeout(() => {
+                    document.getElementById('gameName')?.focus();
+                }, 100);
+            },
+
+            editGame: (id) => {
+                if (!STATE.isAuthenticated) return;
+                
+                const game = STATE.games.find(g => g.id === id);
+                if (!game) return;
+
+                STATE.editingId = id;
+                document.getElementById('formTitle').textContent = 'Modifica Progetto';
+                
+                // Popola campi
+                const fields = [
+                    'gameName', 'gameCategory', 'gamePrice', 'gameModel', 'gameShell', 
+                    'gameButtons', 'gameLabel', 'gameBattery', 'gameAudio', 'gameDisplay', 
+                    'gameLed', 'gameBox', 'gameOther'
+                ];
+                const gameKeys = [
+                    'name', 'category', 'price', 'model', 'shell', 'buttons', 
+                    'label', 'battery', 'audio', 'display', 'led', 'box', 'other'
+                ];
+                
+                fields.forEach((fieldId, i) => {
+                    const element = document.getElementById(fieldId);
+                    if (element) {
+                        element.value = game[gameKeys[i]] || '';
+                    }
+                });
+                
+                // Carica immagini esistenti
+                STATE.uploadedImages = (game.images || []).map((img, i) => ({
+                    data: img,
+                    name: `Immagine ${i + 1}`,
+                    size: 0
+                }));
+                FormManager.updateImagesPreview();
+                
+                document.getElementById('formModal').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            },
+
+            handleSubmit: async (e) => {
                 e.preventDefault();
-                e.currentTarget.classList.add('dragover');
-            });
-            uploadContainer.addEventListener('dragleave', (e) => {
-                e.currentTarget.classList.remove('dragover');
-            });
-            uploadContainer.addEventListener('drop', handleImagesDrop);
-
-            window.addEventListener('click', handleOutsideClick);
-            document.addEventListener('keydown', handleKeyboard);
-        }
-
-        // Sync functions
-        async function syncToCloud(notify = false) {
-            if (!CLOUD_SYNC_ENABLED || !supabase) {
-                updateSyncStatus('local', 'Locale');
-                return false;
-            }
-
-            try {
-                updateSyncStatus('syncing', 'Sincronizzazione...');
                 
-                const { error: deleteError } = await supabase
-                    .from('games')
-                    .delete()
-                    .neq('id', 'none');
-
-                if (deleteError && !deleteError.message.includes('No rows')) {
-                    throw deleteError;
+                if (!STATE.isAuthenticated || STATE.uploadedImages.length === 0) {
+                    UI.showToast('Aggiungi almeno un\'immagine al progetto', 'error');
+                    return;
                 }
 
-                if (games.length > 0) {
-                    const gamesData = games.map(game => ({
-                        id: game.id,
-                        name: game.name,
-                        category: game.category,
-                        images: game.images || [],
-                        price: parseFloat(game.price) || 0,
-                        model: game.model || '',
-                        shell: game.shell || '',
-                        buttons: game.buttons || '',
-                        label: game.label || '',
-                        battery: game.battery || '',
-                        audio: game.audio || '',
-                        display: game.display || '',
-                        led: game.led || '',
-                        box: game.box || '',
-                        other: game.other || '',
-                        created_at: game.createdAt,
-                        updated_at: game.updatedAt || new Date().toISOString()
-                    }));
-
-                    const { error: insertError } = await supabase
-                        .from('games')
-                        .insert(gamesData);
-
-                    if (insertError) throw insertError;
+                const formData = FormManager.getFormData();
+                if (!FormManager.validateFormData(formData)) {
+                    return;
                 }
 
-                localStorage.setItem('retroavia_last_sync', new Date().toISOString());
-                updateSyncStatus('synced', `Sincronizzato (${games.length})`);
-                
-                if (notify) {
-                    showToast('Sincronizzazione completata', 'success');
-                }
-                
-                return true;
-            } catch (error) {
-                updateSyncStatus('error', 'Errore sync');
-                if (notify) {
-                    showToast('Errore sincronizzazione', 'error');
-                }
-                return false;
-            }
-        }
+                UI.showLoading('Salvataggio progetto...');
 
-        async function syncFromCloud() {
-            if (!CLOUD_SYNC_ENABLED || !supabase) {
-                updateSyncStatus('local', 'Locale');
-                return false;
-            }
+                try {
+                    const gameData = {
+                        id: STATE.editingId || Utils.generateId(),
+                        ...formData,
+                        images: STATE.uploadedImages.map(img => img.data),
+                        createdAt: STATE.editingId ? 
+                            (STATE.games.find(g => g.id === STATE.editingId)?.createdAt || new Date().toISOString()) : 
+                            new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    };
 
-            try {
-                updateSyncStatus('syncing', 'Caricamento...');
-                
-                const { data: cloudGames, error } = await supabase
-                    .from('games')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                    if (STATE.editingId) {
+                        const index = STATE.games.findIndex(g => g.id === STATE.editingId);
+                        if (index !== -1) {
+                            STATE.games[index] = gameData;
+                            UI.showToast('Progetto aggiornato con successo', 'success');
+                        }
+                    } else {
+                        STATE.games.unshift(gameData);
+                        UI.showToast('Nuovo progetto aggiunto con successo', 'success');
+                    }
 
-                if (error) throw error;
-
-                if (cloudGames && cloudGames.length > 0) {
-                    const convertedGames = cloudGames.map(game => ({
-                        id: game.id,
-                        name: game.name,
-                        category: game.category,
-                        images: Array.isArray(game.images) ? game.images : [],
-                        price: parseFloat(game.price) || 0,
-                        model: game.model || '',
-                        shell: game.shell || '',
-                        buttons: game.buttons || '',
-                        label: game.label || '',
-                        battery: game.battery || '',
-                        audio: game.audio || '',
-                        display: game.display || '',
-                        led: game.led || '',
-                        box: game.box || '',
-                        other: game.other || '',
-                        createdAt: game.created_at,
-                        updatedAt: game.updated_at
-                    }));
-
-                    if (games.length === 0 || convertedGames.length > games.length) {
-                        games = convertedGames;
-                        saveDataLocal();
-                        renderGallery();
-                        updateStats();
+                    DataManager.saveLocal();
+                    if (STATE.cloudSyncEnabled && STATE.supabase) {
+                        await SupabaseManager.syncToCloud(false);
                     }
                     
-                    localStorage.setItem('retroavia_last_sync', new Date().toISOString());
-                    updateSyncStatus('synced', `Caricato (${games.length})`);
-                } else {
-                    updateSyncStatus('synced', 'Cloud vuoto');
+                    UI.closeModal('formModal');
+                    UI.renderGallery();
+                    UI.updateStats();
+                    
+                } catch (error) {
+                    console.error('Errore salvataggio:', error);
+                    UI.showToast('Errore durante il salvataggio', 'error');
+                } finally {
+                    UI.hideLoading();
                 }
-                
-                return true;
-            } catch (error) {
-                updateSyncStatus('error', 'Errore caricamento');
-                return false;
-            }
-        }
+            },
 
-        function updateSyncStatus(status, text) {
-            const syncStatus = document.getElementById('syncStatus');
-            const syncIcon = document.getElementById('syncIcon');
-            const syncText = document.getElementById('syncText');
-            
-            syncStatus.className = `sync-status ${status}`;
-            syncText.textContent = text;
-            
-            switch(status) {
-                case 'syncing':
-                    syncIcon.innerHTML = '<div class="sync-spinner"></div>';
-                    break;
-                case 'synced':
-                    syncIcon.className = 'fas fa-cloud-check';
-                    break;
-                case 'error':
-                    syncIcon.className = 'fas fa-cloud-exclamation';
-                    break;
-                case 'local':
-                    syncIcon.className = 'fas fa-hard-drive';
-                    break;
-                default:
-                    syncIcon.className = 'fas fa-cloud';
-            }
-        }
-
-        // Global functions for HTML onclick
-        window.showAuthModal = () => {
-            if (isAuthenticated) {
-                logout();
-            } else {
-                document.getElementById('authModal').style.display = 'flex';
-                document.getElementById('authPassword').focus();
-            }
-        };
-
-        window.closeAuthModal = () => {
-            document.getElementById('authModal').style.display = 'none';
-            document.getElementById('authPassword').value = '';
-        };
-
-        window.authenticate = () => {
-            const password = document.getElementById('authPassword');
-            if (password.value === ADMIN_PASSWORD) {
-                isAuthenticated = true;
-                updateAuthUI();
-                closeAuthModal();
-                showToast('Accesso effettuato', 'success');
-                if (CLOUD_SYNC_ENABLED && supabase) {
-                    syncFromCloud();
-                }
-            } else {
-                showToast('Password errata', 'error');
-                password.value = '';
-                password.focus();
-            }
-        };
-
-        function logout() {
-            isAuthenticated = false;
-            editMode = false;
-            updateAuthUI();
-            renderGallery();
-            showToast('Disconnesso', 'info');
-        }
-
-        function updateAuthUI() {
-            const authStatus = document.getElementById('authStatus');
-            const authButton = document.getElementById('authButton');
-            const authIcon = document.getElementById('authIcon');
-            const authText = document.getElementById('authText');
-            const adminControls = document.getElementById('adminControls');
-
-            if (isAuthenticated) {
-                authStatus.className = 'auth-status logged-in';
-                authIcon.className = 'fas fa-unlock';
-                authText.textContent = 'Modalità Admin';
-                authButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Disconnetti';
-                authButton.className = 'auth-btn logout';
-                adminControls.classList.add('show');
-            } else {
-                authStatus.className = 'auth-status logged-out';
-                authIcon.className = 'fas fa-lock';
-                authText.textContent = 'Modalità Visitatore';
-                authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Accedi Admin';
-                authButton.className = 'auth-btn';
-                adminControls.classList.remove('show');
-            }
-        }
-
-        // Admin functions
-        window.openAddModal = () => {
-            if (!isAuthenticated) {
-                showToast('Accesso richiesto', 'error');
-                return;
-            }
-            editingId = null;
-            document.getElementById('formTitle').textContent = 'Aggiungi Progetto';
-            resetForm();
-            document.getElementById('formModal').style.display = 'block';
-        };
-
-        window.toggleEditMode = () => {
-            if (!isAuthenticated) {
-                showToast('Accesso richiesto', 'error');
-                return;
-            }
-            editMode = !editMode;
-            const btn = document.getElementById('editModeBtn');
-            if (editMode) {
-                btn.innerHTML = '<i class="fas fa-times"></i> Esci Modifica';
-                btn.classList.add('edit-mode');
-                showToast('Modalità modifica attiva', 'info');
-            } else {
-                btn.innerHTML = '<i class="fas fa-edit"></i> Modalità Modifica';
-                btn.classList.remove('edit-mode');
-                showToast('Modalità visualizzazione', 'info');
-            }
-            renderGallery();
-        };
-
-        window.forceSyncData = () => {
-            if (!isAuthenticated) {
-                showToast('Accesso richiesto', 'error');
-                return;
-            }
-            syncToCloud(true);
-        };
-
-        window.exportData = () => {
-            if (!isAuthenticated) return;
-            if (games.length === 0) {
-                showToast('Nessun dato da esportare', 'error');
-                return;
-            }
-            
-            const exportData = {
-                version: '2.1',
-                exportDate: new Date().toISOString(),
-                games: games
-            };
-
-            const dataStr = JSON.stringify(exportData, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `retroavia_backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            showToast('Dati esportati', 'success');
-        };
-
-        window.importData = () => {
-            if (!isAuthenticated) return;
-            
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                showLoading('Importazione...');
-                
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    try {
-                        const importedData = JSON.parse(e.target.result);
-                        let importedGames = Array.isArray(importedData) ? importedData : importedData.games || [];
-                        
-                        if (importedGames.length === 0) {
-                            throw new Error('Nessun progetto trovato');
-                        }
-
-                        const replace = confirm(`Sostituire ${games.length} progetti con ${importedGames.length} nuovi?`);
-                        
-                        if (replace) {
-                            games = importedGames;
-                        } else {
-                            importedGames.forEach(game => {
-                                if (!games.find(g => g.id === game.id)) {
-                                    games.push(game);
-                                }
-                            });
-                        }
-                        
-                        games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                        saveDataLocal();
-                        if (CLOUD_SYNC_ENABLED && supabase) {
-                            await syncToCloud(false);
-                        }
-                        renderGallery();
-                        updateStats();
-                        showToast('Progetti importati', 'success');
-                    } catch (error) {
-                        showToast('Errore importazione', 'error');
-                    } finally {
-                        hideLoading();
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        };
-
-        window.clearAllData = () => {
-            if (!isAuthenticated) return;
-            if (games.length === 0) {
-                showToast('Nessun dato da cancellare', 'info');
-                return;
-            }
-
-            const confirmation = prompt(`ELIMINA TUTTO i ${games.length} progetti?\n\nScrivi: ELIMINA TUTTO`);
-            if (confirmation === 'ELIMINA TUTTO') {
-                games = [];
-                saveDataLocal();
-                if (CLOUD_SYNC_ENABLED && supabase) {
-                    syncToCloud(false);
-                }
-                renderGallery();
-                updateStats();
-                showToast('Tutti i dati eliminati', 'success');
-            }
-        };
-
-        window.closeModal = (modalId) => {
-            document.getElementById(modalId).style.display = 'none';
-            if (modalId === 'formModal') {
-                resetForm();
-                editingId = null;
-            }
-        };
-
-        window.changeSlide = (direction) => {
-            if (currentGameImages.length <= 1) return;
-            currentSlide = (currentSlide + direction + currentGameImages.length) % currentGameImages.length;
-            updateModalGallery();
-        };
-
-        window.goToSlide = (index) => {
-            currentSlide = index;
-            updateModalGallery();
-        };
-
-        window.showDetails = (id) => {
-            if (editMode) return;
-            const game = games.find(g => g.id === id);
-            if (!game) return;
-
-            document.getElementById('modalTitle').textContent = game.name;
-            document.getElementById('modalPrice').textContent = `€ ${parseFloat(game.price || 0).toFixed(2)}`;
-            
-            currentGameImages = Array.isArray(game.images) ? game.images : [];
-            currentSlide = 0;
-            updateModalGallery();
-
-            const specs = [
-                { label: 'Modello', value: game.model, icon: 'microchip' },
-                { label: 'Scocca', value: game.shell, icon: 'mobile-alt' },
-                { label: 'Pulsanti', value: game.buttons, icon: 'circle' },
-                { label: 'Etichetta', value: game.label, icon: 'tag' },
-                { label: 'Batteria', value: game.battery, icon: 'battery-full' },
-                { label: 'Audio', value: game.audio, icon: 'volume-up' },
-                { label: 'Display', value: game.display, icon: 'tv' },
-                { label: 'LED', value: game.led, icon: 'lightbulb' },
-                { label: 'Accessori', value: game.box, icon: 'box' },
-                { label: 'Note', value: game.other, icon: 'plus-circle' }
-            ].filter(spec => spec.value && spec.value.trim() !== '');
-
-            document.getElementById('specGrid').innerHTML = specs.map(spec => `
-                <div class="spec-item">
-                    <div class="spec-label">
-                        <i class="fas fa-${spec.icon}"></i> ${spec.label}
-                    </div>
-                    <div class="spec-value">${spec.value}</div>
-                </div>
-            `).join('');
-
-            document.getElementById('detailModal').style.display = 'block';
-        };
-
-        window.editGame = (id) => {
-            if (!isAuthenticated) return;
-            const game = games.find(g => g.id === id);
-            if (!game) return;
-
-            editingId = id;
-            document.getElementById('formTitle').textContent = 'Modifica Progetto';
-            
-            const fields = ['gameName', 'gameCategory', 'gamePrice', 'gameModel', 'gameShell', 'gameButtons', 'gameLabel', 'gameBattery', 'gameAudio', 'gameDisplay', 'gameLed', 'gameBox', 'gameOther'];
-            const gameKeys = ['name', 'category', 'price', 'model', 'shell', 'buttons', 'label', 'battery', 'audio', 'display', 'led', 'box', 'other'];
-            
-            fields.forEach((fieldId, i) => {
-                const element = document.getElementById(fieldId);
-                if (element) {
-                    element.value = game[gameKeys[i]] || '';
-                }
-            });
-            
-            uploadedImages = (game.images || []).map((img, i) => ({
-                data: img,
-                name: `Immagine ${i + 1}`,
-                size: 0
-            }));
-            updateImagesPreview();
-            
-            document.getElementById('formModal').style.display = 'block';
-        };
-
-        window.deleteGame = (id) => {
-            if (!isAuthenticated) return;
-            const game = games.find(g => g.id === id);
-            if (!game) return;
-            
-            if (confirm(`Eliminare "${game.name}"?`)) {
-                games = games.filter(g => g.id !== id);
-                saveDataLocal();
-                if (CLOUD_SYNC_ENABLED && supabase) {
-                    syncToCloud(false);
-                }
-                renderGallery();
-                updateStats();
-                showToast('Progetto eliminato', 'success');
-            }
-        };
-
-        window.removeImage = (index) => {
-            uploadedImages.splice(index, 1);
-            updateImagesPreview();
-        };
-
-        // Data management
-        function loadDataLocal() {
-            try {
-                const saved = localStorage.getItem('retroavia_games');
-                if (saved) {
-                    games = JSON.parse(saved).map(game => ({
-                        id: game.id || Date.now().toString(),
-                        name: game.name || 'Progetto',
-                        category: game.category || 'color',
-                        images: Array.isArray(game.images) ? game.images : [],
-                        price: parseFloat(game.price) || 0,
-                        model: game.model || '',
-                        shell: game.shell || '',
-                        buttons: game.buttons || '',
-                        label: game.label || '',
-                        battery: game.battery || '',
-                        audio: game.audio || '',
-                        display: game.display || '',
-                        led: game.led || '',
-                        box: game.box || '',
-                        other: game.other || '',
-                        createdAt: game.createdAt || new Date().toISOString(),
-                        updatedAt: game.updatedAt || new Date().toISOString()
-                    }));
-                    games.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                }
-                renderGallery();
-                updateStats();
-            } catch (error) {
-                games = [];
-            }
-        }
-
-        function saveDataLocal() {
-            try {
-                localStorage.setItem('retroavia_games', JSON.stringify(games));
-                return true;
-            } catch (error) {
-                return false;
-            }
-        }
-
-        // UI Updates
-        function updateStats() {
-            const total = games.length;
-            const color = games.filter(g => g.category === 'color').length;
-            const advance = games.filter(g => g.category === 'advance').length;
-            const sp = games.filter(g => g.category === 'sp').length;
-
-            document.getElementById('totalGames').textContent = total;
-            document.getElementById('colorGames').textContent = color;
-            document.getElementById('advanceGames').textContent = advance;
-            document.getElementById('spGames').textContent = sp;
-        }
-
-        function switchCategory(category, tabElement) {
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            tabElement.classList.add('active');
-            currentCategory = category;
-            
-            const titles = {
-                'all': 'Tutti i Progetti',
-                'color': 'Game Boy Color',
-                'advance': 'Game Boy Advance',
-                'sp': 'Game Boy Advance SP'
-            };
-            
-            document.getElementById('galleryTitle').textContent = titles[category];
-            renderGallery();
-        }
-
-        function filterGames() {
-            let filtered = currentCategory === 'all' ? games : games.filter(g => g.category === currentCategory);
-            
-            if (searchQuery) {
-                const query = searchQuery.toLowerCase();
-                filtered = filtered.filter(game => 
-                    game.name.toLowerCase().includes(query) ||
-                    game.model.toLowerCase().includes(query) ||
-                    (game.shell && game.shell.toLowerCase().includes(query))
-                );
-            }
-            
-            return filtered;
-        }
-
-        function renderGallery() {
-            const gallery = document.getElementById('gallery');
-            const filteredGames = filterGames();
-
-            if (filteredGames.length === 0) {
-                const message = searchQuery ? `Nessun risultato per "${searchQuery}"` : 'Nessun progetto';
-                gallery.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-gamepad"></i>
-                        <h3>${message}</h3>
-                        <p>Aggiungi progetti per iniziare</p>
-                    </div>
-                `;
-                return;
-            }
-
-            gallery.innerHTML = filteredGames.map(game => {
-                const date = new Date(game.createdAt).toLocaleDateString('it-IT');
-                const imageCount = game.images ? game.images.length : 0;
-                const firstImage = imageCount > 0 ? game.images[0] : null;
-                const price = parseFloat(game.price) || 0;
-                
-                return `
-                    <div class="game-card" onclick="showDetails('${game.id}')">
-                        ${editMode ? `
-                            <div class="edit-controls">
-                                <button class="edit-btn" onclick="event.stopPropagation(); editGame('${game.id}')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="edit-btn delete" onclick="event.stopPropagation(); deleteGame('${game.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        ` : ''}
-                        <div class="game-image-container">
-                            ${firstImage ? 
-                                `<img src="${firstImage}" alt="${game.name}" class="game-image" loading="lazy">` : 
-                                `<div class="game-placeholder"><i class="fas fa-gamepad"></i></div>`
-                            }
-                            ${imageCount > 1 ? `<div class="image-indicator">${imageCount} foto</div>` : ''}
-                            <div class="game-date">${date}</div>
-                        </div>
-                        <div class="game-info">
-                            <div class="game-title">${game.name}</div>
-                            <div class="game-model">${game.model}</div>
-                            <div class="game-price">€ ${price.toFixed(2)}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function updateModalGallery() {
-            const container = document.getElementById('galleryContainerModal');
-            const counter = document.getElementById('galleryCounter');
-            const indicators = document.getElementById('galleryIndicators');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            const showControls = currentGameImages.length > 1;
-            if (prevBtn) prevBtn.style.display = showControls ? 'flex' : 'none';
-            if (nextBtn) nextBtn.style.display = showControls ? 'flex' : 'none';
-            if (indicators) indicators.style.display = showControls ? 'flex' : 'none';
-            
-            if (currentGameImages.length === 0) return;
-            
-            container.innerHTML = currentGameImages.map(img => `
-                <div class="gallery-slide">
-                    <img src="${img}" alt="Game Boy" class="modal-image" loading="lazy">
-                </div>
-            `).join('');
-            
-            container.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            if (counter) {
-                counter.textContent = `${currentSlide + 1} / ${currentGameImages.length}`;
-            }
-            
-            if (indicators && showControls) {
-                indicators.innerHTML = currentGameImages.map((_, index) => `
-                    <div class="gallery-dot ${index === currentSlide ? 'active' : ''}" 
-                         onclick="goToSlide(${index})"></div>
-                `).join('');
-            }
-        }
-
-        // Form handling
-        function resetForm() {
-            document.getElementById('gameForm').reset();
-            uploadedImages = [];
-            updateImagesPreview();
-        }
-
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            
-            if (!isAuthenticated || uploadedImages.length === 0) {
-                showToast('Aggiungi almeno un\'immagine', 'error');
-                return;
-            }
-
-            const nameInput = document.getElementById('gameName');
-            const categoryInput = document.getElementById('gameCategory');
-            const priceInput = document.getElementById('gamePrice');
-            
-            if (!nameInput.value.trim() || !categoryInput.value) {
-                showToast('Compila i campi obbligatori', 'error');
-                return;
-            }
-
-            showLoading('Salvataggio...');
-
-            try {
-                const gameData = {
-                    id: editingId || `game_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                    name: nameInput.value.trim(),
-                    category: categoryInput.value,
-                    images: uploadedImages.map(img => img.data),
-                    price: parseFloat(priceInput.value) || 0,
+            getFormData: () => {
+                return {
+                    name: document.getElementById('gameName').value.trim(),
+                    category: document.getElementById('gameCategory').value,
+                    price: parseFloat(document.getElementById('gamePrice').value) || 0,
                     model: document.getElementById('gameModel').value.trim(),
                     shell: document.getElementById('gameShell').value.trim(),
                     buttons: document.getElementById('gameButtons').value.trim(),
@@ -2142,196 +2872,589 @@
                     display: document.getElementById('gameDisplay').value.trim(),
                     led: document.getElementById('gameLed').value.trim(),
                     box: document.getElementById('gameBox').value.trim(),
-                    other: document.getElementById('gameOther').value.trim(),
-                    createdAt: editingId ? (games.find(g => g.id === editingId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
+                    other: document.getElementById('gameOther').value.trim()
                 };
+            },
 
-                if (editingId) {
-                    const index = games.findIndex(g => g.id === editingId);
-                    if (index !== -1) {
-                        games[index] = gameData;
-                        showToast('Progetto aggiornato', 'success');
+            validateFormData: (data) => {
+                if (!data.name) {
+                    UI.showToast('Il nome del progetto è obbligatorio', 'error');
+                    document.getElementById('gameName')?.focus();
+                    return false;
+                }
+                
+                if (!data.category) {
+                    UI.showToast('Seleziona una categoria', 'error');
+                    document.getElementById('gameCategory')?.focus();
+                    return false;
+                }
+                
+                if (!data.model) {
+                    UI.showToast('Il modello base è obbligatorio', 'error');
+                    document.getElementById('gameModel')?.focus();
+                    return false;
+                }
+                
+                if (data.price < 0) {
+                    UI.showToast('Il prezzo non può essere negativo', 'error');
+                    document.getElementById('gamePrice')?.focus();
+                    return false;
+                }
+                
+                return true;
+            },
+
+            handleImagesSelect: (e) => {
+                const files = Array.from(e.target.files);
+                FormManager.processImages(files);
+            },
+
+            handleImagesDrop: (e) => {
+                e.preventDefault();
+                e.currentTarget.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files).filter(f => f.type.match('image.*'));
+                FormManager.processImages(files);
+            },
+
+            processImages: async (files) => {
+                if (STATE.uploadedImages.length + files.length > CONFIG.MAX_IMAGES) {
+                    UI.showToast(`Massimo ${CONFIG.MAX_IMAGES} immagini consentite`, 'error');
+                    return;
+                }
+
+                if (files.length === 0) return;
+
+                UI.showLoading('Elaborazione immagini...');
+                
+                const results = [];
+                for (const file of files) {
+                    try {
+                        if (!file.type.match('image.*')) {
+                            continue;
+                        }
+                        
+                        if (file.size > CONFIG.MAX_FILE_SIZE) {
+                            UI.showToast(`File ${file.name} troppo grande (max 5MB)`, 'error');
+                            continue;
+                        }
+
+                        let finalData;
+                        if (file.size > 1024 * 1024) { // > 1MB, comprimi
+                            finalData = await Utils.compressImage(file);
+                        } else {
+                            finalData = await Utils.fileToBase64(file);
+                        }
+
+                        results.push({
+                            data: finalData,
+                            name: file.name,
+                            size: file.size
+                        });
+                    } catch (error) {
+                        console.error('Errore elaborazione immagine:', file.name, error);
+                    }
+                }
+
+                STATE.uploadedImages.push(...results);
+                FormManager.updateImagesPreview();
+                UI.hideLoading();
+                
+                if (results.length > 0) {
+                    UI.showToast(`${results.length} immagini elaborate con successo`, 'success');
+                }
+            },
+
+            updateImagesPreview: () => {
+                const preview = document.getElementById('imagesPreview');
+                const counter = document.getElementById('imageCount');
+                const placeholder = document.getElementById('uploadPlaceholder');
+                
+                if (!preview || !counter || !placeholder) return;
+                
+                counter.textContent = `${STATE.uploadedImages.length} / ${CONFIG.MAX_IMAGES} immagini`;
+                
+                if (STATE.uploadedImages.length === 0) {
+                    preview.innerHTML = '';
+                    placeholder.style.display = 'block';
+                    return;
+                }
+
+                placeholder.style.display = 'none';
+                preview.innerHTML = STATE.uploadedImages.map((img, index) => `
+                    <div class="image-preview-item" style="animation-delay: ${index * 0.1}s">
+                        <img src="${img.data}" alt="${img.name}" class="image-preview-img" loading="lazy">
+                        <button type="button" class="image-remove" 
+                                onclick="FormManager.removeImage(${index})" 
+                                title="Rimuovi immagine">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('');
+            },
+
+            removeImage: (index) => {
+                STATE.uploadedImages.splice(index, 1);
+                FormManager.updateImagesPreview();
+                UI.showToast('Immagine rimossa', 'info');
+            }
+        };
+
+        // Auth Manager ottimizzato
+        const AuthManager = {
+            showModal: () => {
+                if (STATE.isAuthenticated) {
+                    AuthManager.logout();
+                } else {
+                    document.getElementById('authModal').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                    setTimeout(() => {
+                        document.getElementById('authPassword')?.focus();
+                    }, 100);
+                }
+            },
+
+            closeModal: () => {
+                document.getElementById('authModal').style.display = 'none';
+                document.body.style.overflow = '';
+                document.getElementById('authPassword').value = '';
+            },
+
+            authenticate: () => {
+                const password = document.getElementById('authPassword');
+                if (password.value === CONFIG.ADMIN_PASSWORD) {
+                    STATE.isAuthenticated = true;
+                    UI.updateAuthUI();
+                    AuthManager.closeModal();
+                    UI.showToast('Accesso amministratore effettuato', 'success');
+                    
+                    // Auto-sync al login
+                    if (STATE.cloudSyncEnabled && STATE.supabase) {
+                        SupabaseManager.syncFromCloud();
                     }
                 } else {
-                    games.unshift(gameData);
-                    showToast('Progetto aggiunto', 'success');
-                }
-
-                saveDataLocal();
-                if (CLOUD_SYNC_ENABLED && supabase) {
-                    await syncToCloud(false);
-                }
-                
-                closeModal('formModal');
-                renderGallery();
-                updateStats();
-                
-            } catch (error) {
-                showToast('Errore nel salvataggio', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // Image handling
-        function handleImagesSelect(e) {
-            processImages(Array.from(e.target.files));
-        }
-
-        function handleImagesDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('dragover');
-            const files = Array.from(e.dataTransfer.files).filter(f => f.type.match('image.*'));
-            processImages(files);
-        }
-
-        async function processImages(files) {
-            if (uploadedImages.length + files.length > MAX_IMAGES) {
-                showToast(`Massimo ${MAX_IMAGES} immagini`, 'error');
-                return;
-            }
-
-            if (files.length === 0) return;
-
-            showLoading('Elaborazione immagini...');
-            
-            const results = [];
-            for (const file of files) {
-                try {
-                    if (!file.type.match('image.*') || file.size > MAX_FILE_SIZE) continue;
-
-                    let finalData;
-                    if (file.size > 1024 * 1024) {
-                        finalData = await compressImage(file);
-                    } else {
-                        finalData = await fileToBase64(file);
-                    }
-
-                    results.push({
-                        data: finalData,
-                        name: file.name,
-                        size: file.size
-                    });
-                } catch (error) {
-                    // Skip file on error
-                }
-            }
-
-            uploadedImages.push(...results);
-            updateImagesPreview();
-            hideLoading();
-            
-            if (results.length > 0) {
-                showToast(`${results.length} immagini elaborate`, 'success');
-            }
-        }
-
-        function updateImagesPreview() {
-            const preview = document.getElementById('imagesPreview');
-            const counter = document.getElementById('imageCount');
-            const placeholder = document.getElementById('uploadPlaceholder');
-            
-            counter.textContent = `${uploadedImages.length} / ${MAX_IMAGES} immagini`;
-            
-            if (uploadedImages.length === 0) {
-                preview.innerHTML = '';
-                placeholder.style.display = 'block';
-                return;
-            }
-
-            placeholder.style.display = 'none';
-            preview.innerHTML = uploadedImages.map((img, index) => `
-                <div class="image-preview-item">
-                    <img src="${img.data}" alt="${img.name}" class="image-preview-img" loading="lazy">
-                    <button type="button" class="image-remove" onclick="removeImage(${index})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        // Utility functions
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = e => resolve(e.target.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function compressImage(file, quality = 0.8, maxDim = 1920) {
-            return new Promise((resolve, reject) => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const img = new Image();
-                
-                img.onload = () => {
-                    let { width, height } = img;
+                    UI.showToast('Password non corretta', 'error');
+                    password.value = '';
+                    password.focus();
                     
-                    if (width > height && width > maxDim) {
-                        height = (height * maxDim) / width;
-                        width = maxDim;
-                    } else if (height > maxDim) {
-                        width = (width * maxDim) / height;
-                        height = maxDim;
+                    // Shake animation
+                    password.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        password.style.animation = '';
+                    }, 500);
+                }
+            },
+
+            logout: () => {
+                STATE.isAuthenticated = false;
+                STATE.editMode = false;
+                UI.updateAuthUI();
+                UI.renderGallery();
+                UI.showToast('Disconnesso dalla modalità admin', 'info');
+            }
+        };
+
+        // Admin Manager ottimizzato
+        const AdminManager = {
+            toggleEditMode: () => {
+                if (!STATE.isAuthenticated) {
+                    UI.showToast('Accesso amministratore richiesto', 'error');
+                    return;
+                }
+                
+                STATE.editMode = !STATE.editMode;
+                const btn = document.getElementById('editModeBtn');
+                
+                if (STATE.editMode) {
+                    btn.innerHTML = '<i class="fas fa-times"></i> Esci Modifica';
+                    btn.classList.add('edit-mode');
+                    UI.showToast('Modalità modifica attiva', 'info');
+                } else {
+                    btn.innerHTML = '<i class="fas fa-edit"></i> Modalità Modifica';
+                    btn.classList.remove('edit-mode');
+                    UI.showToast('Modalità visualizzazione ripristinata', 'info');
+                }
+                
+                UI.renderGallery();
+            },
+
+            deleteGame: (id) => {
+                if (!STATE.isAuthenticated) return;
+                
+                const game = STATE.games.find(g => g.id === id);
+                if (!game) return;
+                
+                if (confirm(`Sei sicuro di voler eliminare "${game.name}"?\n\nQuesta operazione non può essere annullata.`)) {
+                    STATE.games = STATE.games.filter(g => g.id !== id);
+                    DataManager.saveLocal();
+                    
+                    if (STATE.cloudSyncEnabled && STATE.supabase) {
+                        SupabaseManager.syncToCloud(false);
                     }
                     
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', quality));
+                    UI.renderGallery();
+                    UI.updateStats();
+                    UI.showToast('Progetto eliminato', 'success');
+                }
+            },
+
+            exportData: () => {
+                if (!STATE.isAuthenticated) return;
+                
+                if (STATE.games.length === 0) {
+                    UI.showToast('Nessun dato da esportare', 'error');
+                    return;
+                }
+                
+                const exportData = {
+                    version: '2.1.0',
+                    exportDate: new Date().toISOString(),
+                    totalGames: STATE.games.length,
+                    games: STATE.games
+                };
+
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `retroavia_backup_${new Date().toISOString().split('T')[0]}.json`;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                UI.showToast(`${STATE.games.length} progetti esportati`, 'success');
+            },
+
+            importData: () => {
+                if (!STATE.isAuthenticated) return;
+                
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.style.display = 'none';
+                
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    UI.showLoading('Importazione dati...');
+                    
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            const importedData = JSON.parse(e.target.result);
+                            let importedGames = Array.isArray(importedData) ? 
+                                importedData : 
+                                importedData.games || [];
+                            
+                            if (importedGames.length === 0) {
+                                throw new Error('Nessun progetto valido trovato nel file');
+                            }
+
+                            const replace = STATE.games.length > 0 ? 
+                                confirm(`Vuoi sostituire i ${STATE.games.length} progetti esistenti con i ${importedGames.length} progetti importati?\n\nClicca "OK" per sostituire, "Annulla" per aggiungere.`) :
+                                true;
+                            
+                            if (replace) {
+                                STATE.games = importedGames;
+                            } else {
+                                // Aggiungi solo progetti non duplicati
+                                importedGames.forEach(game => {
+                                    if (!STATE.games.find(g => g.id === game.id)) {
+                                        STATE.games.push(game);
+                                    }
+                                });
+                            }
+                            
+                            DataManager.sortGames();
+                            DataManager.saveLocal();
+                            
+                            if (STATE.cloudSyncEnabled && STATE.supabase) {
+                                await SupabaseManager.syncToCloud(false);
+                            }
+                            
+                            UI.renderGallery();
+                            UI.updateStats();
+                            UI.showToast(`${importedGames.length} progetti importati`, 'success');
+                            
+                        } catch (error) {
+                            console.error('Errore importazione:', error);
+                            UI.showToast('File non valido o corrotto', 'error');
+                        } finally {
+                            UI.hideLoading();
+                        }
+                    };
+                    reader.readAsText(file);
                 };
                 
-                img.onerror = reject;
-                img.src = URL.createObjectURL(file);
-            });
-        }
+                document.body.appendChild(input);
+                input.click();
+                document.body.removeChild(input);
+            },
 
-        function handleSearch(e) {
-            searchQuery = e.target.value.toLowerCase().trim();
-            renderGallery();
-        }
+            clearAllData: () => {
+                if (!STATE.isAuthenticated) return;
+                
+                if (STATE.games.length === 0) {
+                    UI.showToast('Nessun dato da eliminare', 'info');
+                    return;
+                }
 
-        function handleOutsideClick(e) {
-            if (e.target.classList.contains('modal') || e.target.classList.contains('form-modal') || e.target.classList.contains('auth-modal')) {
-                e.target.style.display = 'none';
+                const confirmation = prompt(
+                    `⚠️ ATTENZIONE ⚠️\n\nStai per eliminare PERMANENTEMENTE tutti i ${STATE.games.length} progetti.\n\nQuesta operazione NON può essere annullata.\n\nPer confermare, scrivi esattamente: ELIMINA TUTTO`
+                );
+                
+                if (confirmation === 'ELIMINA TUTTO') {
+                    STATE.games = [];
+                    DataManager.saveLocal();
+                    
+                    if (STATE.cloudSyncEnabled && STATE.supabase) {
+                        SupabaseManager.syncToCloud(false);
+                    }
+                    
+                    UI.renderGallery();
+                    UI.updateStats();
+                    UI.showToast('Tutti i dati sono stati eliminati', 'success');
+                } else if (confirmation !== null) {
+                    UI.showToast('Testo di conferma non corretto', 'error');
+                }
             }
-        }
+        };
 
-        function handleKeyboard(e) {
-            if (e.key === 'Escape') {
-                closeModal('detailModal');
-                closeModal('formModal');
-                closeAuthModal();
+        // Event Handlers ottimizzati
+        const EventHandlers = {
+            setupAll: () => {
+                EventHandlers.setupNavigation();
+                EventHandlers.setupForm();
+                EventHandlers.setupSearch();
+                EventHandlers.setupAuth();
+                EventHandlers.setupModals();
+                EventHandlers.setupKeyboard();
+                EventHandlers.setupAutoSync();
+            },
+
+            setupNavigation: () => {
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        UI.switchCategory(tab.dataset.category, tab);
+                    });
+                });
+
+                // Sort dropdown
+                const sortDropdown = document.getElementById('sortDropdown');
+                if (sortDropdown) {
+                    sortDropdown.addEventListener('change', (e) => {
+                        STATE.sortBy = e.target.value;
+                        UI.renderGallery();
+                    });
+                }
+            },
+
+            setupForm: () => {
+                const gameForm = document.getElementById('gameForm');
+                if (gameForm) {
+                    gameForm.addEventListener('submit', FormManager.handleSubmit);
+                }
+
+                const gameImages = document.getElementById('gameImages');
+                if (gameImages) {
+                    gameImages.addEventListener('change', FormManager.handleImagesSelect);
+                }
+                
+                const uploadContainer = document.getElementById('imagesUploadContainer');
+                if (uploadContainer) {
+                    uploadContainer.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.add('dragover');
+                    });
+                    
+                    uploadContainer.addEventListener('dragleave', (e) => {
+                        e.currentTarget.classList.remove('dragover');
+                    });
+                    
+                    uploadContainer.addEventListener('drop', FormManager.handleImagesDrop);
+                }
+            },
+
+            setupSearch: () => {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    const debouncedSearch = Utils.debounce((query) => {
+                        STATE.searchQuery = query.toLowerCase().trim();
+                        UI.renderGallery();
+                    }, CONFIG.SEARCH_DEBOUNCE);
+                    
+                    searchInput.addEventListener('input', (e) => {
+                        debouncedSearch(e.target.value);
+                    });
+                }
+            },
+
+            setupAuth: () => {
+                const authPassword = document.getElementById('authPassword');
+                if (authPassword) {
+                    authPassword.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            AuthManager.authenticate();
+                        }
+                    });
+                }
+            },
+
+            setupModals: () => {
+                // Click outside to close
+                window.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal') || 
+                        e.target.classList.contains('form-modal') || 
+                        e.target.classList.contains('auth-modal')) {
+                        UI.closeModal(e.target.id);
+                    }
+                });
+            },
+
+            setupKeyboard: () => {
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'Escape':
+                            UI.closeModal('detailModal');
+                            UI.closeModal('formModal');
+                            AuthManager.closeModal();
+                            break;
+                        case 'ArrowLeft':
+                            if (document.getElementById('detailModal').style.display === 'block') {
+                                UI.changeSlide(-1);
+                                e.preventDefault();
+                            }
+                            break;
+                        case 'ArrowRight':
+                            if (document.getElementById('detailModal').style.display === 'block') {
+                                UI.changeSlide(1);
+                                e.preventDefault();
+                            }
+                            break;
+                    }
+                });
+            },
+
+            setupAutoSync: () => {
+                if (STATE.cloudSyncEnabled && STATE.supabase) {
+                    STATE.autoSyncTimer = setInterval(() => {
+                        SupabaseManager.syncFromCloud();
+                    }, CONFIG.AUTO_SYNC_INTERVAL);
+                }
+
+                // Sync prima di chiudere la pagina
+                window.addEventListener('beforeunload', () => {
+                    if (STATE.isAuthenticated && STATE.cloudSyncEnabled && STATE.supabase) {
+                        SupabaseManager.syncToCloud(false);
+                    }
+                });
             }
-        }
+        };
 
-        function showLoading(text = 'Caricamento...') {
-            const loading = document.getElementById('loading');
-            const loadingText = document.querySelector('.loading-text');
-            if (loading) loading.style.display = 'flex';
-            if (loadingText) loadingText.textContent = text;
-        }
+        // App Initialization ottimizzata
+        const App = {
+            initialize: () => {
+                UI.updateSyncStatus('syncing', 'Inizializzazione...');
+                
+                let attempts = 0;
+                const maxAttempts = 10;
+                
+                const tryInit = () => {
+                    attempts++;
+                    if (SupabaseManager.initialize()) {
+                        App.start();
+                        return;
+                    }
+                    
+                    if (attempts < maxAttempts) {
+                        setTimeout(tryInit, 200);
+                    } else {
+                        STATE.cloudSyncEnabled = false;
+                        App.start();
+                    }
+                };
+                
+                setTimeout(tryInit, 100);
+            },
 
-        function hideLoading() {
-            const loading = document.getElementById('loading');
-            if (loading) loading.style.display = 'none';
-        }
+            start: () => {
+                DataManager.loadLocal();
+                EventHandlers.setupAll();
+                UI.updateStats();
+                UI.updateAuthUI();
+                
+                if (STATE.cloudSyncEnabled && STATE.supabase) {
+                    SupabaseManager.syncFromCloud();
+                } else {
+                    UI.updateSyncStatus('local', 'Modalità offline');
+                }
 
-        function showToast(message, type = 'success') {
-            document.querySelectorAll('.toast').forEach(toast => toast.remove());
+                // Nascondi loading iniziale
+                setTimeout(() => {
+                    UI.hideLoading();
+                }, 500);
 
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
+                // Setup lazy loading
+                Utils.setupLazyLoading();
+            }
+        };
+
+        // Global functions per HTML onclick - ESSENZIALI
+        window.showAuthModal = AuthManager.showModal;
+        window.closeAuthModal = AuthManager.closeModal;
+        window.authenticate = AuthManager.authenticate;
+        window.openAddModal = FormManager.openAdd;
+        window.toggleEditMode = AdminManager.toggleEditMode;
+        window.forceSyncData = () => {
+            if (!STATE.isAuthenticated) {
+                UI.showToast('Accesso amministratore richiesto', 'error');
+                return;
+            }
+            SupabaseManager.syncToCloud(true);
+        };
+        window.exportData = AdminManager.exportData;
+        window.importData = AdminManager.importData;
+        window.clearAllData = AdminManager.clearAllData;
+        window.closeModal = UI.closeModal;
+        window.changeSlide = UI.changeSlide;
+        window.goToSlide = UI.goToSlide;
+        window.showDetails = UI.showDetails;
+        window.editGame = FormManager.editGame;
+        window.deleteGame = AdminManager.deleteGame;
+        window.removeImage = FormManager.removeImage;
+
+        // Inizializzazione app
+        document.addEventListener('DOMContentLoaded', App.initialize);
+
+        // CSS aggiuntivo per animazioni
+        const additionalStyles = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
             
-            setTimeout(() => {
-                if (toast.parentNode) toast.remove();
-            }, 3000);
-        }
+            @keyframes slideOutRight {
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            
+            .lazy {
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+            
+            .lazy.loaded {
+                opacity: 1;
+            }
+        `;
+        
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = additionalStyles;
+        document.head.appendChild(styleSheet);
     </script>
 </body>
 </html>
