@@ -2196,19 +2196,47 @@
                         return true;
                     }
                 } catch (error) {
-                    console.error('Errore inizializzazione Supabase:', error);
+                    console.error('Errore inizializzazione Supabase:', SupabaseManager.getErrorMessage(error));
                     return false;
                 }
                 return false;
             },
 
             getErrorMessage: (error) => {
-                if (typeof error === 'string') return error;
-                if (error.message) return error.message;
-                if (error.error_description) return error.error_description;
-                if (error.details) return error.details;
-                if (error.hint) return error.hint;
-                return 'Errore sconosciuto';
+                // Approccio ultra-conservativo: se l'oggetto causa problemi, non toccarlo
+                try {
+                    if (!error) return 'Errore di connessione';
+                    if (typeof error === 'string') return error;
+                    
+                    // Test rapido: se l'oggetto è "tossico" (contiene Headers), esci subito
+                    try {
+                        // Test minimo per vedere se l'oggetto è sicuro
+                        String(error.constructor);
+                    } catch (cloneError) {
+                        // L'oggetto contiene elementi non clonabili, non toccarlo mai
+                        return 'Errore di rete - impossibile sincronizzare';
+                    }
+                    
+                    // Solo se l'oggetto è "pulito", prova a estrarre informazioni
+                    if (error.message && typeof error.message === 'string') {
+                        return error.message.substring(0, 100);
+                    }
+                    
+                    return 'Errore durante l\'operazione';
+                    
+                } catch (e) {
+                    // Qualsiasi eccezione = restituisci messaggio generico
+                    return 'Errore di connessione al cloud';
+                }
+            },
+
+            logError: (context, error) => {
+                // Log minimale che non tocca l'oggetto errore problematico
+                try {
+                    console.error(`RetroAvia - Errore ${String(context || 'generico')} alle ${new Date().toLocaleTimeString()}`);
+                } catch (e) {
+                    // Se anche questo fallisce, silenzioso
+                }
             },
 
             syncToCloud: async (notify = false) => {
@@ -2226,7 +2254,7 @@
                         .delete()
                         .neq('id', 'none');
 
-                    if (deleteError && !deleteError.message.includes('No rows')) {
+                    if (deleteError && !SupabaseManager.getErrorMessage(deleteError).includes('No rows')) {
                         throw deleteError;
                     }
 
@@ -2269,8 +2297,9 @@
                     return true;
                 } catch (error) {
                     const errorMsg = SupabaseManager.getErrorMessage(error);
-                    console.error('Errore sync cloud:', errorMsg, error);
+                    SupabaseManager.logError('syncToCloud', error);
                     UI.updateSyncStatus('error', 'Errore sync');
+                    
                     if (notify) {
                         UI.showToast(`Errore sincronizzazione: ${errorMsg}`, 'error');
                     }
@@ -2332,7 +2361,7 @@
                     return true;
                 } catch (error) {
                     const errorMsg = SupabaseManager.getErrorMessage(error);
-                    console.error('Errore caricamento cloud:', errorMsg, error);
+                    SupabaseManager.logError('syncFromCloud', error);
                     UI.updateSyncStatus('error', 'Errore caricamento');
                     return false;
                 }
