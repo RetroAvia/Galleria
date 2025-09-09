@@ -69,7 +69,6 @@
             box-sizing: border-box;
         }
 
-        /* Miglioramenti aggiuntivi per look professionale */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
@@ -91,86 +90,11 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 25% 25%, rgba(71, 85, 105, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(100, 116, 139, 0.02) 0%, transparent 50%);
+                radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
             pointer-events: none;
             z-index: -1;
         }
-
-        /* Header con gradiente più elegante e professionale */
-        .header h1 {
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #475569, #64748b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.04em;
-            position: relative;
-            z-index: 2;
-        }
-
-        .header .subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.25rem);
-            color: var(--text-secondary);
-            font-weight: 400;
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Perfezionamenti per un look più pulito */
-        .search-filters-container {
-            background: var(--gradient-glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-secondary);
-            padding: 2rem;
-        }
-
-        .nav-container {
-            padding: 1.5rem 2rem;
-            background: var(--gradient-glass);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-secondary);
-        }
-
-        .stats-bar {
-            background: var(--gradient-glass);
-            backdrop-filter: blur(20px);
-            padding: 2rem;
-            border-bottom: 1px solid var(--border-secondary);
-        }
-
-        /* Card hover effects più subtili e professionali */
-        .game-card:hover {
-            transform: translateY(-6px) scale(1.01);
-            box-shadow: 0 20px 40px var(--shadow-primary);
-            border-color: rgba(71, 85, 105, 0.4);
-        }
-
-        /* Buttons con stile più raffinato */
-        .admin-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(71, 85, 105, 0.3);
-        }
-
-        /* Modal con stile più pulito */
-        .modal-close:hover {
-            background: var(--accent-error);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        /* Rimuovi completamente tutti i keyframes di animazioni continue */
 
         /* Scrollbar più elegante */
         ::-webkit-scrollbar { width: 6px; }
@@ -187,44 +111,15 @@
             background: var(--gradient-secondary);
         }
 
-        /* Header più professionale con sfondo migliorato */
+        /* Header più professionale */
         .header {
-            background: 
-                linear-gradient(135deg, 
-                    rgba(59, 130, 246, 0.15) 0%, 
-                    rgba(16, 185, 129, 0.12) 50%, 
-                    rgba(245, 158, 11, 0.08) 100%),
-                linear-gradient(to bottom, 
-                    var(--bg-secondary) 0%, 
-                    var(--bg-primary) 100%);
-            backdrop-filter: blur(20px) saturate(1.3);
-            -webkit-backdrop-filter: blur(20px) saturate(1.3);
+            background: var(--gradient-glass);
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
             border-bottom: 1px solid var(--border-secondary);
             padding: 4rem 0 3rem;
             text-align: center;
             position: relative;
-            overflow: hidden;
-        }
-
-        /* Elementi decorativi per l'header */
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 25%),
-                radial-gradient(circle at 70% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 25%);
-            animation: headerFloat 20s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes headerFloat {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(20px, -15px) rotate(1deg); }
-            66% { transform: translate(-15px, 10px) rotate(-0.5deg); }
         }
 
         .header h1 {
@@ -237,14 +132,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.04em;
-            position: relative;
-            z-index: 2;
-            animation: titleGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes titleGlow {
-            0% { filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3)); }
-            100% { filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.3)); }
         }
 
         .header .subtitle {
@@ -253,17 +140,9 @@
             font-weight: 400;
             max-width: 600px;
             margin: 0 auto;
-            position: relative;
-            z-index: 2;
-            animation: subtitleSlide 1s ease-out 0.3s both;
         }
 
-        @keyframes subtitleSlide {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Controlli admin più puliti - FIXED Z-INDEX */
+        /* Controlli admin più puliti */
         .admin-header-controls {
             position: fixed;
             top: 20px;
@@ -273,18 +152,12 @@
             -webkit-backdrop-filter: blur(20px);
             border-radius: var(--border-radius-xl);
             padding: 12px 16px;
-            z-index: 1200; /* Ridotto per non interferire con modal */
+            z-index: 1500;
             border: 1px solid var(--border-secondary);
             display: flex;
             align-items: center;
             gap: 12px;
             box-shadow: 0 8px 32px var(--shadow-primary);
-            transition: var(--transition-normal);
-        }
-
-        .admin-header-controls:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px var(--shadow-primary);
         }
 
         .admin-header-controls .auth-status {
@@ -294,7 +167,6 @@
             font-weight: 500;
             background: var(--bg-glass);
             border: 1px solid var(--border-secondary);
-            transition: var(--transition-normal);
         }
 
         .admin-header-controls .auth-btn {
@@ -332,13 +204,12 @@
             padding: 8px 12px;
             font-size: 0.75rem;
             font-weight: 500;
-            z-index: 1100;
+            z-index: 1400;
             border: 1px solid var(--border-secondary);
             display: flex;
             align-items: center;
             gap: 8px;
             color: var(--text-muted);
-            transition: var(--transition-normal);
         }
 
         .sync-status.syncing { color: var(--accent-info); }
@@ -382,12 +253,6 @@
             font-weight: 600;
             color: var(--text-primary);
             white-space: nowrap;
-            animation: titlePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes titlePulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
         }
 
         .search-box {
@@ -414,7 +279,6 @@
             border-color: var(--accent-primary);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
             background: var(--bg-glass-strong);
-            transform: scale(1.02);
         }
 
         .search-input::placeholder {
@@ -428,17 +292,10 @@
             transform: translateY(-50%);
             color: var(--text-muted);
             font-size: 0.875rem;
-            transition: var(--transition-normal);
         }
 
         .search-input:focus + .search-icon {
             color: var(--accent-primary);
-            animation: searchPulse 1s ease-in-out infinite;
-        }
-
-        @keyframes searchPulse {
-            0%, 100% { transform: translateY(-50%) scale(1); }
-            50% { transform: translateY(-50%) scale(1.1); }
         }
 
         .sort-dropdown {
@@ -458,7 +315,6 @@
             outline: none;
             border-color: var(--accent-primary);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            transform: scale(1.02);
         }
 
         .filter-label {
@@ -468,7 +324,7 @@
             white-space: nowrap;
         }
 
-        /* Statistiche più eleganti con emoji */
+        /* Statistiche più eleganti */
         .stats-bar {
             background: var(--gradient-glass);
             backdrop-filter: blur(20px);
@@ -497,20 +353,12 @@
             border: 1px solid var(--border-secondary);
             transition: var(--transition-normal);
             min-width: 120px;
-            animation: statFloat 3s ease-in-out infinite;
-            animation-delay: calc(var(--i) * 0.2s);
-        }
-
-        @keyframes statFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
         }
 
         .stat-item:hover {
-            transform: translateY(-8px);
+            transform: translateY(-2px);
             background: var(--bg-glass-strong);
             box-shadow: 0 8px 25px var(--shadow-secondary);
-            animation-play-state: paused;
         }
 
         .stat-number {
@@ -561,21 +409,12 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            animation: tabSlide 0.5s ease-out;
-            animation-delay: calc(var(--i) * 0.1s);
-            animation-fill-mode: both;
-        }
-
-        @keyframes tabSlide {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .nav-tab:hover {
             color: var(--text-primary);
             border-color: var(--accent-primary);
             background: var(--bg-glass-strong);
-            transform: translateY(-2px);
         }
 
         .nav-tab.active {
@@ -583,7 +422,6 @@
             color: white;
             border-color: var(--accent-primary);
             box-shadow: 0 4px 12px var(--shadow-accent);
-            transform: translateY(-2px);
         }
 
         /* Controlli admin più organizzati */
@@ -617,27 +455,10 @@
             gap: 8px;
             min-width: 140px;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .admin-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .admin-btn:hover::before {
-            left: 100%;
         }
 
         .admin-btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
             box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
 
@@ -684,23 +505,22 @@
             transition: var(--transition-slow);
             opacity: 0;
             animation: cardFadeIn 0.6s ease forwards;
-            animation-delay: calc(var(--i) * 0.05s);
         }
 
         @keyframes cardFadeIn {
             from {
                 opacity: 0;
-                transform: translateY(30px) scale(0.9);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(0);
             }
         }
 
         .game-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 50px var(--shadow-primary);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px var(--shadow-primary);
             border-color: var(--accent-primary);
         }
 
@@ -720,7 +540,7 @@
         }
 
         .game-card:hover .game-image {
-            transform: scale(1.08);
+            transform: scale(1.05);
         }
 
         .game-placeholder {
@@ -732,12 +552,6 @@
             font-size: 3rem;
             color: var(--text-dim);
             background: var(--bg-tertiary);
-            animation: placeholderPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes placeholderPulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 0.8; }
         }
 
         .image-indicator {
@@ -752,12 +566,6 @@
             font-size: 0.75rem;
             font-weight: 600;
             border: 1px solid var(--border-secondary);
-            animation: indicatorBounce 2s ease-in-out infinite;
-        }
-
-        @keyframes indicatorBounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
 
         .edit-controls {
@@ -788,7 +596,7 @@
         .edit-btn:hover {
             background: var(--accent-primary);
             border-color: var(--accent-primary);
-            transform: scale(1.1) rotate(5deg);
+            transform: scale(1.1);
         }
 
         .edit-btn.delete:hover {
@@ -839,7 +647,7 @@
             border: 1px solid var(--border-secondary);
         }
 
-        /* Modal più elegante - FIXED Z-INDEX */
+        /* Modal più elegante */
         .modal {
             display: none;
             position: fixed;
@@ -849,7 +657,7 @@
             height: 100%;
             background: var(--bg-overlay);
             backdrop-filter: blur(20px);
-            z-index: 2000; /* Aumentato per essere sopra tutto */
+            z-index: 1000;
             overflow-y: auto;
             padding: 2rem;
         }
@@ -885,7 +693,7 @@
             font-size: 1.25rem;
             color: var(--text-primary);
             cursor: pointer;
-            z-index: 2001; /* Molto alto per essere sicuri */
+            z-index: 1001;
             width: 40px;
             height: 40px;
             background: var(--bg-overlay);
@@ -901,7 +709,7 @@
         .modal-close:hover {
             background: var(--accent-error);
             color: white;
-            transform: scale(1.1) rotate(90deg);
+            transform: scale(1.1);
         }
 
         .modal-gallery {
@@ -929,11 +737,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: var(--transition-normal);
-        }
-
-        .modal-image:hover {
-            transform: scale(1.02);
         }
 
         .modal-image-placeholder {
@@ -964,7 +767,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1900; /* Sotto il modal-close ma sopra il resto */
         }
 
         .gallery-nav:hover {
@@ -982,7 +784,6 @@
             transform: translateX(-50%);
             display: flex;
             gap: 8px;
-            z-index: 1900;
         }
 
         .gallery-dot {
@@ -997,7 +798,7 @@
         .gallery-dot.active,
         .gallery-dot:hover {
             background: var(--accent-primary);
-            transform: scale(1.3);
+            transform: scale(1.2);
         }
 
         .gallery-counter {
@@ -1012,7 +813,6 @@
             font-size: 0.875rem;
             font-weight: 600;
             border: 1px solid var(--border-secondary);
-            z-index: 1900;
         }
 
         .modal-info {
@@ -1028,12 +828,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             line-height: 1.2;
-            animation: titleShimmer 2s ease-in-out infinite;
-        }
-
-        @keyframes titleShimmer {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
         }
 
         .spec-grid {
@@ -1050,17 +844,10 @@
             border-radius: var(--border-radius-lg);
             border: 1px solid var(--border-secondary);
             transition: var(--transition-normal);
-            animation: specSlide 0.5s ease-out;
-            animation-fill-mode: both;
-        }
-
-        @keyframes specSlide {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
         }
 
         .spec-item:hover {
-            transform: translateY(-4px);
+            transform: translateY(-2px);
             box-shadow: 0 8px 25px var(--shadow-secondary);
             border-color: var(--accent-primary);
         }
@@ -1096,12 +883,6 @@
             padding-top: 2rem;
             border-top: 1px solid var(--border-secondary);
             font-family: 'JetBrains Mono', monospace;
-            animation: priceGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes priceGlow {
-            0% { filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.3)); }
-            100% { filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.4)); }
         }
 
         /* Form più puliti */
@@ -1114,7 +895,7 @@
             height: 100%;
             background: var(--bg-overlay);
             backdrop-filter: blur(20px);
-            z-index: 2000;
+            z-index: 1000;
             overflow-y: auto;
             padding: 2rem;
         }
@@ -1190,7 +971,6 @@
             border-color: var(--accent-primary);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
             background: var(--bg-glass-strong);
-            transform: scale(1.02);
         }
 
         .form-group input::placeholder,
@@ -1212,13 +992,12 @@
         .images-upload-container:hover {
             border-color: var(--accent-primary);
             background: var(--bg-glass-strong);
-            transform: scale(1.02);
         }
 
         .images-upload-container.dragover {
             border-color: var(--accent-secondary);
             background: rgba(16, 185, 129, 0.1);
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
 
         .images-input {
@@ -1269,17 +1048,11 @@
             aspect-ratio: 1;
             border: 2px solid var(--border-secondary);
             transition: var(--transition-normal);
-            animation: imageSlideIn 0.3s ease-out;
-        }
-
-        @keyframes imageSlideIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
         }
 
         .image-preview-item:hover {
             border-color: var(--accent-primary);
-            transform: scale(1.05) rotate(2deg);
+            transform: scale(1.05);
         }
 
         .image-preview-img {
@@ -1308,7 +1081,7 @@
 
         .image-remove:hover {
             background: #ff6666;
-            transform: scale(1.3) rotate(90deg);
+            transform: scale(1.2);
         }
 
         .image-count {
@@ -1341,23 +1114,6 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
         }
 
         .btn-primary {
@@ -1366,7 +1122,7 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
             box-shadow: 0 8px 20px var(--shadow-accent);
         }
 
@@ -1379,7 +1135,7 @@
         .btn-secondary:hover {
             background: var(--bg-glass-strong);
             color: var(--text-primary);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
 
         /* Stati vuoti */
@@ -1388,12 +1144,6 @@
             padding: 4rem 2rem;
             color: var(--text-muted);
             grid-column: 1 / -1;
-            animation: emptyStatePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes emptyStatePulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
         }
 
         .empty-state i {
@@ -1401,12 +1151,6 @@
             margin-bottom: 1.5rem;
             opacity: 0.4;
             color: var(--accent-primary);
-            animation: emptyStateFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes emptyStateFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
         }
 
         .empty-state h3 {
@@ -1433,7 +1177,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 3000;
+            z-index: 2000;
             flex-direction: column;
             gap: 1rem;
         }
@@ -1468,7 +1212,7 @@
             height: 100%;
             background: var(--bg-overlay);
             backdrop-filter: blur(20px);
-            z-index: 2000;
+            z-index: 1000;
             align-items: center;
             justify-content: center;
             padding: 2rem;
@@ -1519,7 +1263,6 @@
             outline: none;
             border-color: var(--accent-primary);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            transform: scale(1.02);
         }
 
         .auth-content .btn {
@@ -1536,7 +1279,7 @@
             border-radius: var(--border-radius-lg);
             font-weight: 500;
             font-size: 0.875rem;
-            z-index: 3000;
+            z-index: 2000;
             animation: slideInRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             max-width: 350px;
             backdrop-filter: blur(20px);
@@ -1573,17 +1316,7 @@
             }
         }
 
-        @keyframes slideOutRight {
-            to { transform: translateX(100%); opacity: 0; }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        /* Responsive design migliorato - FIXED MOBILE Z-INDEX ISSUE */
+        /* Responsive design migliorato */
         @media (max-width: 768px) {
             .header {
                 padding: 2rem 0;
@@ -1593,14 +1326,12 @@
                 font-size: 2.5rem;
             }
 
-            /* FIXED: Admin controls positioning on mobile */
             .admin-header-controls {
                 top: 10px;
                 right: 10px;
                 padding: 8px 12px;
                 flex-direction: column;
                 gap: 8px;
-                z-index: 900; /* Ridotto per mobile */
             }
 
             .admin-header-controls .auth-status {
@@ -1611,20 +1342,6 @@
             .admin-header-controls .auth-btn {
                 padding: 6px 12px;
                 font-size: 0.75rem;
-            }
-
-            /* FIXED: Modal close button on mobile */
-            .modal {
-                z-index: 1500; /* Più alto degli admin controls su mobile */
-            }
-
-            .modal-close {
-                top: 15px;
-                right: 15px;
-                width: 44px; /* Più grande per touch */
-                height: 44px;
-                z-index: 1501; /* Sopra il modal */
-                font-size: 1.5rem;
             }
 
             .search-filters-wrapper {
@@ -1678,8 +1395,8 @@
             }
             
             .gallery-nav {
-                width: 44px; /* Più grande per touch */
-                height: 44px;
+                width: 40px;
+                height: 40px;
                 font-size: 1rem;
             }
             
@@ -1736,21 +1453,6 @@
             
             .gallery-nav.prev { left: 10px; }
             .gallery-nav.next { right: 10px; }
-
-            /* Admin controls even smaller on very small screens */
-            .admin-header-controls {
-                top: 5px;
-                right: 5px;
-                padding: 6px 8px;
-                z-index: 800; /* Ancora più basso */
-            }
-
-            .modal-close {
-                top: 10px;
-                right: 10px;
-                width: 40px;
-                height: 40px;
-            }
         }
 
         /* Animazioni di caricamento più fluide */
@@ -1800,7 +1502,7 @@
 
     <div class="auth-modal" id="authModal">
         <div class="auth-content">
-            <h3>🔐 Accesso Admin</h3>
+            <h3>Accesso Admin</h3>
             <p>Inserisci la password per accedere alle funzionalità di amministrazione</p>
             <input type="password" id="authPassword" placeholder="Password admin" autocomplete="current-password">
             <div style="display: flex; gap: 1rem; margin-top: 1rem;">
@@ -1815,27 +1517,27 @@
     </div>
 
     <header class="header">
-        <h1>🎮 RetroAvia</h1>
-        <p class="subtitle">✨ Galleria progetti Game Boy personalizzati · Creazioni uniche e modifiche professionali 🚀</p>
+        <h1>RetroAvia</h1>
+        <p class="subtitle">Galleria progetti Game Boy personalizzati · Creazioni uniche e modifiche professionali</p>
     </header>
 
     <div class="stats-bar">
         <div class="stats-container">
             <div class="stat-item" style="--i: 0">
                 <div class="stat-number" id="totalGames">0</div>
-                <div class="stat-label">🎯 Totale Progetti</div>
+                <div class="stat-label">Totale Progetti</div>
             </div>
             <div class="stat-item" style="--i: 1">
                 <div class="stat-number" id="colorGames">0</div>
-                <div class="stat-label">🌈 Game Boy Color</div>
+                <div class="stat-label">Game Boy Color</div>
             </div>
             <div class="stat-item" style="--i: 2">
                 <div class="stat-number" id="advanceGames">0</div>
-                <div class="stat-label">📱 Game Boy Advance</div>
+                <div class="stat-label">Game Boy Advance</div>
             </div>
             <div class="stat-item" style="--i: 3">
                 <div class="stat-number" id="spGames">0</div>
-                <div class="stat-label">💎 Game Boy Advance SP</div>
+                <div class="stat-label">Game Boy Advance SP</div>
             </div>
         </div>
     </div>
@@ -1843,59 +1545,59 @@
     <div class="nav-container">
         <nav class="nav-tabs">
             <button class="nav-tab active" data-category="all" style="--i: 0">
-                <i class="fas fa-gamepad"></i> 🌟 Tutti
+                <i class="fas fa-gamepad"></i> Tutti
             </button>
             <button class="nav-tab" data-category="color" style="--i: 1">
-                <i class="fas fa-palette"></i> 🌈 Color
+                <i class="fas fa-palette"></i> Color
             </button>
             <button class="nav-tab" data-category="advance" style="--i: 2">
-                <i class="fas fa-mobile-alt"></i> 📱 Advance
+                <i class="fas fa-mobile-alt"></i> Advance
             </button>
             <button class="nav-tab" data-category="sp" style="--i: 3">
-                <i class="fas fa-laptop"></i> 💎 Advance SP
+                <i class="fas fa-laptop"></i> Advance SP
             </button>
         </nav>
     </div>
 
     <div class="admin-controls" id="adminControls">
         <button class="admin-btn" onclick="openAddModal()">
-            <i class="fas fa-plus"></i> ➕ Aggiungi
+            <i class="fas fa-plus"></i> Aggiungi
         </button>
         <button class="admin-btn" id="editModeBtn" onclick="toggleEditMode()">
-            <i class="fas fa-edit"></i> ✏️ Modifica
+            <i class="fas fa-edit"></i> Modifica
         </button>
         <button class="admin-btn sync" onclick="forceSyncData()">
-            <i class="fas fa-sync-alt"></i> 🔄 Sincronizza
+            <i class="fas fa-sync-alt"></i> Sincronizza
         </button>
         <button class="admin-btn export" onclick="exportData()">
-            <i class="fas fa-download"></i> 📥 Esporta
+            <i class="fas fa-download"></i> Esporta
         </button>
         <button class="admin-btn import" onclick="importData()">
-            <i class="fas fa-upload"></i> 📤 Importa
+            <i class="fas fa-upload"></i> Importa
         </button>
         <button class="admin-btn clear" onclick="clearAllData()">
-            <i class="fas fa-trash-alt"></i> 🗑️ Cancella
+            <i class="fas fa-trash-alt"></i> Cancella
         </button>
     </div>
 
     <div class="search-filters-container">
         <div class="search-filters-wrapper">
             <div class="search-section">
-                <h2 class="gallery-title" id="galleryTitle">🌟 Tutti i Progetti</h2>
+                <h2 class="gallery-title" id="galleryTitle">Tutti i Progetti</h2>
                 <div class="search-box">
-                    <input type="text" class="search-input" id="searchInput" placeholder="🔍 Cerca progetti...">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Cerca progetti...">
                     <i class="fas fa-search search-icon"></i>
                 </div>
             </div>
             <div class="filters-section">
                 <span class="filter-label">Ordina:</span>
                 <select class="sort-dropdown" id="sortDropdown">
-                    <option value="date-desc">📅 Più recenti</option>
-                    <option value="date-asc">📅 Più vecchi</option>
-                    <option value="name-asc">🔤 Nome A-Z</option>
-                    <option value="name-desc">🔤 Nome Z-A</option>
-                    <option value="price-desc">💰 Prezzo alto</option>
-                    <option value="price-asc">💰 Prezzo basso</option>
+                    <option value="date-desc">Più recenti</option>
+                    <option value="date-asc">Più vecchi</option>
+                    <option value="name-asc">Nome A-Z</option>
+                    <option value="name-desc">Nome Z-A</option>
+                    <option value="price-desc">Prezzo alto</option>
+                    <option value="price-asc">Prezzo basso</option>
                 </select>
             </div>
         </div>
@@ -1905,8 +1607,8 @@
         <div class="gallery" id="gallery">
             <div class="empty-state">
                 <i class="fas fa-gamepad"></i>
-                <h3>🎮 Nessun progetto disponibile</h3>
-                <p>✨ I progetti RetroAvia appariranno qui una volta aggiunti</p>
+                <h3>Nessun progetto disponibile</h3>
+                <p>I progetti RetroAvia appariranno qui una volta aggiunti</p>
             </div>
         </div>
     </div>
@@ -1935,9 +1637,9 @@
                 <div class="gallery-indicators" id="galleryIndicators"></div>
             </div>
             <div class="modal-info">
-                <h2 class="modal-title" id="modalTitle">🎮 Progetto</h2>
+                <h2 class="modal-title" id="modalTitle">Progetto</h2>
                 <div class="spec-grid" id="specGrid"></div>
-                <div class="modal-price" id="modalPrice">💰 € 0</div>
+                <div class="modal-price" id="modalPrice">€ 0</div>
             </div>
         </div>
     </div>
@@ -1948,37 +1650,37 @@
             <span class="modal-close" onclick="closeModal('formModal')">
                 <i class="fas fa-times"></i>
             </span>
-            <h2 class="form-title" id="formTitle">➕ Aggiungi Progetto</h2>
+            <h2 class="form-title" id="formTitle">Aggiungi Progetto</h2>
             <form id="gameForm">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="gameName">
-                            <i class="fas fa-gamepad"></i> 🎮 Nome Progetto *
+                            <i class="fas fa-gamepad"></i> Nome Progetto *
                         </label>
                         <input type="text" id="gameName" required placeholder="Game Boy Color Custom" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="gameCategory">
-                            <i class="fas fa-tags"></i> 🏷️ Categoria *
+                            <i class="fas fa-tags"></i> Categoria *
                         </label>
                         <select id="gameCategory" required>
                             <option value="">Seleziona categoria</option>
-                            <option value="color">🌈 Game Boy Color</option>
-                            <option value="advance">📱 Game Boy Advance</option>
-                            <option value="sp">💎 Game Boy Advance SP</option>
+                            <option value="color">Game Boy Color</option>
+                            <option value="advance">Game Boy Advance</option>
+                            <option value="sp">Game Boy Advance SP</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group full-width">
                     <label for="gameImages">
-                        <i class="fas fa-images"></i> 🖼️ Immagini Progetto (Max 10) *
+                        <i class="fas fa-images"></i> Immagini Progetto (Max 10) *
                     </label>
                     <div class="images-upload-container" id="imagesUploadContainer">
                         <input type="file" id="gameImages" class="images-input" accept="image/*" multiple>
                         <div class="upload-placeholder" id="uploadPlaceholder">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            <div>📤 Carica immagini</div>
+                            <div>Carica immagini</div>
                             <small>JPG, PNG · Max 5MB · Max 10 immagini</small>
                         </div>
                         <div class="images-preview" id="imagesPreview"></div>
@@ -1989,61 +1691,61 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="gamePrice">
-                            <i class="fas fa-euro-sign"></i> 💰 Prezzo *
+                            <i class="fas fa-euro-sign"></i> Prezzo *
                         </label>
                         <input type="number" id="gamePrice" step="0.01" min="0" required placeholder="120.00" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="gameModel">
-                            <i class="fas fa-microchip"></i> 🔧 Modello Base *
+                            <i class="fas fa-microchip"></i> Modello Base *
                         </label>
                         <input type="text" id="gameModel" required placeholder="CGB-001" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="gameShell">
-                            <i class="fas fa-mobile-alt"></i> 📱 Scocca
+                            <i class="fas fa-mobile-alt"></i> Scocca
                         </label>
                         <input type="text" id="gameShell" placeholder="Trasparente custom" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="gameButtons">
-                            <i class="fas fa-circle"></i> 🔘 Pulsanti
+                            <i class="fas fa-circle"></i> Pulsanti
                         </label>
                         <input type="text" id="gameButtons" placeholder="Custom colorati" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="gameLabel">
-                            <i class="fas fa-tag"></i> 🏷️ Etichetta
+                            <i class="fas fa-tag"></i> Etichetta
                         </label>
                         <input type="text" id="gameLabel" placeholder="Personalizzata" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="gameBattery">
-                            <i class="fas fa-battery-full"></i> 🔋 Batteria
+                            <i class="fas fa-battery-full"></i> Batteria
                         </label>
                         <input type="text" id="gameBattery" placeholder="Li-ion ricaricabile" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="gameAudio">
-                            <i class="fas fa-volume-up"></i> 🔊 Audio
+                            <i class="fas fa-volume-up"></i> Audio
                         </label>
                         <input type="text" id="gameAudio" placeholder="Speaker + amplificatore" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="gameDisplay">
-                            <i class="fas fa-tv"></i> 🖥️ Display
+                            <i class="fas fa-tv"></i> Display
                         </label>
                         <input type="text" id="gameDisplay" placeholder="IPS retroilluminato" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="gameLed">
-                            <i class="fas fa-lightbulb"></i> 💡 Kit LED
+                            <i class="fas fa-lightbulb"></i> Kit LED
                         </label>
                         <input type="text" id="gameLed" placeholder="RGB programmabile" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="gameBox">
-                            <i class="fas fa-box"></i> 📦 Accessori
+                            <i class="fas fa-box"></i> Accessori
                         </label>
                         <input type="text" id="gameBox" placeholder="Box + manuale" autocomplete="off">
                     </div>
@@ -2051,17 +1753,17 @@
                 
                 <div class="form-group full-width">
                     <label for="gameOther">
-                        <i class="fas fa-plus-circle"></i> ➕ Note Aggiuntive
+                        <i class="fas fa-plus-circle"></i> Note Aggiuntive
                     </label>
                     <textarea id="gameOther" rows="3" placeholder="Modifiche speciali, personalizzazioni..."></textarea>
                 </div>
                 
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('formModal')">
-                        <i class="fas fa-times"></i> ❌ Annulla
+                        <i class="fas fa-times"></i> Annulla
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> 💾 Salva
+                        <i class="fas fa-save"></i> Salva
                     </button>
                 </div>
             </form>
@@ -2291,22 +1993,22 @@
                     }
 
                     localStorage.setItem('retroavia_last_sync', new Date().toISOString());
-                    UI.updateSyncStatus('synced', `✅ Sincronizzato (${STATE.games.length})`);
+                    UI.updateSyncStatus('synced', `Sincronizzato (${STATE.games.length})`);
                     
                     if (notify) {
-                        UI.showToast('✅ Sincronizzazione completata con successo', 'success');
+                        UI.showToast('Sincronizzazione completata con successo', 'success');
                     }
                     
                     return true;
                 } catch (error) {
                     console.error('Errore sincronizzazione:', error);
-                    UI.updateSyncStatus('error', '❌ Errore sync');
+                    UI.updateSyncStatus('error', 'Errore sync');
                     
                     if (notify) {
                         const errorMsg = error.message.includes('fetch') ? 
                             'Problemi di connessione al server' : 
                             error.message;
-                        UI.showToast(`❌ Errore sincronizzazione: ${errorMsg}`, 'error');
+                        UI.showToast(`Errore sincronizzazione: ${errorMsg}`, 'error');
                     }
                     return false;
                 }
@@ -2359,15 +2061,15 @@
                         }
                         
                         localStorage.setItem('retroavia_last_sync', new Date().toISOString());
-                        UI.updateSyncStatus('synced', `📥 Caricato (${STATE.games.length})`);
+                        UI.updateSyncStatus('synced', `Caricato (${STATE.games.length})`);
                     } else {
-                        UI.updateSyncStatus('synced', '☁️ Cloud vuoto');
+                        UI.updateSyncStatus('synced', 'Cloud vuoto');
                     }
                     
                     return true;
                 } catch (error) {
                     console.error('Errore caricamento da cloud:', error);
-                    UI.updateSyncStatus('error', '❌ Errore caricamento');
+                    UI.updateSyncStatus('error', 'Errore caricamento');
                     return false;
                 }
             }
@@ -2390,7 +2092,7 @@
             }
         };
 
-        // Gestione dati - FIXED LOCAL SAVE ERROR
+        // Gestione dati
         const DataManager = {
             loadLocal: () => {
                 try {
@@ -2434,11 +2136,7 @@
                     return true;
                 } catch (error) {
                     console.error('Errore salvataggio locale:', error);
-                    // FIXED: Non mostrare più il toast di errore se il salvataggio è riuscito
-                    // Il localStorage.setItem non lancia eccezione se riesce
-                    if (error.name === 'QuotaExceededError') {
-                        UI.showToast('❌ Spazio di archiviazione esaurito', 'error');
-                    }
+                    UI.showToast('Errore nel salvataggio locale', 'error');
                     return false;
                 }
             },
@@ -2533,16 +2231,16 @@
                 if (STATE.isAuthenticated) {
                     elements.authStatus.className = 'auth-status logged-in';
                     elements.authIcon.className = 'fas fa-unlock';
-                    elements.authText.textContent = '👑 Admin';
-                    elements.authButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> 🚪 Esci';
+                    elements.authText.textContent = 'Admin';
+                    elements.authButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Esci';
                     elements.authButton.className = 'auth-btn logout';
                     elements.adminControls.classList.add('show');
                     elements.syncStatus.style.display = 'flex';
                 } else {
                     elements.authStatus.className = 'auth-status logged-out';
                     elements.authIcon.className = 'fas fa-lock';
-                    elements.authText.textContent = '👤 Visitatore';
-                    elements.authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> 🔑 Accedi';
+                    elements.authText.textContent = 'Visitatore';
+                    elements.authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Accedi';
                     elements.authButton.className = 'auth-btn';
                     elements.adminControls.classList.remove('show');
                     elements.syncStatus.style.display = 'none';
@@ -2589,10 +2287,10 @@
                 STATE.currentCategory = category;
                 
                 const titles = {
-                    'all': '🌟 Tutti i Progetti',
-                    'color': '🌈 Game Boy Color',
-                    'advance': '📱 Game Boy Advance',
-                    'sp': '💎 Game Boy Advance SP'
+                    'all': 'Tutti i Progetti',
+                    'color': 'Game Boy Color',
+                    'advance': 'Game Boy Advance',
+                    'sp': 'Game Boy Advance SP'
                 };
                 
                 document.getElementById('galleryTitle').textContent = titles[category];
@@ -2605,18 +2303,14 @@
 
                 if (filteredGames.length === 0) {
                     const message = STATE.searchQuery ? 
-                        `🔍 Nessun risultato per "${STATE.searchQuery}"` : 
-                        '🎮 Nessun progetto disponibile';
-                    
-                    const description = STATE.searchQuery ? 
-                        '💡 Prova con altri termini di ricerca' : 
-                        '✨ I progetti RetroAvia appariranno qui una volta aggiunti';
+                        `Nessun risultato per "${STATE.searchQuery}"` : 
+                        'Nessun progetto disponibile';
                     
                     gallery.innerHTML = `
                         <div class="empty-state fade-in">
                             <i class="fas fa-gamepad"></i>
                             <h3>${message}</h3>
-                            <p>${description}</p>
+                            <p>${STATE.searchQuery ? 'Prova con altri termini di ricerca' : 'I progetti RetroAvia appariranno qui una volta aggiunti'}</p>
                         </div>
                     `;
                     return;
@@ -2634,10 +2328,10 @@
                              style="--i: ${index}; animation-delay: ${index * 0.05}s">
                             ${STATE.editMode ? `
                                 <div class="edit-controls">
-                                    <button class="edit-btn" onclick="event.stopPropagation(); editGame('${game.id}')" title="✏️ Modifica">
+                                    <button class="edit-btn" onclick="event.stopPropagation(); editGame('${game.id}')" title="Modifica">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="edit-btn delete" onclick="event.stopPropagation(); deleteGame('${game.id}')" title="🗑️ Elimina">
+                                    <button class="edit-btn delete" onclick="event.stopPropagation(); deleteGame('${game.id}')" title="Elimina">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -2647,12 +2341,12 @@
                                     `<img src="${firstImage}" alt="${Utils.sanitizeInput(game.name)}" class="game-image" loading="lazy">` : 
                                     `<div class="game-placeholder"><i class="fas fa-gamepad"></i></div>`
                                 }
-                                ${imageCount > 1 ? `<div class="image-indicator">📸 ${imageCount} foto</div>` : ''}
-                                <div class="game-date">📅 ${date}</div>
+                                ${imageCount > 1 ? `<div class="image-indicator">${imageCount} foto</div>` : ''}
+                                <div class="game-date">${date}</div>
                             </div>
                             <div class="game-info">
                                 <div class="game-title">${Utils.sanitizeInput(game.name)}</div>
-                                <div class="game-model">🔧 ${Utils.sanitizeInput(game.model)}</div>
+                                <div class="game-model">${Utils.sanitizeInput(game.model)}</div>
                                 <div class="game-price">${price}</div>
                             </div>
                         </div>
@@ -2666,30 +2360,30 @@
                 const game = STATE.games.find(g => g.id === id);
                 if (!game) return;
 
-                document.getElementById('modalTitle').textContent = `🎮 ${game.name}`;
-                document.getElementById('modalPrice').textContent = `💰 ${Utils.formatPrice(game.price)}`;
+                document.getElementById('modalTitle').textContent = game.name;
+                document.getElementById('modalPrice').textContent = Utils.formatPrice(game.price);
                 
                 STATE.currentGameImages = Array.isArray(game.images) ? game.images : [];
                 STATE.currentSlide = 0;
                 UI.updateModalGallery();
 
                 const specs = [
-                    { label: 'Modello', value: game.model, icon: 'microchip', emoji: '🔧' },
-                    { label: 'Scocca', value: game.shell, icon: 'mobile-alt', emoji: '📱' },
-                    { label: 'Pulsanti', value: game.buttons, icon: 'circle', emoji: '🔘' },
-                    { label: 'Etichetta', value: game.label, icon: 'tag', emoji: '🏷️' },
-                    { label: 'Batteria', value: game.battery, icon: 'battery-full', emoji: '🔋' },
-                    { label: 'Audio', value: game.audio, icon: 'volume-up', emoji: '🔊' },
-                    { label: 'Display', value: game.display, icon: 'tv', emoji: '🖥️' },
-                    { label: 'LED', value: game.led, icon: 'lightbulb', emoji: '💡' },
-                    { label: 'Accessori', value: game.box, icon: 'box', emoji: '📦' },
-                    { label: 'Note', value: game.other, icon: 'plus-circle', emoji: '📝' }
+                    { label: 'Modello', value: game.model, icon: 'microchip' },
+                    { label: 'Scocca', value: game.shell, icon: 'mobile-alt' },
+                    { label: 'Pulsanti', value: game.buttons, icon: 'circle' },
+                    { label: 'Etichetta', value: game.label, icon: 'tag' },
+                    { label: 'Batteria', value: game.battery, icon: 'battery-full' },
+                    { label: 'Audio', value: game.audio, icon: 'volume-up' },
+                    { label: 'Display', value: game.display, icon: 'tv' },
+                    { label: 'LED', value: game.led, icon: 'lightbulb' },
+                    { label: 'Accessori', value: game.box, icon: 'box' },
+                    { label: 'Note', value: game.other, icon: 'plus-circle' }
                 ].filter(spec => spec.value && spec.value.trim() !== '');
 
-                document.getElementById('specGrid').innerHTML = specs.map((spec, index) => `
-                    <div class="spec-item slide-up" style="animation-delay: ${index * 0.1}s">
+                document.getElementById('specGrid').innerHTML = specs.map(spec => `
+                    <div class="spec-item slide-up" style="animation-delay: ${Math.random() * 0.3}s">
                         <div class="spec-label">
-                            <i class="fas fa-${spec.icon}"></i> ${spec.emoji} ${spec.label}
+                            <i class="fas fa-${spec.icon}"></i> ${spec.label}
                         </div>
                         <div class="spec-value">${Utils.sanitizeInput(spec.value)}</div>
                     </div>
@@ -2724,14 +2418,14 @@
                 
                 container.innerHTML = STATE.currentGameImages.map((img, index) => `
                     <div class="gallery-slide">
-                        <img src="${img}" alt="🎮 Game Boy ${index + 1}" class="modal-image" loading="lazy">
+                        <img src="${img}" alt="Game Boy ${index + 1}" class="modal-image" loading="lazy">
                     </div>
                 `).join('');
                 
                 container.style.transform = `translateX(-${STATE.currentSlide * 100}%)`;
                 
                 if (counter) {
-                    counter.textContent = `📸 ${STATE.currentSlide + 1} / ${STATE.currentGameImages.length}`;
+                    counter.textContent = `${STATE.currentSlide + 1} / ${STATE.currentGameImages.length}`;
                 }
                 
                 if (indicators && showControls) {
@@ -2826,12 +2520,12 @@
 
             openAdd: () => {
                 if (!STATE.isAuthenticated) {
-                    UI.showToast('🔒 Accesso amministratore richiesto', 'error');
+                    UI.showToast('Accesso amministratore richiesto', 'error');
                     return;
                 }
                 
                 STATE.editingId = null;
-                document.getElementById('formTitle').textContent = '➕ Aggiungi Progetto';
+                document.getElementById('formTitle').textContent = 'Aggiungi Progetto';
                 FormManager.reset();
                 document.getElementById('formModal').style.display = 'block';
                 document.body.style.overflow = 'hidden';
@@ -2848,7 +2542,7 @@
                 if (!game) return;
 
                 STATE.editingId = id;
-                document.getElementById('formTitle').textContent = '✏️ Modifica Progetto';
+                document.getElementById('formTitle').textContent = 'Modifica Progetto';
                 
                 const fields = [
                     'gameName', 'gameCategory', 'gamePrice', 'gameModel', 'gameShell', 
@@ -2869,7 +2563,7 @@
                 
                 STATE.uploadedImages = (game.images || []).map((img, i) => ({
                     data: img,
-                    name: `🖼️ Immagine ${i + 1}`,
+                    name: `Immagine ${i + 1}`,
                     size: 0
                 }));
                 FormManager.updateImagesPreview();
@@ -2882,7 +2576,7 @@
                 e.preventDefault();
                 
                 if (!STATE.isAuthenticated || STATE.uploadedImages.length === 0) {
-                    UI.showToast('📸 Aggiungi almeno un\'immagine al progetto', 'error');
+                    UI.showToast('Aggiungi almeno un\'immagine al progetto', 'error');
                     return;
                 }
 
@@ -2891,7 +2585,7 @@
                     return;
                 }
 
-                UI.showLoading('💾 Salvataggio progetto...');
+                UI.showLoading('Salvataggio progetto...');
 
                 try {
                     const gameData = {
@@ -2908,11 +2602,11 @@
                         const index = STATE.games.findIndex(g => g.id === STATE.editingId);
                         if (index !== -1) {
                             STATE.games[index] = gameData;
-                            UI.showToast('✅ Progetto aggiornato con successo', 'success');
+                            UI.showToast('Progetto aggiornato con successo', 'success');
                         }
                     } else {
                         STATE.games.unshift(gameData);
-                        UI.showToast('🎉 Nuovo progetto aggiunto con successo', 'success');
+                        UI.showToast('Nuovo progetto aggiunto con successo', 'success');
                     }
 
                     DataManager.saveLocal();
@@ -2926,7 +2620,7 @@
                     
                 } catch (error) {
                     console.error('Errore salvataggio:', error);
-                    UI.showToast('❌ Errore durante il salvataggio', 'error');
+                    UI.showToast('Errore durante il salvataggio', 'error');
                 } finally {
                     UI.hideLoading();
                 }
@@ -2952,25 +2646,25 @@
 
             validateFormData: (data) => {
                 if (!data.name) {
-                    UI.showToast('🎮 Il nome del progetto è obbligatorio', 'error');
+                    UI.showToast('Il nome del progetto è obbligatorio', 'error');
                     document.getElementById('gameName')?.focus();
                     return false;
                 }
                 
                 if (!data.category) {
-                    UI.showToast('🏷️ Seleziona una categoria', 'error');
+                    UI.showToast('Seleziona una categoria', 'error');
                     document.getElementById('gameCategory')?.focus();
                     return false;
                 }
                 
                 if (!data.model) {
-                    UI.showToast('🔧 Il modello base è obbligatorio', 'error');
+                    UI.showToast('Il modello base è obbligatorio', 'error');
                     document.getElementById('gameModel')?.focus();
                     return false;
                 }
                 
                 if (data.price < 0) {
-                    UI.showToast('💰 Il prezzo non può essere negativo', 'error');
+                    UI.showToast('Il prezzo non può essere negativo', 'error');
                     document.getElementById('gamePrice')?.focus();
                     return false;
                 }
@@ -2992,13 +2686,13 @@
 
             processImages: async (files) => {
                 if (STATE.uploadedImages.length + files.length > CONFIG.MAX_IMAGES) {
-                    UI.showToast(`📸 Massimo ${CONFIG.MAX_IMAGES} immagini consentite`, 'error');
+                    UI.showToast(`Massimo ${CONFIG.MAX_IMAGES} immagini consentite`, 'error');
                     return;
                 }
 
                 if (files.length === 0) return;
 
-                UI.showLoading('🖼️ Elaborazione immagini...');
+                UI.showLoading('Elaborazione immagini...');
                 
                 const results = [];
                 for (const file of files) {
@@ -3008,7 +2702,7 @@
                         }
                         
                         if (file.size > CONFIG.MAX_FILE_SIZE) {
-                            UI.showToast(`📦 File ${file.name} troppo grande (max 5MB)`, 'error');
+                            UI.showToast(`File ${file.name} troppo grande (max 5MB)`, 'error');
                             continue;
                         }
 
@@ -3034,7 +2728,7 @@
                 UI.hideLoading();
                 
                 if (results.length > 0) {
-                    UI.showToast(`🖼️ ${results.length} immagini elaborate con successo`, 'success');
+                    UI.showToast('🖼️ ' + `${results.length} immagini elaborate con successo`, 'success');
                 }
             },
 
@@ -3045,7 +2739,7 @@
                 
                 if (!preview || !counter || !placeholder) return;
                 
-                counter.textContent = `📸 ${STATE.uploadedImages.length} / ${CONFIG.MAX_IMAGES} immagini`;
+                counter.textContent = `${STATE.uploadedImages.length} / ${CONFIG.MAX_IMAGES} immagini`;
                 
                 if (STATE.uploadedImages.length === 0) {
                     preview.innerHTML = '';
@@ -3059,7 +2753,7 @@
                         <img src="${img.data}" alt="${img.name}" class="image-preview-img" loading="lazy">
                         <button type="button" class="image-remove" 
                                 onclick="FormManager.removeImage(${index})" 
-                                title="🗑️ Rimuovi immagine">
+                                title="Rimuovi immagine">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -3069,7 +2763,7 @@
             removeImage: (index) => {
                 STATE.uploadedImages.splice(index, 1);
                 FormManager.updateImagesPreview();
-                UI.showToast('🗑️ Immagine rimossa', 'info');
+                UI.showToast('Immagine rimossa', 'info');
             }
         };
 
@@ -3100,13 +2794,13 @@
                     STATE.isAuthenticated = true;
                     UI.updateAuthUI();
                     AuthManager.closeModal();
-                    UI.showToast('🎉 Accesso amministratore effettuato', 'success');
+                    UI.showToast('Accesso amministratore effettuato', 'success');
                     
                     if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
                         SupabaseManager.syncFromCloud();
                     }
                 } else {
-                    UI.showToast('❌ Password non corretta', 'error');
+                    UI.showToast('Password non corretta', 'error');
                     password.value = '';
                     password.focus();
                     
@@ -3122,7 +2816,7 @@
                 STATE.editMode = false;
                 UI.updateAuthUI();
                 UI.renderGallery();
-                UI.showToast('👋 Disconnesso dalla modalità admin', 'info');
+                UI.showToast('Disconnesso dalla modalità admin', 'info');
             }
         };
 
@@ -3130,7 +2824,7 @@
         const AdminManager = {
             toggleEditMode: () => {
                 if (!STATE.isAuthenticated) {
-                    UI.showToast('🔒 Accesso amministratore richiesto', 'error');
+                    UI.showToast('Accesso amministratore richiesto', 'error');
                     return;
                 }
                 
@@ -3138,13 +2832,13 @@
                 const btn = document.getElementById('editModeBtn');
                 
                 if (STATE.editMode) {
-                    btn.innerHTML = '<i class="fas fa-times"></i> ❌ Esci';
+                    btn.innerHTML = '<i class="fas fa-times"></i> Esci';
                     btn.classList.add('edit-mode');
-                    UI.showToast('✏️ Modalità modifica attiva', 'info');
+                    UI.showToast('Modalità modifica attiva', 'info');
                 } else {
-                    btn.innerHTML = '<i class="fas fa-edit"></i> ✏️ Modifica';
+                    btn.innerHTML = '<i class="fas fa-edit"></i> Modifica';
                     btn.classList.remove('edit-mode');
-                    UI.showToast('👁️ Modalità visualizzazione ripristinata', 'info');
+                    UI.showToast('Modalità visualizzazione ripristinata', 'info');
                 }
                 
                 UI.renderGallery();
@@ -3156,7 +2850,7 @@
                 const game = STATE.games.find(g => g.id === id);
                 if (!game) return;
                 
-                if (confirm(`🗑️ Sei sicuro di voler eliminare "${game.name}"?\n\n⚠️ Questa operazione non può essere annullata.`)) {
+                if (confirm(`Sei sicuro di voler eliminare "${game.name}"?\n\nQuesta operazione non può essere annullata.`)) {
                     STATE.games = STATE.games.filter(g => g.id !== id);
                     DataManager.saveLocal();
                     
@@ -3166,7 +2860,7 @@
                     
                     UI.renderGallery();
                     UI.updateStats();
-                    UI.showToast('🗑️ Progetto eliminato', 'success');
+                    UI.showToast('Progetto eliminato', 'success');
                 }
             },
 
@@ -3174,7 +2868,7 @@
                 if (!STATE.isAuthenticated) return;
                 
                 if (STATE.games.length === 0) {
-                    UI.showToast('📦 Nessun dato da esportare', 'error');
+                    UI.showToast('Nessun dato da esportare', 'error');
                     return;
                 }
                 
@@ -3198,7 +2892,7 @@
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
                 
-                UI.showToast(`📥 ${STATE.games.length} progetti esportati`, 'success');
+                UI.showToast(`${STATE.games.length} progetti esportati`, 'success');
             },
 
             importData: () => {
@@ -3213,7 +2907,7 @@
                     const file = e.target.files[0];
                     if (!file) return;
                     
-                    UI.showLoading('📤 Importazione dati...');
+                    UI.showLoading('Importazione dati...');
                     
                     const reader = new FileReader();
                     reader.onload = async (e) => {
@@ -3228,7 +2922,7 @@
                             }
 
                             const replace = STATE.games.length > 0 ? 
-                                confirm(`🔄 Vuoi sostituire i ${STATE.games.length} progetti esistenti con i ${importedGames.length} progetti importati?\n\nClicca "OK" per sostituire, "Annulla" per aggiungere.`) :
+                                confirm(`Vuoi sostituire i ${STATE.games.length} progetti esistenti con i ${importedGames.length} progetti importati?\n\nClicca "OK" per sostituire, "Annulla" per aggiungere.`) :
                                 true;
                             
                             if (replace) {
@@ -3250,11 +2944,11 @@
                             
                             UI.renderGallery();
                             UI.updateStats();
-                            UI.showToast(`📤 ${importedGames.length} progetti importati`, 'success');
+                            UI.showToast(`${importedGames.length} progetti importati`, 'success');
                             
                         } catch (error) {
                             console.error('Errore importazione:', error);
-                            UI.showToast('❌ File non valido o corrotto', 'error');
+                            UI.showToast('File non valido o corrotto', 'error');
                         } finally {
                             UI.hideLoading();
                         }
@@ -3271,12 +2965,12 @@
                 if (!STATE.isAuthenticated) return;
                 
                 if (STATE.games.length === 0) {
-                    UI.showToast('📦 Nessun dato da eliminare', 'info');
+                    UI.showToast('Nessun dato da eliminare', 'info');
                     return;
                 }
 
                 const confirmation = prompt(
-                    `⚠️ ATTENZIONE ⚠️\n\nStai per eliminare PERMANENTEMENTE tutti i ${STATE.games.length} progetti.\n\n🚨 Questa operazione NON può essere annullata.\n\nPer confermare, scrivi esattamente: ELIMINA TUTTO`
+                    `⚠️ ATTENZIONE ⚠️\n\nStai per eliminare PERMANENTEMENTE tutti i ${STATE.games.length} progetti.\n\nQuesta operazione NON può essere annullata.\n\nPer confermare, scrivi esattamente: ELIMINA TUTTO`
                 );
                 
                 if (confirmation === 'ELIMINA TUTTO') {
@@ -3289,9 +2983,9 @@
                     
                     UI.renderGallery();
                     UI.updateStats();
-                    UI.showToast('🗑️ Tutti i dati sono stati eliminati', 'success');
+                    UI.showToast('Tutti i dati sono stati eliminati', 'success');
                 } else if (confirmation !== null) {
-                    UI.showToast('❌ Testo di conferma non corretto', 'error');
+                    UI.showToast('Testo di conferma non corretto', 'error');
                 }
             }
         };
@@ -3412,7 +3106,7 @@
         // App Initialization ottimizzata
         const App = {
             initialize: () => {
-                UI.updateSyncStatus('syncing', '🔄 Inizializzazione...');
+                UI.updateSyncStatus('syncing', 'Inizializzazione...');
                 
                 // Inizializza network monitoring
                 NetworkManager.init();
@@ -3447,7 +3141,7 @@
                 if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
                     SupabaseManager.syncFromCloud();
                 } else {
-                    UI.updateSyncStatus('local', STATE.isOnline ? '💻 Modalità offline' : '📴 Offline');
+                    UI.updateSyncStatus('local', STATE.isOnline ? 'Modalità offline' : 'Offline');
                 }
 
                 setTimeout(() => {
@@ -3464,11 +3158,11 @@
         window.toggleEditMode = AdminManager.toggleEditMode;
         window.forceSyncData = () => {
             if (!STATE.isAuthenticated) {
-                UI.showToast('🔒 Accesso amministratore richiesto', 'error');
+                UI.showToast('Accesso amministratore richiesto', 'error');
                 return;
             }
             if (!STATE.isOnline) {
-                UI.showToast('📴 Connessione offline', 'error');
+                UI.showToast('Connessione offline', 'error');
                 return;
             }
             SupabaseManager.syncToCloud(true);
@@ -3482,14 +3176,14 @@
         window.showDetails = UI.showDetails;
         window.editGame = (id) => {
             if (!STATE.isAuthenticated) {
-                UI.showToast('🔒 Accesso amministratore richiesto', 'error');
+                UI.showToast('Accesso amministratore richiesto', 'error');
                 return;
             }
             FormManager.editGame(id);
         };
         window.deleteGame = (id) => {
             if (!STATE.isAuthenticated) {
-                UI.showToast('🔒 Accesso amministratore richiesto', 'error');
+                UI.showToast('Accesso amministratore richiesto', 'error');
                 return;
             }
             AdminManager.deleteGame(id);
@@ -3498,6 +3192,23 @@
 
         // Inizializzazione app
         document.addEventListener('DOMContentLoaded', App.initialize);
+
+        // CSS aggiuntivo per animazioni
+        const additionalStyles = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+            
+            @keyframes slideOutRight {
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = additionalStyles;
+        document.head.appendChild(styleSheet);
     </script>
 </body>
 </html>
