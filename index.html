@@ -2784,6 +2784,7 @@
             closeModal: () => {
                 document.getElementById('authModal').style.display = 'none';
                 document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
                 document.getElementById('authPassword').value = '';
             },
 
