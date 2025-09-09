@@ -2728,7 +2728,7 @@
                 UI.hideLoading();
                 
                 if (results.length > 0) {
-                    UI.showToast(`${results.length} immagini elaborate con successo`, 'success');
+                    UI.showToast('🖼️ ' + `${results.length} immagini elaborate con successo`, 'success');
                 }
             },
 
@@ -3155,7 +3155,6 @@
         window.authenticate = AuthManager.authenticate;
         window.openAddModal = FormManager.openAdd;
         window.toggleEditMode = AdminManager.toggleEditMode;
-        window.closeConfirmation = ConfirmationManager.close;
         window.forceSyncData = () => {
             if (!STATE.isAuthenticated) {
                 UI.showToast('Accesso amministratore richiesto', 'error');
