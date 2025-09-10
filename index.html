@@ -3726,7 +3726,7 @@
                 if (confirm(`Sei sicuro di voler eliminare "${game.name}"?\n\nQuesta operazione non può essere annullata.`)) {
                     STATE.games = STATE.games.filter(g => g.id !== id);
                     STATE.selectedGames.delete(id); // Rimuovi anche dalla selezione confronto
-                    DataManager.saveLocal();
+                    DataManager.saveLocalProgressive();
                     
                     if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
                         SupabaseManager.syncToCloud(false);
