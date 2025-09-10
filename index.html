@@ -50,6 +50,9 @@
             --gradient-glass: linear-gradient(135deg, var(--bg-glass), var(--bg-glass-strong));
             --gradient-card: linear-gradient(135deg, var(--bg-card), rgba(26, 26, 26, 0.95));
             
+            /* Nuovo gradiente per lo sfondo del titolo */
+            --gradient-hero-bg: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 25%, #1d4ed8 50%, #2563eb 75%, #1e40af 100%);
+            
             /* Transizioni più fluide */
             --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-normal: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -111,7 +114,7 @@
             background: var(--gradient-secondary);
         }
 
-        /* Header più professionale */
+        /* Header con sfondo gradiente blu */
         .header {
             background: var(--gradient-glass);
             backdrop-filter: blur(20px) saturate(1.2);
@@ -122,16 +125,42 @@
             position: relative;
         }
 
+        /* Sfondo gradiente blu dietro il titolo */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-hero-bg);
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(15, 15, 15, 0.8) 100%);
+            z-index: -1;
+        }
+
         .header h1 {
             font-family: 'Inter', sans-serif;
             font-size: clamp(2.5rem, 6vw, 4rem);
             font-weight: 800;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            background: linear-gradient(135deg, #60a5fa, #93c5fd, #dbeafe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.04em;
+            text-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+            position: relative;
         }
 
         .header .subtitle {
@@ -140,9 +169,10 @@
             font-weight: 400;
             max-width: 600px;
             margin: 0 auto;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
-        /* Controlli admin più puliti */
+        /* FIX: Z-index ridotto per controlli admin per evitare sovrapposizione con modal */
         .admin-header-controls {
             position: fixed;
             top: 20px;
@@ -152,12 +182,19 @@
             -webkit-backdrop-filter: blur(20px);
             border-radius: var(--border-radius-xl);
             padding: 12px 16px;
-            z-index: 1500;
+            z-index: 900; /* Ridotto da 1500 a 900 per evitare sovrapposizione con modal */
             border: 1px solid var(--border-secondary);
             display: flex;
             align-items: center;
             gap: 12px;
             box-shadow: 0 8px 32px var(--shadow-primary);
+            transition: var(--transition-normal);
+        }
+
+        /* MIGLIORAMENTO: Nascondi controlli admin quando modal è aperto */
+        body.modal-open .admin-header-controls {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .admin-header-controls .auth-status {
@@ -204,12 +241,19 @@
             padding: 8px 12px;
             font-size: 0.75rem;
             font-weight: 500;
-            z-index: 1400;
+            z-index: 900; /* Allineato con controlli admin */
             border: 1px solid var(--border-secondary);
             display: flex;
             align-items: center;
             gap: 8px;
             color: var(--text-muted);
+            transition: var(--transition-normal);
+        }
+
+        /* MIGLIORAMENTO: Nascondi sync status quando modal è aperto */
+        body.modal-open .sync-status {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .sync-status.syncing { color: var(--accent-info); }
@@ -647,7 +691,7 @@
             border: 1px solid var(--border-secondary);
         }
 
-        /* Modal più elegante */
+        /* Modal più elegante con z-index più alto */
         .modal {
             display: none;
             position: fixed;
@@ -657,7 +701,7 @@
             height: 100%;
             background: var(--bg-overlay);
             backdrop-filter: blur(20px);
-            z-index: 1000;
+            z-index: 1000; /* Assicurati che sia sopra i controlli admin */
             overflow-y: auto;
             padding: 2rem;
         }
@@ -1316,7 +1360,7 @@
             }
         }
 
-        /* Responsive design migliorato */
+        /* MIGLIORAMENTI RESPONSIVE per mobile */
         @media (max-width: 768px) {
             .header {
                 padding: 2rem 0;
@@ -1326,12 +1370,14 @@
                 font-size: 2.5rem;
             }
 
+            /* FIX: Migliore posizionamento dei controlli admin su mobile */
             .admin-header-controls {
-                top: 10px;
-                right: 10px;
-                padding: 8px 12px;
+                top: 15px;
+                right: 15px;
+                padding: 10px 14px;
                 flex-direction: column;
                 gap: 8px;
+                transform: scale(0.9);
             }
 
             .admin-header-controls .auth-status {
@@ -1342,6 +1388,14 @@
             .admin-header-controls .auth-btn {
                 padding: 6px 12px;
                 font-size: 0.75rem;
+            }
+
+            .sync-status {
+                top: 100px;
+                right: 15px;
+                transform: scale(0.9);
+                font-size: 0.7rem;
+                padding: 6px 10px;
             }
 
             .search-filters-wrapper {
@@ -1364,10 +1418,16 @@
                 gap: 1.5rem;
             }
             
+            /* MIGLIORAMENTO: Modal più adatti per mobile */
             .modal-content,
             .form-content {
                 margin: 1rem;
                 padding: 1.5rem;
+                border-radius: var(--border-radius-xl);
+            }
+
+            .modal-gallery {
+                height: 350px;
             }
             
             .form-grid {
@@ -1383,6 +1443,7 @@
             .admin-controls {
                 flex-direction: column;
                 align-items: center;
+                padding: 1.5rem;
             }
             
             .admin-btn {
@@ -1424,6 +1485,12 @@
                 left: 20px;
                 max-width: none;
             }
+
+            /* IMPORTANTE: Quando modal è aperto su mobile, nascondi completamente i controlli */
+            body.modal-open .admin-header-controls,
+            body.modal-open .sync-status {
+                display: none !important;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1445,6 +1512,7 @@
             .form-content,
             .auth-content {
                 padding: 1rem;
+                margin: 0.5rem;
             }
             
             .modal-gallery {
@@ -1453,6 +1521,18 @@
             
             .gallery-nav.prev { left: 10px; }
             .gallery-nav.next { right: 10px; }
+
+            .admin-header-controls {
+                top: 10px;
+                right: 10px;
+                transform: scale(0.85);
+            }
+
+            .sync-status {
+                top: 85px;
+                right: 10px;
+                transform: scale(0.85);
+            }
         }
 
         /* Animazioni di caricamento più fluide */
@@ -1476,6 +1556,17 @@
                 transform: translateY(0);
                 opacity: 1;
             }
+        }
+
+        /* Animazioni aggiuntive */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes slideOutRight {
+            to { transform: translateX(100%); opacity: 0; }
         }
     </style>
 </head>
@@ -2092,7 +2183,7 @@
             }
         };
 
-        // Gestione dati
+        // MIGLIORAMENTO: Gestione dati con migliore controllo errori
         const DataManager = {
             loadLocal: () => {
                 try {
@@ -2127,13 +2218,29 @@
                 } catch (error) {
                     console.error('Errore caricamento locale:', error);
                     STATE.games = [];
+                    // Non mostrare toast qui per evitare il messaggio falso di errore
                 }
             },
 
+            // FIX: Migliorata gestione errori per evitare toast di errore quando il salvataggio funziona
             saveLocal: () => {
                 try {
-                    localStorage.setItem('retroavia_games', JSON.stringify(STATE.games));
-                    return true;
+                    // Verifica se localStorage è disponibile
+                    if (typeof(Storage) === "undefined") {
+                        throw new Error('LocalStorage non supportato');
+                    }
+                    
+                    // Serializza e salva i dati
+                    const dataToSave = JSON.stringify(STATE.games);
+                    localStorage.setItem('retroavia_games', dataToSave);
+                    
+                    // Verifica che il salvataggio sia avvenuto con successo
+                    const saved = localStorage.getItem('retroavia_games');
+                    if (saved === dataToSave) {
+                        return true;
+                    } else {
+                        throw new Error('Verifica post-salvataggio fallita');
+                    }
                 } catch (error) {
                     console.error('Errore salvataggio locale:', error);
                     UI.showToast('Errore nel salvataggio locale', 'error');
@@ -2186,7 +2293,7 @@
             }
         };
 
-        // UI Manager
+        // UI Manager migliorato
         const UI = {
             updateSyncStatus: (status, text) => {
                 const syncStatus = document.getElementById('syncStatus');
@@ -2360,6 +2467,9 @@
                 const game = STATE.games.find(g => g.id === id);
                 if (!game) return;
 
+                // MIGLIORAMENTO: Aggiunge classe modal-open al body
+                document.body.classList.add('modal-open');
+
                 document.getElementById('modalTitle').textContent = game.name;
                 document.getElementById('modalPrice').textContent = Utils.formatPrice(game.price);
                 
@@ -2495,11 +2605,13 @@
                 return icons[type] || 'info-circle';
             },
 
+            // MIGLIORAMENTO: Gestione modal con rimozione classe modal-open
             closeModal: (modalId) => {
                 const modal = document.getElementById(modalId);
                 if (modal) {
                     modal.style.display = 'none';
                     document.body.style.overflow = '';
+                    document.body.classList.remove('modal-open'); // Rimuove classe per ripristinare visibilità controlli
                     
                     if (modalId === 'formModal') {
                         FormManager.reset();
@@ -2529,6 +2641,7 @@
                 FormManager.reset();
                 document.getElementById('formModal').style.display = 'block';
                 document.body.style.overflow = 'hidden';
+                document.body.classList.add('modal-open'); // Aggiunge classe per nascondere controlli
                 
                 setTimeout(() => {
                     document.getElementById('gameName')?.focus();
@@ -2570,6 +2683,7 @@
                 
                 document.getElementById('formModal').style.display = 'block';
                 document.body.style.overflow = 'hidden';
+                document.body.classList.add('modal-open'); // Aggiunge classe per nascondere controlli
             },
 
             handleSubmit: async (e) => {
@@ -2728,7 +2842,7 @@
                 UI.hideLoading();
                 
                 if (results.length > 0) {
-                    UI.showToast('🖼️ ' + `${results.length} immagini elaborate con successo`, 'success');
+                    UI.showToast(`${results.length} immagini elaborate con successo`, 'success');
                 }
             },
 
@@ -2775,6 +2889,7 @@
                 } else {
                     document.getElementById('authModal').style.display = 'flex';
                     document.body.style.overflow = 'hidden';
+                    document.body.classList.add('modal-open'); // Aggiunge classe per nascondere controlli
                     setTimeout(() => {
                         document.getElementById('authPassword')?.focus();
                     }, 100);
@@ -2784,7 +2899,7 @@
             closeModal: () => {
                 document.getElementById('authModal').style.display = 'none';
                 document.body.style.overflow = '';
-                document.body.classList.remove('modal-open');
+                document.body.classList.remove('modal-open'); // Rimuove classe per ripristinare controlli
                 document.getElementById('authPassword').value = '';
             },
 
@@ -3192,23 +3307,6 @@
 
         // Inizializzazione app
         document.addEventListener('DOMContentLoaded', App.initialize);
-
-        // CSS aggiuntivo per animazioni
-        const additionalStyles = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-5px); }
-                75% { transform: translateX(5px); }
-            }
-            
-            @keyframes slideOutRight {
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = additionalStyles;
-        document.head.appendChild(styleSheet);
     </script>
 </body>
 </html>
