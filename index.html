@@ -117,8 +117,8 @@
         /* Header con sfondo gradiente blu */
         .header {
             background: var(--gradient-glass);
-            backdrop-filter: blur(20px) saturate(1.2);
             -webkit-backdrop-filter: blur(20px) saturate(1.2);
+            backdrop-filter: blur(20px) saturate(1.2);
             border-bottom: 1px solid var(--border-secondary);
             padding: 4rem 0 3rem;
             text-align: center;
@@ -172,17 +172,17 @@
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
-        /* FIX: Z-index migliorato per controlli admin */
+        /* Z-index migliorato per controlli admin */
         .admin-header-controls {
             position: fixed;
             top: 20px;
             right: 20px;
             background: var(--bg-overlay);
-            backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
             border-radius: var(--border-radius-xl);
             padding: 12px 16px;
-            z-index: 500; /* Ridotto significativamente per essere sotto i modal */
+            z-index: 500;
             border: 1px solid var(--border-secondary);
             display: flex;
             align-items: center;
@@ -191,12 +191,12 @@
             transition: var(--transition-normal);
         }
 
-        /* FIX: Miglioramento per nascondere controlli admin quando modal è aperto */
+        /* Miglioramento per nascondere controlli admin quando modal è aperto */
         body.modal-open .admin-header-controls {
             opacity: 0;
             pointer-events: none;
             transform: scale(0.9);
-            visibility: hidden; /* Aggiunto per sicurezza */
+            visibility: hidden;
         }
 
         .admin-header-controls .auth-status {
@@ -238,12 +238,13 @@
             top: 80px;
             right: 20px;
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             border-radius: var(--border-radius-lg);
             padding: 8px 12px;
             font-size: 0.75rem;
             font-weight: 500;
-            z-index: 500; /* Allineato con controlli admin */
+            z-index: 500;
             border: 1px solid var(--border-secondary);
             display: flex;
             align-items: center;
@@ -252,12 +253,12 @@
             transition: var(--transition-normal);
         }
 
-        /* FIX: Miglioramento per nascondere sync status quando modal è aperto */
+        /* Miglioramento per nascondere sync status quando modal è aperto */
         body.modal-open .sync-status {
             opacity: 0;
             pointer-events: none;
             transform: scale(0.9);
-            visibility: hidden; /* Aggiunto per sicurezza */
+            visibility: hidden;
         }
 
         .sync-status.syncing { color: var(--accent-info); }
@@ -267,8 +268,8 @@
         /* Search e filtri più puliti */
         .search-filters-container {
             background: var(--gradient-glass);
-            backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-secondary);
             padding: 2rem;
         }
@@ -315,6 +316,7 @@
             border: 1px solid var(--border-secondary);
             border-radius: var(--border-radius-xl);
             background: var(--bg-glass);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             color: var(--text-primary);
             font-size: 0.875rem;
@@ -351,6 +353,7 @@
             border: 1px solid var(--border-secondary);
             border-radius: var(--border-radius-lg);
             background: var(--bg-glass);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             color: var(--text-primary);
             font-size: 0.875rem;
@@ -372,9 +375,73 @@
             white-space: nowrap;
         }
 
+        /* Compare Bar - Nuovo sistema di confronto */
+        .compare-bar {
+            background: var(--gradient-glass);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-secondary);
+            padding: 1rem 2rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .compare-bar.show {
+            display: flex;
+        }
+
+        .compare-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .compare-count {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: var(--border-radius-lg);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .compare-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .compare-btn {
+            background: var(--gradient-secondary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--border-radius-lg);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .compare-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .compare-btn.clear {
+            background: var(--gradient-primary);
+        }
+
         /* Statistiche più eleganti */
         .stats-bar {
             background: var(--gradient-glass);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             padding: 2rem;
             border-bottom: 1px solid var(--border-secondary);
@@ -397,6 +464,7 @@
             padding: 1.5rem 1rem;
             border-radius: var(--border-radius-lg);
             background: var(--bg-glass);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-secondary);
             transition: var(--transition-normal);
@@ -431,6 +499,7 @@
         .nav-container {
             padding: 1.5rem 2rem;
             background: var(--gradient-glass);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-secondary);
         }
@@ -476,6 +545,7 @@
         .admin-controls {
             padding: 2rem;
             background: var(--gradient-glass);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-secondary);
             display: none;
@@ -545,6 +615,7 @@
 
         .game-card {
             background: var(--gradient-card);
+            -webkit-backdrop-filter: blur(15px);
             backdrop-filter: blur(15px);
             border: 1px solid var(--border-secondary);
             border-radius: var(--border-radius-xl);
@@ -553,6 +624,7 @@
             transition: var(--transition-slow);
             opacity: 0;
             animation: cardFadeIn 0.6s ease forwards;
+            position: relative;
         }
 
         @keyframes cardFadeIn {
@@ -570,6 +642,54 @@
             transform: translateY(-8px);
             box-shadow: 0 20px 40px var(--shadow-primary);
             border-color: var(--accent-primary);
+        }
+
+        .game-card.selected {
+            border-color: var(--accent-secondary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Compare checkbox overlay */
+        .compare-checkbox-overlay {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 10;
+            display: none;
+        }
+
+        .compare-mode .compare-checkbox-overlay {
+            display: block;
+        }
+
+        .compare-checkbox {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border-secondary);
+            border-radius: var(--border-radius-sm);
+            background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            position: relative;
+        }
+
+        .compare-checkbox:checked {
+            background: var(--accent-secondary);
+            border-color: var(--accent-secondary);
+        }
+
+        .compare-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
         }
 
         .game-image-container {
@@ -605,8 +725,9 @@
         .image-indicator {
             position: absolute;
             top: 12px;
-            left: 12px;
+            right: 12px;
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             color: var(--accent-secondary);
             padding: 4px 8px;
@@ -627,6 +748,7 @@
 
         .edit-btn {
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(15px);
             backdrop-filter: blur(15px);
             border: 1px solid var(--border-secondary);
             color: white;
@@ -686,6 +808,7 @@
             bottom: 12px;
             right: 12px;
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             color: var(--text-muted);
             padding: 4px 8px;
@@ -695,7 +818,7 @@
             border: 1px solid var(--border-secondary);
         }
 
-        /* FIX: Modal con z-index più alto e migliore gestione mobile */
+        /* Modal con z-index più alto e migliore gestione mobile */
         .modal {
             display: none;
             position: fixed;
@@ -704,8 +827,9 @@
             width: 100%;
             height: 100%;
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
-            z-index: 1000; /* Z-index alto per essere sopra tutto */
+            z-index: 1000;
             overflow-y: auto;
             padding: 2rem;
         }
@@ -714,6 +838,7 @@
             max-width: 1200px;
             margin: 0 auto;
             background: var(--gradient-card);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             border-radius: var(--border-radius-2xl);
             overflow: hidden;
@@ -734,7 +859,7 @@
             }
         }
 
-        /* FIX: Pulsante chiusura modal con z-index maggiore */
+        /* Pulsante chiusura modal con z-index maggiore */
         .modal-close {
             position: absolute;
             top: 20px;
@@ -742,10 +867,11 @@
             font-size: 1.25rem;
             color: var(--text-primary);
             cursor: pointer;
-            z-index: 1010; /* Z-index molto alto per essere sopra tutto */
+            z-index: 1010;
             width: 40px;
             height: 40px;
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(15px);
             backdrop-filter: blur(15px);
             border-radius: 50%;
             display: flex;
@@ -786,6 +912,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            cursor: zoom-in;
+            transition: var(--transition-normal);
+        }
+
+        .modal-image:hover {
+            transform: scale(1.02);
         }
 
         .modal-image-placeholder {
@@ -804,6 +936,7 @@
             top: 50%;
             transform: translateY(-50%);
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(15px);
             backdrop-filter: blur(15px);
             color: white;
             border: 1px solid var(--border-secondary);
@@ -855,6 +988,7 @@
             top: 20px;
             left: 20px;
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(15px);
             backdrop-filter: blur(15px);
             color: white;
             padding: 8px 12px;
@@ -862,6 +996,194 @@
             font-size: 0.875rem;
             font-weight: 600;
             border: 1px solid var(--border-secondary);
+        }
+
+        /* Zoom Button per le immagini */
+        .zoom-button {
+            position: absolute;
+            top: 20px;
+            right: 80px;
+            background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            color: white;
+            border: 1px solid var(--border-secondary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-normal);
+            font-size: 1rem;
+            z-index: 20;
+        }
+
+        .zoom-button:hover {
+            background: var(--accent-primary);
+            transform: scale(1.1);
+        }
+
+        /* Zoom Modal */
+        .zoom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            cursor: zoom-out;
+        }
+
+        .zoom-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 95vw;
+            max-height: 95vh;
+            object-fit: contain;
+        }
+
+        .zoom-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-normal);
+            z-index: 2001;
+        }
+
+        .zoom-close:hover {
+            background: var(--accent-error);
+            transform: scale(1.1);
+        }
+
+        /* Compare Modal */
+        .compare-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .compare-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--gradient-card);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius-2xl);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-secondary);
+            animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 50px var(--shadow-primary);
+        }
+
+        .compare-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-secondary);
+            text-align: center;
+        }
+
+        .compare-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .compare-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .compare-item {
+            background: var(--bg-glass);
+            border-radius: var(--border-radius-xl);
+            overflow: hidden;
+            border: 1px solid var(--border-secondary);
+        }
+
+        .compare-item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: var(--bg-tertiary);
+        }
+
+        .compare-item-info {
+            padding: 1.5rem;
+        }
+
+        .compare-item-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .compare-specs {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .compare-spec {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .compare-spec:last-child {
+            border-bottom: none;
+        }
+
+        .compare-spec-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .compare-spec-value {
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            text-align: right;
+            max-width: 60%;
         }
 
         .modal-info {
@@ -888,6 +1210,7 @@
 
         .spec-item {
             background: var(--bg-glass);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             padding: 1.25rem;
             border-radius: var(--border-radius-lg);
@@ -943,6 +1266,7 @@
             width: 100%;
             height: 100%;
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             z-index: 1000;
             overflow-y: auto;
@@ -953,6 +1277,7 @@
             max-width: 800px;
             margin: 0 auto;
             background: var(--gradient-card);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             border-radius: var(--border-radius-2xl);
             padding: 2rem;
@@ -1006,6 +1331,7 @@
             border: 1px solid var(--border-secondary);
             border-radius: var(--border-radius-lg);
             background: var(--bg-glass);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             color: var(--text-primary);
             font-size: 0.875rem;
@@ -1222,6 +1548,7 @@
             width: 100%;
             height: 100%;
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             display: none;
             align-items: center;
@@ -1260,6 +1587,7 @@
             width: 100%;
             height: 100%;
             background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             z-index: 1000;
             align-items: center;
@@ -1269,6 +1597,7 @@
 
         .auth-content {
             background: var(--gradient-card);
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             border-radius: var(--border-radius-xl);
             padding: 2rem;
@@ -1331,6 +1660,7 @@
             z-index: 2000;
             animation: slideInRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             max-width: 350px;
+            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border-secondary);
             box-shadow: 0 8px 25px var(--shadow-primary);
@@ -1365,7 +1695,7 @@
             }
         }
 
-        /* FIX: MIGLIORAMENTI RESPONSIVE per mobile */
+        /* MIGLIORAMENTI RESPONSIVE per mobile */
         @media (max-width: 768px) {
             .header {
                 padding: 2rem 0;
@@ -1375,7 +1705,7 @@
                 font-size: 2.5rem;
             }
 
-            /* FIX: Migliore posizionamento dei controlli admin su mobile */
+            /* Migliore posizionamento dei controlli admin su mobile */
             .admin-header-controls {
                 top: 15px;
                 right: 15px;
@@ -1423,9 +1753,10 @@
                 gap: 1.5rem;
             }
             
-            /* FIX: Modal più adatti per mobile con padding ridotto per evitare sovrapposizioni */
+            /* Modal più adatti per mobile con padding ridotto per evitare sovrapposizioni */
             .modal-content,
-            .form-content {
+            .form-content,
+            .compare-content {
                 margin: 0.5rem;
                 padding: 1rem;
                 border-radius: var(--border-radius-xl);
@@ -1435,7 +1766,7 @@
                 height: 350px;
             }
 
-            /* FIX: Pulsante chiusura modal più grande su mobile */
+            /* Pulsante chiusura modal più grande su mobile */
             .modal-close {
                 top: 15px;
                 right: 15px;
@@ -1500,7 +1831,7 @@
                 max-width: none;
             }
 
-            /* FIX: IMPORTANTE - Quando modal è aperto su mobile, nascondi completamente i controlli */
+            /* IMPORTANTE - Quando modal è aperto su mobile, nascondi completamente i controlli */
             body.modal-open .admin-header-controls,
             body.modal-open .sync-status {
                 display: none !important;
@@ -1509,15 +1840,37 @@
                 pointer-events: none !important;
             }
 
-            /* FIX: Assicura che il modal sia sempre sopra tutto su mobile */
+            /* Assicura che il modal sia sempre sopra tutto su mobile */
             .modal,
             .form-modal,
-            .auth-modal {
+            .auth-modal,
+            .compare-modal,
+            .zoom-modal {
                 z-index: 9999 !important;
             }
 
-            .modal-close {
+            .modal-close,
+            .zoom-close {
                 z-index: 10000 !important;
+            }
+
+            /* Compare grid responsive */
+            .compare-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .compare-bar {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+
+            .compare-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+                max-width: 250px;
             }
         }
 
@@ -1532,13 +1885,15 @@
 
             .modal,
             .form-modal,
-            .auth-modal {
+            .auth-modal,
+            .compare-modal {
                 padding: 0.5rem;
             }
             
             .modal-content,
             .form-content,
-            .auth-content {
+            .auth-content,
+            .compare-content {
                 padding: 1rem;
                 margin: 0.25rem;
             }
@@ -1562,8 +1917,9 @@
                 transform: scale(0.8);
             }
 
-            /* FIX: Ancora più spazio dal top per il pulsante chiusura */
-            .modal-close {
+            /* Ancora più spazio dal top per il pulsante chiusura */
+            .modal-close,
+            .zoom-close {
                 top: 10px;
                 right: 10px;
                 width: 48px;
@@ -1670,6 +2026,24 @@
         </div>
     </div>
 
+    <!-- Compare Bar -->
+    <div class="compare-bar" id="compareBar">
+        <div class="compare-info">
+            <i class="fas fa-balance-scale"></i>
+            <span>Modalità Confronto:</span>
+            <div class="compare-count" id="compareCount">0</div>
+            <span>progetti selezionati</span>
+        </div>
+        <div class="compare-actions">
+            <button class="compare-btn" onclick="openCompareModal()" id="compareButton" disabled>
+                <i class="fas fa-eye"></i> Confronta
+            </button>
+            <button class="compare-btn clear" onclick="clearCompareSelection()">
+                <i class="fas fa-times"></i> Cancella
+            </button>
+        </div>
+    </div>
+
     <div class="nav-container">
         <nav class="nav-tabs">
             <button class="nav-tab active" data-category="all" style="--i: 0">
@@ -1694,6 +2068,9 @@
         <button class="admin-btn" id="editModeBtn" onclick="toggleEditMode()">
             <i class="fas fa-edit"></i> Modifica
         </button>
+        <button class="admin-btn" id="compareModeBtn" onclick="toggleCompareMode()">
+            <i class="fas fa-balance-scale"></i> Confronta
+        </button>
         <button class="admin-btn sync" onclick="forceSyncData()">
             <i class="fas fa-sync-alt"></i> Sincronizza
         </button>
@@ -1713,13 +2090,13 @@
             <div class="search-section">
                 <h2 class="gallery-title" id="galleryTitle">Tutti i Progetti</h2>
                 <div class="search-box">
-                    <input type="text" class="search-input" id="searchInput" placeholder="Cerca progetti...">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Cerca progetti..." aria-label="Cerca progetti">
                     <i class="fas fa-search search-icon"></i>
                 </div>
             </div>
             <div class="filters-section">
                 <span class="filter-label">Ordina:</span>
-                <select class="sort-dropdown" id="sortDropdown">
+                <select class="sort-dropdown" id="sortDropdown" aria-label="Ordina progetti" title="Ordinamento progetti">
                     <option value="date-desc">Più recenti</option>
                     <option value="date-asc">Più vecchi</option>
                     <option value="name-asc">Nome A-Z</option>
@@ -1761,6 +2138,9 @@
                 <button class="gallery-nav next" id="nextBtn" onclick="changeSlide(1)" title="Immagine successiva">
                     <i class="fas fa-chevron-right"></i>
                 </button>
+                <button class="zoom-button" onclick="openZoomModal()" title="Zoom immagine">
+                    <i class="fas fa-search-plus"></i>
+                </button>
                 <div class="gallery-counter" id="galleryCounter">1 / 1</div>
                 <div class="gallery-indicators" id="galleryIndicators"></div>
             </div>
@@ -1768,6 +2148,30 @@
                 <h2 class="modal-title" id="modalTitle">Progetto</h2>
                 <div class="spec-grid" id="specGrid"></div>
                 <div class="modal-price" id="modalPrice">€ 0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zoom Modal -->
+    <div class="zoom-modal" id="zoomModal" onclick="closeZoomModal()">
+        <button class="zoom-close" onclick="closeZoomModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <img class="zoom-content" id="zoomImage" src="" alt="Zoom">
+    </div>
+
+    <!-- Compare Modal -->
+    <div class="compare-modal" id="compareModal">
+        <div class="compare-content">
+            <span class="modal-close" onclick="closeModal('compareModal')">
+                <i class="fas fa-times"></i>
+            </span>
+            <div class="compare-header">
+                <h2 class="compare-title">Confronto Progetti</h2>
+                <p class="compare-subtitle">Analizza le differenze tra i progetti selezionati</p>
+            </div>
+            <div class="compare-grid" id="compareGrid">
+                <!-- I progetti da confrontare verranno inseriti qui -->
             </div>
         </div>
     </div>
@@ -1899,7 +2303,7 @@
     </div>
 
     <script>
-        // FIX: Configurazione e oggetti principali definiti PRIMA delle funzioni globali
+        // Configurazione e oggetti principali definiti PRIMA delle funzioni globali
         const CONFIG = {
             ADMIN_PASSWORD: 'RetroAvia2024!',
             MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
@@ -1912,15 +2316,17 @@
             TOAST_DURATION: 4000,
             SEARCH_DEBOUNCE: 300,
             IMAGE_COMPRESSION: {
-                quality: 0.8,
-                maxDimension: 1920
-            }
+                quality: 0.6, // Ridotta da 0.8 per risparmiare spazio
+                maxDimension: 1280 // Ridotta da 1920 per risparmiare spazio
+            },
+            STORAGE_LIMIT: 4 * 1024 * 1024 // 4MB limite approssimativo per localStorage
         };
         
         const STATE = {
             supabase: null,
             games: [],
             editMode: false,
+            compareMode: false,
             currentCategory: 'all',
             editingId: null,
             isAuthenticated: false,
@@ -1930,7 +2336,8 @@
             currentGameImages: [],
             uploadedImages: [],
             cloudSyncEnabled: true,
-            isOnline: navigator.onLine
+            isOnline: navigator.onLine,
+            selectedGames: new Set() // Per il sistema di confronto
         };
 
         const Utils = {
@@ -1970,6 +2377,7 @@
                 return div.innerHTML;
             },
 
+            // Compressione immagini migliorata per ridurre occupazione localStorage
             compressImage: (file, quality = CONFIG.IMAGE_COMPRESSION.quality, maxDim = CONFIG.IMAGE_COMPRESSION.maxDimension) => {
                 return new Promise((resolve, reject) => {
                     const canvas = document.createElement('canvas');
@@ -1979,6 +2387,7 @@
                     img.onload = () => {
                         let { width, height } = img;
                         
+                        // Calcola le nuove dimensioni mantenendo l'aspect ratio
                         const ratio = Math.min(maxDim / width, maxDim / height);
                         if (ratio < 1) {
                             width *= ratio;
@@ -1992,7 +2401,14 @@
                         ctx.imageSmoothingQuality = 'high';
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        const result = canvas.toDataURL('image/jpeg', quality);
+                        // Prova prima con JPEG per file più piccoli
+                        let result = canvas.toDataURL('image/jpeg', quality);
+                        
+                        // Se il file è ancora troppo grande, riduci ulteriormente
+                        if (result.length > 300000) { // ~300KB
+                            result = canvas.toDataURL('image/jpeg', quality * 0.7);
+                        }
+                        
                         resolve(result);
                     };
                     
@@ -2012,6 +2428,27 @@
 
             async sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
+            },
+
+            // Funzione per controllare la dimensione del localStorage
+            getStorageSize: () => {
+                let total = 0;
+                for (let key in localStorage) {
+                    if (localStorage.hasOwnProperty(key)) {
+                        total += localStorage[key].length + key.length;
+                    }
+                }
+                return total;
+            },
+
+            // Funzione per liberare spazio se necessario
+            cleanupStorage: () => {
+                const currentSize = Utils.getStorageSize();
+                if (currentSize > CONFIG.STORAGE_LIMIT) {
+                    // Rimuovi dati non essenziali se necessario
+                    localStorage.removeItem('retroavia_last_sync');
+                    console.warn('Storage cleanup eseguito');
+                }
             }
         };
 
@@ -2213,6 +2650,7 @@
             }
         };
 
+        // Gestione migliorata del localStorage con controllo quota
         const DataManager = {
             loadLocal: () => {
                 try {
@@ -2247,6 +2685,7 @@
                 } catch (error) {
                     console.error('Errore caricamento locale:', error);
                     STATE.games = [];
+                    UI.showToast('Errore caricamento dati locali', 'error');
                 }
             },
 
@@ -2256,7 +2695,16 @@
                         throw new Error('LocalStorage non supportato');
                     }
                     
+                    // Controlla la dimensione prima del salvataggio
+                    Utils.cleanupStorage();
+                    
                     const dataToSave = JSON.stringify(STATE.games);
+                    
+                    // Controlla se supererebbe il limite
+                    if (dataToSave.length > CONFIG.STORAGE_LIMIT) {
+                        throw new Error('Dati troppo grandi per localStorage');
+                    }
+                    
                     localStorage.setItem('retroavia_games', dataToSave);
                     
                     const saved = localStorage.getItem('retroavia_games');
@@ -2267,7 +2715,15 @@
                     }
                 } catch (error) {
                     console.error('Errore salvataggio locale:', error);
-                    if (STATE.games.length > 0) {
+                    
+                    if (error.name === 'QuotaExceededError' || error.message.includes('quota') || error.message.includes('troppo grandi')) {
+                        UI.showToast('Spazio insufficiente. Riduci il numero di immagini o attiva la sincronizzazione cloud.', 'error');
+                        
+                        // Prova a salvare nel cloud se possibile
+                        if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline && STATE.isAuthenticated) {
+                            SupabaseManager.syncToCloud(true);
+                        }
+                    } else {
                         UI.showToast('Errore nel salvataggio locale', 'error');
                     }
                     return false;
@@ -2316,6 +2772,124 @@
 
             sortGames: () => {
                 STATE.games = DataManager.applySorting(STATE.games);
+            }
+        };
+
+        // Nuovo sistema di confronto progetti
+        const CompareManager = {
+            toggleGame: (gameId) => {
+                if (STATE.selectedGames.has(gameId)) {
+                    STATE.selectedGames.delete(gameId);
+                } else {
+                    if (STATE.selectedGames.size >= 6) { // Limite massimo 6 progetti
+                        UI.showToast('Massimo 6 progetti per confronto', 'error');
+                        return false;
+                    }
+                    STATE.selectedGames.add(gameId);
+                }
+                
+                CompareManager.updateUI();
+                return true;
+            },
+
+            updateUI: () => {
+                const compareBar = document.getElementById('compareBar');
+                const compareCount = document.getElementById('compareCount');
+                const compareButton = document.getElementById('compareButton');
+                
+                const count = STATE.selectedGames.size;
+                
+                if (count > 0) {
+                    compareBar.classList.add('show');
+                    compareCount.textContent = count;
+                    compareButton.disabled = count < 2;
+                } else {
+                    compareBar.classList.remove('show');
+                    compareButton.disabled = true;
+                }
+
+                // Aggiorna gli checkbox
+                document.querySelectorAll('.compare-checkbox').forEach(checkbox => {
+                    const gameId = checkbox.dataset.gameId;
+                    checkbox.checked = STATE.selectedGames.has(gameId);
+                });
+
+                // Aggiorna lo stile delle card
+                document.querySelectorAll('.game-card').forEach(card => {
+                    const gameId = card.dataset.gameId;
+                    if (STATE.selectedGames.has(gameId)) {
+                        card.classList.add('selected');
+                    } else {
+                        card.classList.remove('selected');
+                    }
+                });
+            },
+
+            clear: () => {
+                STATE.selectedGames.clear();
+                CompareManager.updateUI();
+                UI.showToast('Selezione confronto cancellata', 'info');
+            },
+
+            openModal: () => {
+                if (STATE.selectedGames.size < 2) {
+                    UI.showToast('Seleziona almeno 2 progetti per confrontarli', 'error');
+                    return;
+                }
+
+                const selectedGames = Array.from(STATE.selectedGames).map(id => 
+                    STATE.games.find(g => g.id === id)
+                ).filter(g => g);
+
+                CompareManager.renderCompareModal(selectedGames);
+                document.getElementById('compareModal').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                document.body.classList.add('modal-open');
+            },
+
+            renderCompareModal: (games) => {
+                const compareGrid = document.getElementById('compareGrid');
+                
+                compareGrid.innerHTML = games.map(game => {
+                    const specs = [
+                        { label: 'Categoria', value: game.category === 'color' ? 'Game Boy Color' : 
+                                                    game.category === 'advance' ? 'Game Boy Advance' : 
+                                                    'Game Boy Advance SP' },
+                        { label: 'Modello', value: game.model },
+                        { label: 'Prezzo', value: Utils.formatPrice(game.price) },
+                        { label: 'Scocca', value: game.shell || 'Non specificata' },
+                        { label: 'Pulsanti', value: game.buttons || 'Standard' },
+                        { label: 'Display', value: game.display || 'Standard' },
+                        { label: 'Audio', value: game.audio || 'Standard' },
+                        { label: 'Batteria', value: game.battery || 'Standard' },
+                        { label: 'Kit LED', value: game.led || 'Nessuno' },
+                        { label: 'Accessori', value: game.box || 'Nessuno' }
+                    ];
+
+                    const firstImage = game.images && game.images.length > 0 ? game.images[0] : null;
+                    
+                    return `
+                        <div class="compare-item">
+                            ${firstImage ? 
+                                `<img src="${firstImage}" alt="${Utils.sanitizeInput(game.name)}" class="compare-item-image">` :
+                                `<div class="compare-item-image" style="display: flex; align-items: center; justify-content: center; color: var(--text-dim); background: var(--bg-tertiary);">
+                                    <i class="fas fa-gamepad" style="font-size: 3rem;"></i>
+                                </div>`
+                            }
+                            <div class="compare-item-info">
+                                <h3 class="compare-item-title">${Utils.sanitizeInput(game.name)}</h3>
+                                <div class="compare-specs">
+                                    ${specs.map(spec => `
+                                        <div class="compare-spec">
+                                            <span class="compare-spec-label">${spec.label}:</span>
+                                            <span class="compare-spec-value">${Utils.sanitizeInput(spec.value)}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             }
         };
 
@@ -2433,6 +3007,14 @@
                 const gallery = document.getElementById('gallery');
                 const filteredGames = DataManager.filterGames();
 
+                // Aggiorna la classe per modalità confronto
+                const galleryContainer = document.querySelector('.gallery-container');
+                if (STATE.compareMode) {
+                    galleryContainer.classList.add('compare-mode');
+                } else {
+                    galleryContainer.classList.remove('compare-mode');
+                }
+
                 if (filteredGames.length === 0) {
                     const message = STATE.searchQuery ? 
                         `Nessun risultato per "${STATE.searchQuery}"` : 
@@ -2453,11 +3035,24 @@
                     const imageCount = game.images ? game.images.length : 0;
                     const firstImage = imageCount > 0 ? game.images[0] : null;
                     const price = Utils.formatPrice(game.price);
+                    const isSelected = STATE.selectedGames.has(game.id);
                     
                     return `
-                        <div class="game-card" 
-                             onclick="showDetails('${game.id}')" 
+                        <div class="game-card ${isSelected ? 'selected' : ''}" 
+                             data-game-id="${game.id}"
+                             onclick="handleCardClick('${game.id}', event)" 
                              style="--i: ${index}; animation-delay: ${index * 0.05}s">
+                            
+                            ${STATE.compareMode ? `
+                                <div class="compare-checkbox-overlay">
+                                    <input type="checkbox" class="compare-checkbox" 
+                                           data-game-id="${game.id}" 
+                                           ${isSelected ? 'checked' : ''}
+                                           onchange="toggleCompare('${game.id}')"
+                                           onclick="event.stopPropagation()">
+                                </div>
+                            ` : ''}
+                            
                             ${STATE.editMode ? `
                                 <div class="edit-controls">
                                     <button class="edit-btn" onclick="event.stopPropagation(); editGame('${game.id}')" title="Modifica">
@@ -2468,6 +3063,7 @@
                                     </button>
                                 </div>
                             ` : ''}
+                            
                             <div class="game-image-container">
                                 ${firstImage ? 
                                     `<img src="${firstImage}" alt="${Utils.sanitizeInput(game.name)}" class="game-image" loading="lazy">` : 
@@ -2484,10 +3080,13 @@
                         </div>
                     `;
                 }).join('');
+
+                // Aggiorna UI confronto dopo il rendering
+                CompareManager.updateUI();
             },
 
             showDetails: (id) => {
-                if (STATE.editMode) return;
+                if (STATE.editMode || STATE.compareMode) return;
                 
                 const game = STATE.games.find(g => g.id === id);
                 if (!game) return;
@@ -2533,11 +3132,17 @@
                 const indicators = document.getElementById('galleryIndicators');
                 const prevBtn = document.getElementById('prevBtn');
                 const nextBtn = document.getElementById('nextBtn');
+                const zoomBtn = document.querySelector('.zoom-button');
                 
                 const showControls = STATE.currentGameImages.length > 1;
                 if (prevBtn) prevBtn.style.display = showControls ? 'flex' : 'none';
                 if (nextBtn) nextBtn.style.display = showControls ? 'flex' : 'none';
                 if (indicators) indicators.style.display = showControls ? 'flex' : 'none';
+                
+                // Mostra pulsante zoom solo se ci sono immagini
+                if (zoomBtn) {
+                    zoomBtn.style.display = STATE.currentGameImages.length > 0 ? 'flex' : 'none';
+                }
                 
                 if (STATE.currentGameImages.length === 0) {
                     container.innerHTML = `
@@ -2742,8 +3347,8 @@
                         UI.showToast('Nuovo progetto aggiunto con successo', 'success');
                     }
 
-                    DataManager.saveLocal();
-                    if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
+                    const saved = DataManager.saveLocal();
+                    if (saved && STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
                         await SupabaseManager.syncToCloud(false);
                     }
                     
@@ -2840,11 +3445,8 @@
                         }
 
                         let finalData;
-                        if (file.size > 1024 * 1024) {
-                            finalData = await Utils.compressImage(file);
-                        } else {
-                            finalData = await Utils.fileToBase64(file);
-                        }
+                        // Comprimi sempre le immagini per risparmiare spazio
+                        finalData = await Utils.compressImage(file);
 
                         results.push({
                             data: finalData,
@@ -2947,6 +3549,8 @@
             logout: () => {
                 STATE.isAuthenticated = false;
                 STATE.editMode = false;
+                STATE.compareMode = false;
+                CompareManager.clear();
                 UI.updateAuthUI();
                 UI.renderGallery();
                 UI.showToast('Disconnesso dalla modalità admin', 'info');
@@ -2961,16 +3565,59 @@
                 }
                 
                 STATE.editMode = !STATE.editMode;
+                if (STATE.editMode) {
+                    STATE.compareMode = false;
+                    CompareManager.clear();
+                }
+                
                 const btn = document.getElementById('editModeBtn');
+                const compareBtn = document.getElementById('compareModeBtn');
                 
                 if (STATE.editMode) {
                     btn.innerHTML = '<i class="fas fa-times"></i> Esci';
                     btn.classList.add('edit-mode');
+                    if (compareBtn) compareBtn.disabled = true;
                     UI.showToast('Modalità modifica attiva', 'info');
                 } else {
                     btn.innerHTML = '<i class="fas fa-edit"></i> Modifica';
                     btn.classList.remove('edit-mode');
+                    if (compareBtn) compareBtn.disabled = false;
                     UI.showToast('Modalità visualizzazione ripristinata', 'info');
+                }
+                
+                UI.renderGallery();
+            },
+
+            toggleCompareMode: () => {
+                if (!STATE.isAuthenticated) {
+                    UI.showToast('Accesso amministratore richiesto', 'error');
+                    return;
+                }
+                
+                STATE.compareMode = !STATE.compareMode;
+                if (STATE.compareMode) {
+                    STATE.editMode = false;
+                } else {
+                    CompareManager.clear();
+                }
+                
+                const btn = document.getElementById('compareModeBtn');
+                const editBtn = document.getElementById('editModeBtn');
+                
+                if (STATE.compareMode) {
+                    btn.innerHTML = '<i class="fas fa-times"></i> Esci';
+                    btn.classList.add('edit-mode');
+                    if (editBtn) {
+                        editBtn.disabled = true;
+                        editBtn.classList.remove('edit-mode');
+                        editBtn.innerHTML = '<i class="fas fa-edit"></i> Modifica';
+                    }
+                    UI.showToast('Modalità confronto attiva - Seleziona i progetti da confrontare', 'info');
+                } else {
+                    btn.innerHTML = '<i class="fas fa-balance-scale"></i> Confronta';
+                    btn.classList.remove('edit-mode');
+                    if (editBtn) editBtn.disabled = false;
+                    UI.showToast('Modalità confronto disattivata', 'info');
                 }
                 
                 UI.renderGallery();
@@ -2984,6 +3631,7 @@
                 
                 if (confirm(`Sei sicuro di voler eliminare "${game.name}"?\n\nQuesta operazione non può essere annullata.`)) {
                     STATE.games = STATE.games.filter(g => g.id !== id);
+                    STATE.selectedGames.delete(id); // Rimuovi anche dalla selezione confronto
                     DataManager.saveLocal();
                     
                     if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
@@ -2992,6 +3640,7 @@
                     
                     UI.renderGallery();
                     UI.updateStats();
+                    CompareManager.updateUI();
                     UI.showToast('Progetto eliminato', 'success');
                 }
             },
@@ -3005,7 +3654,7 @@
                 }
                 
                 const exportData = {
-                    version: '2.2.0',
+                    version: '2.3.0',
                     exportDate: new Date().toISOString(),
                     totalGames: STATE.games.length,
                     games: STATE.games
@@ -3059,6 +3708,7 @@
                             
                             if (replace) {
                                 STATE.games = importedGames;
+                                STATE.selectedGames.clear();
                             } else {
                                 importedGames.forEach(game => {
                                     if (!STATE.games.find(g => g.id === game.id)) {
@@ -3076,6 +3726,7 @@
                             
                             UI.renderGallery();
                             UI.updateStats();
+                            CompareManager.updateUI();
                             UI.showToast(`${importedGames.length} progetti importati`, 'success');
                             
                         } catch (error) {
@@ -3107,6 +3758,7 @@
                 
                 if (confirmation === 'ELIMINA TUTTO') {
                     STATE.games = [];
+                    STATE.selectedGames.clear();
                     DataManager.saveLocal();
                     
                     if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
@@ -3115,10 +3767,32 @@
                     
                     UI.renderGallery();
                     UI.updateStats();
+                    CompareManager.updateUI();
                     UI.showToast('Tutti i dati sono stati eliminati', 'success');
                 } else if (confirmation !== null) {
                     UI.showToast('Testo di conferma non corretto', 'error');
                 }
+            }
+        };
+
+        // Sistema Zoom per le immagini
+        const ZoomManager = {
+            open: () => {
+                if (STATE.currentGameImages.length === 0) return;
+                
+                const currentImage = STATE.currentGameImages[STATE.currentSlide];
+                const zoomModal = document.getElementById('zoomModal');
+                const zoomImage = document.getElementById('zoomImage');
+                
+                zoomImage.src = currentImage;
+                zoomModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            },
+
+            close: () => {
+                const zoomModal = document.getElementById('zoomModal');
+                zoomModal.style.display = 'none';
+                document.body.style.overflow = 'hidden'; // Mantieni overflow hidden perché siamo ancora nel modal principale
             }
         };
 
@@ -3203,7 +3877,8 @@
                 window.addEventListener('click', (e) => {
                     if (e.target.classList.contains('modal') || 
                         e.target.classList.contains('form-modal') || 
-                        e.target.classList.contains('auth-modal')) {
+                        e.target.classList.contains('auth-modal') ||
+                        e.target.classList.contains('compare-modal')) {
                         UI.closeModal(e.target.id);
                     }
                 });
@@ -3213,9 +3888,14 @@
                 document.addEventListener('keydown', (e) => {
                     switch(e.key) {
                         case 'Escape':
-                            UI.closeModal('detailModal');
-                            UI.closeModal('formModal');
-                            AuthManager.closeModal();
+                            if (document.getElementById('zoomModal').style.display === 'block') {
+                                ZoomManager.close();
+                            } else {
+                                UI.closeModal('detailModal');
+                                UI.closeModal('formModal');
+                                UI.closeModal('compareModal');
+                                AuthManager.closeModal();
+                            }
                             break;
                         case 'ArrowLeft':
                             if (document.getElementById('detailModal').style.display === 'block') {
@@ -3279,12 +3959,13 @@
             }
         };
 
-        // FIX: Definisco le funzioni globali IMMEDIATAMENTE e correttamente
+        // Definisco le funzioni globali IMMEDIATAMENTE e correttamente
         window.showAuthModal = () => AuthManager.showModal();
         window.closeAuthModal = () => AuthManager.closeModal();
         window.authenticate = () => AuthManager.authenticate();
         window.openAddModal = () => FormManager.openAdd();
         window.toggleEditMode = () => AdminManager.toggleEditMode();
+        window.toggleCompareMode = () => AdminManager.toggleCompareMode();
         window.forceSyncData = () => {
             if (!STATE.isAuthenticated) {
                 UI.showToast('Accesso amministratore richiesto', 'error');
@@ -3302,6 +3983,33 @@
         window.closeModal = (modalId) => UI.closeModal(modalId);
         window.changeSlide = (direction) => UI.changeSlide(direction);
         window.goToSlide = (index) => UI.goToSlide(index);
+        window.removeImage = (index) => FormManager.removeImage(index);
+
+        // Funzioni per il sistema di confronto
+        window.toggleCompare = (gameId) => {
+            const success = CompareManager.toggleGame(gameId);
+            if (success) {
+                setTimeout(() => CompareManager.updateUI(), 50);
+            }
+        };
+        window.openCompareModal = () => CompareManager.openModal();
+        window.clearCompareSelection = () => CompareManager.clear();
+
+        // Funzioni per zoom
+        window.openZoomModal = () => ZoomManager.open();
+        window.closeZoomModal = () => ZoomManager.close();
+
+        // Gestione click su card (normale vs confronto)
+        window.handleCardClick = (gameId, event) => {
+            if (STATE.compareMode) {
+                // In modalità confronto, gestisci come toggle
+                window.toggleCompare(gameId);
+            } else if (!STATE.editMode) {
+                // In modalità normale, mostra i dettagli
+                UI.showDetails(gameId);
+            }
+        };
+
         window.showDetails = (id) => UI.showDetails(id);
         window.editGame = (id) => {
             if (!STATE.isAuthenticated) {
@@ -3317,20 +4025,6 @@
             }
             AdminManager.deleteGame(id);
         };
-        window.removeImage = (index) => FormManager.removeImage(index);
-
-        // Funzioni globali per il sistema di confronto
-        window.toggleCompare = (gameId) => {
-            const success = CompareManager.toggleGame(gameId);
-            if (success) {
-                // Aggiorna l'UI dopo il toggle
-                setTimeout(() => CompareManager.updateUI(), 50);
-            }
-        };
-        
-        window.openCompareModal = () => CompareManager.openModal();
-        
-        window.clearCompareSelection = () => CompareManager.clear();
 
         // Inizializzazione app
         document.addEventListener('DOMContentLoaded', App.initialize);
