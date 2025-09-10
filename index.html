@@ -2516,7 +2516,16 @@
                             },
                             realtime: {
                                 params: {
-                                    eventsPerSecond: 2
+                                    eventsPerSecond: 1 // Ridotto per evitare overload
+                                }
+                            },
+                            db: {
+                                schema: 'public'
+                            },
+                            global: {
+                                headers: {
+                                    'cache-control': 'no-cache', // Evita problemi di cache
+                                    'pragma': 'no-cache'
                                 }
                             }
                         });
@@ -2537,11 +2546,22 @@
                 let lastError;
                 for (let attempt = 0; attempt < retries; attempt++) {
                     try {
+                        // Timeout con gestione più robusta
                         const controller = new AbortController();
                         const timeoutId = setTimeout(() => controller.abort(), CONFIG.SYNC_TIMEOUT);
                         
-                        const result = await operation();
+                        const startTime = Date.now();
+                        const result = await Promise.race([
+                            operation(),
+                            new Promise((_, reject) => 
+                                setTimeout(() => reject(new Error('Request timeout')), CONFIG.SYNC_TIMEOUT)
+                            )
+                        ]);
+                        
                         clearTimeout(timeoutId);
+                        const duration = Date.now() - startTime;
+                        
+                        console.log(`Request completed in ${duration}ms`);
                         
                         if (result.error) {
                             throw result.error;
@@ -2550,15 +2570,42 @@
                         return result;
                     } catch (error) {
                         lastError = error;
-                        console.warn(`Tentativo ${attempt + 1} fallito:`, error.message);
+                        console.warn(`Tentativo ${attempt + 1}/${retries} fallito:`, error.message);
                         
+                        // Backoff esponenziale per evitare spam di richieste
                         if (attempt < retries - 1) {
-                            await Utils.sleep(CONFIG.RETRY_DELAY * (attempt + 1));
+                            const delay = CONFIG.RETRY_DELAY * Math.pow(1.5, attempt);
+                            console.log(`Attesa ${delay}ms prima del prossimo tentativo`);
+                            await Utils.sleep(delay);
                         }
                     }
                 }
                 
                 throw lastError;
+            },
+
+            // Operazioni batch per evitare timeout su grandi dataset
+            async syncToCloudBatch(games, batchSize = CONFIG.BATCH_SIZE) {
+                const batches = [];
+                for (let i = 0; i < games.length; i += batchSize) {
+                    batches.push(games.slice(i, i + batchSize));
+                }
+
+                for (let i = 0; i < batches.length; i++) {
+                    const batch = batches[i];
+                    UI.updateSyncStatus('syncing', `Sincronizzazione ${i + 1}/${batches.length}...`);
+                    
+                    await SupabaseManager.makeRequest(async () => {
+                        return await STATE.supabase
+                            .from('games')
+                            .insert(batch);
+                    });
+                    
+                    // Piccola pausa tra i batch per evitare overload
+                    if (i < batches.length - 1) {
+                        await Utils.sleep(500);
+                    }
+                }
             },
 
             syncToCloud: async (notify = false) => {
@@ -2570,6 +2617,7 @@
                 try {
                     UI.updateSyncStatus('syncing', 'Sincronizzazione...');
                     
+                    // Prima cancella tutti i dati esistenti con timeout più lungo
                     await SupabaseManager.makeRequest(async () => {
                         return await STATE.supabase
                             .from('games')
@@ -2598,11 +2646,16 @@
                             updated_at: game.updatedAt || new Date().toISOString()
                         }));
 
-                        await SupabaseManager.makeRequest(async () => {
-                            return await STATE.supabase
-                                .from('games')
-                                .insert(gamesData);
-                        });
+                        // Usa operazioni batch per dataset grandi
+                        if (gamesData.length > CONFIG.BATCH_SIZE) {
+                            await SupabaseManager.syncToCloudBatch(gamesData);
+                        } else {
+                            await SupabaseManager.makeRequest(async () => {
+                                return await STATE.supabase
+                                    .from('games')
+                                    .insert(gamesData);
+                            });
+                        }
                     }
 
                     localStorage.setItem('retroavia_last_sync', new Date().toISOString());
@@ -2618,10 +2671,18 @@
                     UI.updateSyncStatus('error', 'Errore sync');
                     
                     if (notify) {
-                        const errorMsg = error.message.includes('fetch') ? 
-                            'Problemi di connessione al server' : 
-                            error.message;
-                        UI.showToast(`Errore sincronizzazione: ${errorMsg}`, 'error');
+                        let errorMsg = 'Errore di sincronizzazione';
+                        
+                        // Messaggi più user-friendly per errori comuni
+                        if (error.message.includes('timeout') || error.message.includes('statement timeout')) {
+                            errorMsg = 'Timeout di connessione. Riprova tra qualche minuto.';
+                        } else if (error.message.includes('fetch')) {
+                            errorMsg = 'Problemi di connessione al server';
+                        } else if (error.message.includes('network')) {
+                            errorMsg = 'Errore di rete. Controlla la connessione.';
+                        }
+                        
+                        UI.showToast(errorMsg, 'error');
                     }
                     return false;
                 }
@@ -2636,11 +2697,13 @@
                 try {
                     UI.updateSyncStatus('syncing', 'Caricamento...');
                     
+                    // Query ottimizzata con limite per evitare timeout
                     const result = await SupabaseManager.makeRequest(async () => {
                         return await STATE.supabase
                             .from('games')
                             .select('*')
-                            .order('created_at', { ascending: false });
+                            .order('created_at', { ascending: false })
+                            .limit(1000); // Limite per evitare timeout su grandi dataset
                     });
 
                     const cloudGames = result.data;
@@ -2683,6 +2746,12 @@
                 } catch (error) {
                     console.error('Errore caricamento da cloud:', error);
                     UI.updateSyncStatus('error', 'Errore caricamento');
+                    
+                    // Fallback: continua con dati locali se cloud fallisce
+                    if (STATE.games.length > 0) {
+                        UI.updateSyncStatus('local', 'Usando dati locali');
+                    }
+                    
                     return false;
                 }
             }
