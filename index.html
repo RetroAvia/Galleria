@@ -3724,18 +3724,61 @@
                 if (!game) return;
                 
                 if (confirm(`Sei sicuro di voler eliminare "${game.name}"?\n\nQuesta operazione non può essere annullata.`)) {
-                    STATE.games = STATE.games.filter(g => g.id !== id);
-                    STATE.selectedGames.delete(id); // Rimuovi anche dalla selezione confronto
-                    DataManager.saveLocalProgressive();
+                    // ELIMINAZIONE DIRETTA SU CLOUD
+                    AdminManager.deleteDirectFromCloud(id, game);
+                }
+            },
+
+            // Nuovo metodo per eliminazione diretta da cloud
+            deleteDirectFromCloud: async (id, game) => {
+                try {
+                    UI.showLoading('Eliminazione progetto...');
                     
+                    // Elimina dall'array in memoria
+                    STATE.games = STATE.games.filter(g => g.id !== id);
+                    STATE.selectedGames.delete(id);
+                    
+                    // Eliminazione diretta da Supabase se connesso
                     if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
-                        SupabaseManager.syncToCloud(false);
+                        UI.updateSyncStatus('syncing', 'Eliminazione da cloud...');
+                        
+                        try {
+                            await SupabaseManager.makeRequest(async () => {
+                                return await STATE.supabase
+                                    .from('games')
+                                    .delete()
+                                    .eq('id', id);
+                            });
+                            
+                            console.log('Progetto eliminato direttamente da cloud:', id);
+                            UI.updateSyncStatus('synced', `Cloud aggiornato (${STATE.games.length})`);
+                            UI.showToast('Progetto eliminato da cloud', 'success');
+                            
+                            // Aggiorna cache locale
+                            StorageManager.saveToLocalCache();
+                        } catch (cloudError) {
+                            console.error('Errore eliminazione cloud:', cloudError);
+                            UI.updateSyncStatus('error', 'Errore eliminazione cloud');
+                            UI.showToast('Progetto eliminato localmente (errore cloud)', 'warning');
+                            
+                            // Salva modifiche in locale anche se cloud fallisce
+                            await DataManager.saveIntelligent();
+                        }
+                    } else {
+                        // Modalità offline
+                        await DataManager.saveIntelligent();
+                        UI.showToast('Progetto eliminato (offline)', 'info');
                     }
                     
                     UI.renderGallery();
                     UI.updateStats();
                     CompareManager.updateUI();
-                    UI.showToast('Progetto eliminato', 'success');
+                    
+                } catch (error) {
+                    console.error('Errore eliminazione:', error);
+                    UI.showToast('Errore durante l\'eliminazione', 'error');
+                } finally {
+                    UI.hideLoading();
                 }
             },
 
