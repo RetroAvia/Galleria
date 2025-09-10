@@ -265,6 +265,107 @@
         .sync-status.synced { color: var(--accent-secondary); }
         .sync-status.error { color: var(--accent-error); }
 
+        /* NUOVO: Storage Controls */
+        .storage-controls {
+            position: fixed;
+            top: 140px;
+            right: 20px;
+            background: var(--bg-overlay);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius-lg);
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            z-index: 500;
+            border: 1px solid var(--border-secondary);
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 200px;
+            transition: var(--transition-normal);
+        }
+
+        .storage-controls.show {
+            display: flex;
+        }
+
+        body.modal-open .storage-controls {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.9);
+            visibility: hidden;
+        }
+
+        .storage-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+        }
+
+        .storage-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 4px 0;
+        }
+
+        .storage-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: var(--transition-normal);
+        }
+
+        .storage-fill.warning {
+            background: var(--gradient-tertiary);
+        }
+
+        .storage-fill.error {
+            background: linear-gradient(135deg, var(--accent-error), #dc2626);
+        }
+
+        .storage-controls .btn-small {
+            padding: 6px 12px;
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.75rem;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .btn-cloud-toggle {
+            background: var(--gradient-secondary);
+            color: white;
+        }
+
+        .btn-cloud-toggle.disabled {
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+        }
+
+        .btn-cloud-toggle:hover:not(.disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-cleanup {
+            background: var(--gradient-tertiary);
+            color: white;
+        }
+
+        .btn-cleanup:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
         /* Search e filtri più puliti */
         .search-filters-container {
             background: var(--gradient-glass);
@@ -1772,6 +1873,13 @@
                 padding: 6px 10px;
             }
 
+            .storage-controls {
+                top: 125px;
+                right: 15px;
+                transform: scale(0.85);
+                min-width: 160px;
+            }
+
             .search-filters-wrapper {
                 flex-direction: column;
                 gap: 1rem;
@@ -1883,7 +1991,8 @@
 
             /* IMPORTANTE - Quando modal è aperto su mobile, nascondi completamente i controlli */
             body.modal-open .admin-header-controls,
-            body.modal-open .sync-status {
+            body.modal-open .sync-status,
+            body.modal-open .storage-controls {
                 display: none !important;
                 opacity: 0 !important;
                 visibility: hidden !important;
@@ -1967,6 +2076,13 @@
                 transform: scale(0.8);
             }
 
+            .storage-controls {
+                top: 120px;
+                right: 10px;
+                transform: scale(0.8);
+                min-width: 140px;
+            }
+
             /* Ancora più spazio dal top per il pulsante chiusura */
             .modal-close,
             .zoom-close {
@@ -2017,6 +2133,24 @@
     <div class="sync-status" id="syncStatus" style="display: none;">
         <i class="fas fa-cloud" id="syncIcon"></i>
         <span id="syncText">Inizializzazione...</span>
+    </div>
+
+    <!-- NUOVO: Storage Controls -->
+    <div class="storage-controls" id="storageControls">
+        <div class="storage-info">
+            <span>Storage:</span>
+            <span id="storagePercent">0%</span>
+        </div>
+        <div class="storage-bar">
+            <div class="storage-fill" id="storageFill"></div>
+        </div>
+        <button class="btn-small btn-cloud-toggle" id="cloudToggleBtn" onclick="toggleCloudSync()">
+            <i class="fas fa-cloud-upload-alt"></i> 
+            <span id="cloudToggleText">Abilita Cloud</span>
+        </button>
+        <button class="btn-small btn-cleanup" id="cleanupBtn" onclick="cleanupStorage()">
+            <i class="fas fa-broom"></i> Pulisci Cache
+        </button>
     </div>
 
     <div class="admin-header-controls" id="adminHeaderControls">
@@ -2357,23 +2491,27 @@
     </div>
 
     <script>
-        // Configurazione e oggetti principali definiti PRIMA delle funzioni globali
+        // Configurazione migliorata con timeout ridotti e parametri ottimizzati
         const CONFIG = {
             ADMIN_PASSWORD: 'RetroAvia2024!',
             MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
             MAX_IMAGES: 10,
             SUPABASE_URL: 'https://moenkmmkpogjapsyiuat.supabase.co',
             SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vZW5rbW1rcG9namFwc3lpdWF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0OTYyMTYsImV4cCI6MjA3MjA3MjIxNn0.RdFnDxJVIgESel9I6s84KRR3F6yPFL7rk0ycFP_q0pg',
-            SYNC_TIMEOUT: 30000,
-            RETRY_ATTEMPTS: 3,
-            RETRY_DELAY: 2000,
+            // TIMEOUT RIDOTTI per evitare timeout lunghi
+            SYNC_TIMEOUT: 15000, // Ridotto da 30000 a 15000 (15 secondi)
+            RETRY_ATTEMPTS: 2, // Ridotto da 3 a 2
+            RETRY_DELAY: 1000, // Ridotto da 2000 a 1000 (1 secondo)
             TOAST_DURATION: 4000,
             SEARCH_DEBOUNCE: 300,
             IMAGE_COMPRESSION: {
-                quality: 0.6, // Ridotta da 0.8 per risparmiare spazio
-                maxDimension: 1280 // Ridotta da 1920 per risparmiare spazio
+                quality: 0.5, // Ridotta da 0.6 per risparmiare spazio
+                maxDimension: 1024 // Ridotta da 1280 per risparmiare spazio
             },
-            STORAGE_LIMIT: 4 * 1024 * 1024 // 4MB limite approssimativo per localStorage
+            // LIMITI STORAGE ridotti per prevenire overflow
+            STORAGE_LIMIT: 3 * 1024 * 1024, // Ridotto da 4MB a 3MB
+            STORAGE_WARNING: 2.5 * 1024 * 1024, // 2.5MB per warning
+            BATCH_SIZE: 5 // Ridotto da 10 per evitare timeout
         };
         
         const STATE = {
@@ -2389,9 +2527,12 @@
             currentSlide: 0,
             currentGameImages: [],
             uploadedImages: [],
-            cloudSyncEnabled: true,
+            cloudSyncEnabled: false, // MODIFICATO: Default false
             isOnline: navigator.onLine,
-            selectedGames: new Set() // Per il sistema di confronto
+            selectedGames: new Set(),
+            // NUOVO: Stati per gestione storage
+            storageSize: 0,
+            forceCloudMode: false // NUOVO: Forza salvataggio solo cloud
         };
 
         const Utils = {
@@ -2459,8 +2600,8 @@
                         let result = canvas.toDataURL('image/jpeg', quality);
                         
                         // Se il file è ancora troppo grande, riduci ulteriormente
-                        if (result.length > 300000) { // ~300KB
-                            result = canvas.toDataURL('image/jpeg', quality * 0.7);
+                        if (result.length > 200000) { // Ridotto da 300KB a 200KB
+                            result = canvas.toDataURL('image/jpeg', quality * 0.6);
                         }
                         
                         resolve(result);
@@ -2484,7 +2625,7 @@
                 return new Promise(resolve => setTimeout(resolve, ms));
             },
 
-            // Funzione per controllare la dimensione del localStorage
+            // NUOVO: Funzione migliorata per controllare la dimensione del localStorage
             getStorageSize: () => {
                 let total = 0;
                 for (let key in localStorage) {
@@ -2492,16 +2633,127 @@
                         total += localStorage[key].length + key.length;
                     }
                 }
+                STATE.storageSize = total;
+                StorageManager.updateStorageUI();
                 return total;
             },
 
-            // Funzione per liberare spazio se necessario
+            // NUOVO: Funzione per liberare spazio se necessario
             cleanupStorage: () => {
                 const currentSize = Utils.getStorageSize();
+                console.log(`Storage corrente: ${(currentSize / 1024 / 1024).toFixed(2)}MB`);
+                
                 if (currentSize > CONFIG.STORAGE_LIMIT) {
-                    // Rimuovi dati non essenziali se necessario
-                    localStorage.removeItem('retroavia_last_sync');
-                    console.warn('Storage cleanup eseguito');
+                    // Rimuovi dati non essenziali
+                    const itemsToRemove = [
+                        'retroavia_last_sync',
+                        'retroavia_backup',
+                        'retroavia_temp'
+                    ];
+                    
+                    itemsToRemove.forEach(key => {
+                        if (localStorage.getItem(key)) {
+                            localStorage.removeItem(key);
+                            console.log(`Rimosso ${key} per liberare spazio`);
+                        }
+                    });
+                    
+                    Utils.getStorageSize(); // Ricalcola
+                    return true;
+                }
+                return false;
+            },
+
+            // NUOVO: Formatta dimensioni file
+            formatFileSize: (bytes) => {
+                if (bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            }
+        };
+
+        // NUOVO: Gestione migliorata dello storage
+        const StorageManager = {
+            init: () => {
+                Utils.getStorageSize();
+                StorageManager.updateStorageUI();
+                
+                // Controlla ogni 30 secondi se authenticated
+                setInterval(() => {
+                    if (STATE.isAuthenticated) {
+                        Utils.getStorageSize();
+                    }
+                }, 30000);
+            },
+
+            updateStorageUI: () => {
+                if (!STATE.isAuthenticated) return;
+                
+                const storageControls = document.getElementById('storageControls');
+                const storagePercent = document.getElementById('storagePercent');
+                const storageFill = document.getElementById('storageFill');
+                const cloudToggleBtn = document.getElementById('cloudToggleBtn');
+                const cloudToggleText = document.getElementById('cloudToggleText');
+                
+                if (!storageControls) return;
+                
+                storageControls.classList.add('show');
+                
+                const percentage = (STATE.storageSize / CONFIG.STORAGE_LIMIT) * 100;
+                const percentageRounded = Math.round(percentage);
+                
+                if (storagePercent) {
+                    storagePercent.textContent = `${percentageRounded}%`;
+                }
+                
+                if (storageFill) {
+                    storageFill.style.width = `${Math.min(percentage, 100)}%`;
+                    
+                    // Cambia colore in base all'uso
+                    storageFill.className = 'storage-fill';
+                    if (percentage > 90) {
+                        storageFill.classList.add('error');
+                    } else if (percentage > 75) {
+                        storageFill.classList.add('warning');
+                    }
+                }
+                
+                // Aggiorna pulsante cloud sync
+                if (cloudToggleBtn && cloudToggleText) {
+                    if (STATE.cloudSyncEnabled) {
+                        cloudToggleBtn.classList.remove('disabled');
+                        cloudToggleText.textContent = 'Cloud ON';
+                        cloudToggleBtn.querySelector('i').className = 'fas fa-cloud-check';
+                    } else {
+                        cloudToggleBtn.classList.add('disabled');
+                        cloudToggleText.textContent = 'Cloud OFF';
+                        cloudToggleBtn.querySelector('i').className = 'fas fa-cloud-upload-alt';
+                    }
+                }
+            },
+
+            // NUOVO: Salva cache locale temporanea
+            saveToLocalCache: () => {
+                try {
+                    if (STATE.games.length === 0) return true;
+                    
+                    const lightData = STATE.games.map(game => ({
+                        id: game.id,
+                        name: game.name,
+                        category: game.category,
+                        price: game.price,
+                        model: game.model,
+                        createdAt: game.createdAt,
+                        imageCount: game.images ? game.images.length : 0
+                    }));
+                    
+                    localStorage.setItem('retroavia_cache', JSON.stringify(lightData));
+                    return true;
+                } catch (error) {
+                    console.error('Errore salvataggio cache:', error);
+                    return false;
                 }
             }
         };
@@ -2516,7 +2768,7 @@
                             },
                             realtime: {
                                 params: {
-                                    eventsPerSecond: 1 // Ridotto per evitare overload
+                                    eventsPerSecond: 1
                                 }
                             },
                             db: {
@@ -2524,15 +2776,20 @@
                             },
                             global: {
                                 headers: {
-                                    'cache-control': 'no-cache', // Evita problemi di cache
+                                    'cache-control': 'no-cache',
                                     'pragma': 'no-cache'
                                 }
                             }
                         });
+                        
+                        // NUOVO: Abilita cloud sync automaticamente se supabase è inizializzato
+                        STATE.cloudSyncEnabled = true;
+                        StorageManager.updateStorageUI();
                         return true;
                     }
                 } catch (error) {
                     console.error('Errore inizializzazione Supabase:', error);
+                    STATE.cloudSyncEnabled = false;
                     return false;
                 }
                 return false;
@@ -2546,10 +2803,6 @@
                 let lastError;
                 for (let attempt = 0; attempt < retries; attempt++) {
                     try {
-                        // Timeout con gestione più robusta
-                        const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), CONFIG.SYNC_TIMEOUT);
-                        
                         const startTime = Date.now();
                         const result = await Promise.race([
                             operation(),
@@ -2558,10 +2811,11 @@
                             )
                         ]);
                         
-                        clearTimeout(timeoutId);
                         const duration = Date.now() - startTime;
                         
-                        console.log(`Request completed in ${duration}ms`);
+                        if (duration > 10000) { // Log se richiesta > 10 secondi
+                            console.warn(`Richiesta lenta: ${duration}ms`);
+                        }
                         
                         if (result.error) {
                             throw result.error;
@@ -2572,10 +2826,8 @@
                         lastError = error;
                         console.warn(`Tentativo ${attempt + 1}/${retries} fallito:`, error.message);
                         
-                        // Backoff esponenziale per evitare spam di richieste
                         if (attempt < retries - 1) {
                             const delay = CONFIG.RETRY_DELAY * Math.pow(1.5, attempt);
-                            console.log(`Attesa ${delay}ms prima del prossimo tentativo`);
                             await Utils.sleep(delay);
                         }
                     }
@@ -2584,40 +2836,16 @@
                 throw lastError;
             },
 
-            // Operazioni batch per evitare timeout su grandi dataset
-            async syncToCloudBatch(games, batchSize = CONFIG.BATCH_SIZE) {
-                const batches = [];
-                for (let i = 0; i < games.length; i += batchSize) {
-                    batches.push(games.slice(i, i + batchSize));
-                }
-
-                for (let i = 0; i < batches.length; i++) {
-                    const batch = batches[i];
-                    UI.updateSyncStatus('syncing', `Sincronizzazione ${i + 1}/${batches.length}...`);
-                    
-                    await SupabaseManager.makeRequest(async () => {
-                        return await STATE.supabase
-                            .from('games')
-                            .insert(batch);
-                    });
-                    
-                    // Piccola pausa tra i batch per evitare overload
-                    if (i < batches.length - 1) {
-                        await Utils.sleep(500);
-                    }
-                }
-            },
-
-            syncToCloud: async (notify = false) => {
+            // NUOVO: Sincronizzazione diretta senza localStorage
+            syncToCloudDirect: async (games, notify = false) => {
                 if (!STATE.cloudSyncEnabled || !STATE.supabase || !STATE.isOnline) {
-                    UI.updateSyncStatus('local', 'Offline');
-                    return false;
+                    throw new Error('Cloud sync non disponibile');
                 }
 
                 try {
-                    UI.updateSyncStatus('syncing', 'Sincronizzazione...');
+                    UI.updateSyncStatus('syncing', 'Sincronizzazione diretta...');
                     
-                    // Prima cancella tutti i dati esistenti con timeout più lungo
+                    // Cancella tutti i dati esistenti
                     await SupabaseManager.makeRequest(async () => {
                         return await STATE.supabase
                             .from('games')
@@ -2625,8 +2853,8 @@
                             .neq('id', 'none');
                     });
 
-                    if (STATE.games.length > 0) {
-                        const gamesData = STATE.games.map(game => ({
+                    if (games.length > 0) {
+                        const gamesData = games.map(game => ({
                             id: game.id,
                             name: game.name,
                             category: game.category,
@@ -2646,7 +2874,7 @@
                             updated_at: game.updatedAt || new Date().toISOString()
                         }));
 
-                        // Usa operazioni batch per dataset grandi
+                        // Batch processing per dataset grandi
                         if (gamesData.length > CONFIG.BATCH_SIZE) {
                             await SupabaseManager.syncToCloudBatch(gamesData);
                         } else {
@@ -2659,33 +2887,62 @@
                     }
 
                     localStorage.setItem('retroavia_last_sync', new Date().toISOString());
-                    UI.updateSyncStatus('synced', `Sincronizzato (${STATE.games.length})`);
+                    UI.updateSyncStatus('synced', `Sincronizzato (${games.length})`);
                     
                     if (notify) {
-                        UI.showToast('Sincronizzazione completata con successo', 'success');
+                        UI.showToast('Sincronizzazione cloud completata', 'success');
                     }
                     
                     return true;
                 } catch (error) {
-                    console.error('Errore sincronizzazione:', error);
+                    console.error('Errore sincronizzazione diretta:', error);
                     UI.updateSyncStatus('error', 'Errore sync');
                     
                     if (notify) {
-                        let errorMsg = 'Errore di sincronizzazione';
+                        let errorMsg = 'Errore di sincronizzazione cloud';
                         
-                        // Messaggi più user-friendly per errori comuni
-                        if (error.message.includes('timeout') || error.message.includes('statement timeout')) {
-                            errorMsg = 'Timeout di connessione. Riprova tra qualche minuto.';
-                        } else if (error.message.includes('fetch')) {
-                            errorMsg = 'Problemi di connessione al server';
-                        } else if (error.message.includes('network')) {
-                            errorMsg = 'Errore di rete. Controlla la connessione.';
+                        if (error.message.includes('timeout')) {
+                            errorMsg = 'Timeout di connessione al cloud';
+                        } else if (error.message.includes('fetch') || error.message.includes('network')) {
+                            errorMsg = 'Errore di rete';
                         }
                         
                         UI.showToast(errorMsg, 'error');
                     }
+                    throw error;
+                }
+            },
+
+            // Operazioni batch per evitare timeout su grandi dataset
+            async syncToCloudBatch(games, batchSize = CONFIG.BATCH_SIZE) {
+                const batches = [];
+                for (let i = 0; i < games.length; i += batchSize) {
+                    batches.push(games.slice(i, i + batchSize));
+                }
+
+                for (let i = 0; i < batches.length; i++) {
+                    const batch = batches[i];
+                    UI.updateSyncStatus('syncing', `Batch ${i + 1}/${batches.length}...`);
+                    
+                    await SupabaseManager.makeRequest(async () => {
+                        return await STATE.supabase
+                            .from('games')
+                            .insert(batch);
+                    });
+                    
+                    if (i < batches.length - 1) {
+                        await Utils.sleep(500);
+                    }
+                }
+            },
+
+            syncToCloud: async (notify = false) => {
+                if (!STATE.cloudSyncEnabled || !STATE.supabase || !STATE.isOnline) {
+                    UI.updateSyncStatus('local', 'Offline');
                     return false;
                 }
+
+                return await SupabaseManager.syncToCloudDirect(STATE.games, notify);
             },
 
             syncFromCloud: async () => {
@@ -2697,13 +2954,12 @@
                 try {
                     UI.updateSyncStatus('syncing', 'Caricamento...');
                     
-                    // Query ottimizzata con limite per evitare timeout
                     const result = await SupabaseManager.makeRequest(async () => {
                         return await STATE.supabase
                             .from('games')
                             .select('*')
                             .order('created_at', { ascending: false })
-                            .limit(1000); // Limite per evitare timeout su grandi dataset
+                            .limit(500); // Limite ridotto per evitare timeout
                     });
 
                     const cloudGames = result.data;
@@ -2729,12 +2985,13 @@
                             updatedAt: game.updated_at
                         }));
 
-                        if (STATE.games.length === 0 || convertedGames.length > STATE.games.length) {
-                            STATE.games = convertedGames;
-                            DataManager.saveLocal();
-                            UI.renderGallery();
-                            UI.updateStats();
-                        }
+                        STATE.games = convertedGames;
+                        
+                        // NUOVO: Prova a salvare in locale, se fallisce continua con cloud
+                        DataManager.saveLocalSilent();
+                        
+                        UI.renderGallery();
+                        UI.updateStats();
                         
                         localStorage.setItem('retroavia_last_sync', new Date().toISOString());
                         UI.updateSyncStatus('synced', `Caricato (${STATE.games.length})`);
@@ -2773,7 +3030,7 @@
             }
         };
 
-        // Gestione migliorata del localStorage con controllo quota
+        // NUOVO: Gestione migliorata del localStorage con strategia intelligente
         const DataManager = {
             loadLocal: () => {
                 try {
@@ -2805,10 +3062,82 @@
                     
                     UI.renderGallery();
                     UI.updateStats();
+                    Utils.getStorageSize();
                 } catch (error) {
                     console.error('Errore caricamento locale:', error);
                     STATE.games = [];
                     UI.showToast('Errore caricamento dati locali', 'error');
+                }
+            },
+
+            // NUOVO: Salvataggio silente senza errori all'utente
+            saveLocalSilent: () => {
+                try {
+                    const dataToSave = JSON.stringify(STATE.games);
+                    
+                    if (dataToSave.length > CONFIG.STORAGE_LIMIT) {
+                        return false; // Fallisce silenziosamente
+                    }
+                    
+                    localStorage.setItem('retroavia_games', dataToSave);
+                    Utils.getStorageSize();
+                    return true;
+                } catch (error) {
+                    console.warn('Salvataggio locale fallito silenziosamente:', error);
+                    return false;
+                }
+            },
+
+            // NUOVO: Strategia di salvataggio intelligente
+            saveIntelligent: async () => {
+                const currentSize = Utils.getStorageSize();
+                const dataSize = JSON.stringify(STATE.games).length;
+                
+                console.log(`Tentativo salvataggio: ${Utils.formatFileSize(dataSize)}, Storage: ${Utils.formatFileSize(currentSize)}`);
+                
+                // STRATEGIA 1: Prova locale se c'è spazio
+                if (currentSize + dataSize < CONFIG.STORAGE_LIMIT) {
+                    const localSuccess = DataManager.saveLocal();
+                    if (localSuccess) {
+                        console.log('✓ Salvato in locale');
+                        
+                        // Sync in background se cloud disponibile
+                        if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
+                            SupabaseManager.syncToCloud(false).catch(err => {
+                                console.warn('Background sync fallito:', err);
+                            });
+                        }
+                        return true;
+                    }
+                }
+                
+                // STRATEGIA 2: Cleanup e riprova locale
+                const cleanedUp = Utils.cleanupStorage();
+                if (cleanedUp) {
+                    const localRetrySuccess = DataManager.saveLocal();
+                    if (localRetrySuccess) {
+                        console.log('✓ Salvato in locale dopo cleanup');
+                        return true;
+                    }
+                }
+                
+                // STRATEGIA 3: Forza cloud sync
+                if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline && STATE.isAuthenticated) {
+                    try {
+                        await SupabaseManager.syncToCloudDirect(STATE.games, true);
+                        console.log('✓ Salvato solo in cloud');
+                        
+                        // Salva cache leggera per offline
+                        StorageManager.saveToLocalCache();
+                        
+                        STATE.forceCloudMode = true;
+                        return true;
+                    } catch (error) {
+                        console.error('✗ Salvataggio cloud fallito:', error);
+                        throw new Error('Impossibile salvare: storage locale pieno e cloud non disponibile');
+                    }
+                } else {
+                    throw new Error('Spazio insufficiente e cloud non disponibile');
                 }
             },
 
@@ -2818,39 +3147,27 @@
                         throw new Error('LocalStorage non supportato');
                     }
                     
-                    // Controlla la dimensione prima del salvataggio
                     Utils.cleanupStorage();
                     
                     const dataToSave = JSON.stringify(STATE.games);
                     
-                    // Controlla se supererebbe il limite
                     if (dataToSave.length > CONFIG.STORAGE_LIMIT) {
                         throw new Error('Dati troppo grandi per localStorage');
                     }
                     
                     localStorage.setItem('retroavia_games', dataToSave);
+                    Utils.getStorageSize();
                     
-                    const saved = localStorage.getItem('retroavia_games');
-                    if (saved === dataToSave) {
-                        return true;
-                    } else {
-                        throw new Error('Verifica post-salvataggio fallita');
-                    }
+                    return true;
                 } catch (error) {
                     console.error('Errore salvataggio locale:', error);
                     
                     if (error.name === 'QuotaExceededError' || error.message.includes('quota') || error.message.includes('troppo grandi')) {
-                        // Mostra il messaggio di errore solo agli admin autenticati
                         if (STATE.isAuthenticated) {
-                            UI.showToast('Spazio insufficiente. Riduci il numero di immagini o attiva la sincronizzazione cloud.', 'error');
+                            UI.showToast('Storage locale pieno. Usando cloud sync...', 'warning');
                         }
-                        
-                        // Prova a salvare nel cloud se possibile
-                        if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline && STATE.isAuthenticated) {
-                            SupabaseManager.syncToCloud(true);
-                        }
+                        return false;
                     } else {
-                        // Altri errori mostrati solo agli admin
                         if (STATE.isAuthenticated) {
                             UI.showToast('Errore nel salvataggio locale', 'error');
                         }
@@ -2910,7 +3227,7 @@
                 if (STATE.selectedGames.has(gameId)) {
                     STATE.selectedGames.delete(gameId);
                 } else {
-                    if (STATE.selectedGames.size >= 6) { // Limite massimo 6 progetti
+                    if (STATE.selectedGames.size >= 6) {
                         UI.showToast('Massimo 6 progetti per confronto', 'error');
                         return false;
                     }
@@ -3061,7 +3378,8 @@
                     authText: document.getElementById('authText'),
                     adminControls: document.getElementById('adminControls'),
                     userControls: document.getElementById('userControls'),
-                    syncStatus: document.getElementById('syncStatus')
+                    syncStatus: document.getElementById('syncStatus'),
+                    storageControls: document.getElementById('storageControls')
                 };
 
                 if (STATE.isAuthenticated) {
@@ -3071,8 +3389,10 @@
                     elements.authButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Esci';
                     elements.authButton.className = 'auth-btn logout';
                     elements.adminControls.classList.add('show');
-                    elements.userControls.style.display = 'none'; // Nascondi controlli utente in modalità admin
+                    elements.userControls.style.display = 'none';
                     elements.syncStatus.style.display = 'flex';
+                    // NUOVO: Mostra controlli storage per admin
+                    StorageManager.updateStorageUI();
                 } else {
                     elements.authStatus.className = 'auth-status logged-out';
                     elements.authIcon.className = 'fas fa-lock';
@@ -3080,8 +3400,12 @@
                     elements.authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Accedi';
                     elements.authButton.className = 'auth-btn';
                     elements.adminControls.classList.remove('show');
-                    elements.userControls.style.display = 'flex'; // Mostra controlli utente in modalità visitatore
+                    elements.userControls.style.display = 'flex';
                     elements.syncStatus.style.display = 'none';
+                    // NUOVO: Nascondi controlli storage per visitatori
+                    if (elements.storageControls) {
+                        elements.storageControls.classList.remove('show');
+                    }
                 }
             },
 
@@ -3442,6 +3766,7 @@
                 document.body.classList.add('modal-open');
             },
 
+            // NUOVO: Submit migliorato con gestione intelligente
             handleSubmit: async (e) => {
                 e.preventDefault();
                 
@@ -3479,10 +3804,8 @@
                         UI.showToast('Nuovo progetto aggiunto con successo', 'success');
                     }
 
-                    const saved = DataManager.saveLocal();
-                    if (saved && STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
-                        await SupabaseManager.syncToCloud(false);
-                    }
+                    // NUOVO: Usa strategia di salvataggio intelligente
+                    await DataManager.saveIntelligent();
                     
                     UI.closeModal('formModal');
                     UI.renderGallery();
@@ -3490,7 +3813,7 @@
                     
                 } catch (error) {
                     console.error('Errore salvataggio:', error);
-                    UI.showToast('Errore durante il salvataggio', 'error');
+                    UI.showToast(error.message || 'Errore durante il salvataggio', 'error');
                 } finally {
                     UI.hideLoading();
                 }
@@ -3576,9 +3899,8 @@
                             continue;
                         }
 
-                        let finalData;
                         // Comprimi sempre le immagini per risparmiare spazio
-                        finalData = await Utils.compressImage(file);
+                        const finalData = await Utils.compressImage(file);
 
                         results.push({
                             data: finalData,
@@ -3663,6 +3985,9 @@
                     AuthManager.closeModal();
                     UI.showToast('Accesso amministratore effettuato', 'success');
                     
+                    // NUOVO: Inizializza storage manager per admin
+                    StorageManager.init();
+                    
                     if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
                         SupabaseManager.syncFromCloud();
                     }
@@ -3724,12 +4049,11 @@
                 if (!game) return;
                 
                 if (confirm(`Sei sicuro di voler eliminare "${game.name}"?\n\nQuesta operazione non può essere annullata.`)) {
-                    // ELIMINAZIONE DIRETTA SU CLOUD
                     AdminManager.deleteDirectFromCloud(id, game);
                 }
             },
 
-            // Nuovo metodo per eliminazione diretta da cloud
+            // NUOVO: Eliminazione diretta migliorata
             deleteDirectFromCloud: async (id, game) => {
                 try {
                     UI.showLoading('Eliminazione progetto...');
@@ -3738,41 +4062,14 @@
                     STATE.games = STATE.games.filter(g => g.id !== id);
                     STATE.selectedGames.delete(id);
                     
-                    // Eliminazione diretta da Supabase se connesso
-                    if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
-                        UI.updateSyncStatus('syncing', 'Eliminazione da cloud...');
-                        
-                        try {
-                            await SupabaseManager.makeRequest(async () => {
-                                return await STATE.supabase
-                                    .from('games')
-                                    .delete()
-                                    .eq('id', id);
-                            });
-                            
-                            console.log('Progetto eliminato direttamente da cloud:', id);
-                            UI.updateSyncStatus('synced', `Cloud aggiornato (${STATE.games.length})`);
-                            UI.showToast('Progetto eliminato da cloud', 'success');
-                            
-                            // Aggiorna cache locale
-                            StorageManager.saveToLocalCache();
-                        } catch (cloudError) {
-                            console.error('Errore eliminazione cloud:', cloudError);
-                            UI.updateSyncStatus('error', 'Errore eliminazione cloud');
-                            UI.showToast('Progetto eliminato localmente (errore cloud)', 'warning');
-                            
-                            // Salva modifiche in locale anche se cloud fallisce
-                            await DataManager.saveIntelligent();
-                        }
-                    } else {
-                        // Modalità offline
-                        await DataManager.saveIntelligent();
-                        UI.showToast('Progetto eliminato (offline)', 'info');
-                    }
+                    // Usa strategia di salvataggio intelligente
+                    await DataManager.saveIntelligent();
                     
                     UI.renderGallery();
                     UI.updateStats();
                     CompareManager.updateUI();
+                    
+                    UI.showToast('Progetto eliminato con successo', 'success');
                     
                 } catch (error) {
                     console.error('Errore eliminazione:', error);
@@ -3791,7 +4088,7 @@
                 }
                 
                 const exportData = {
-                    version: '2.3.0',
+                    version: '2.4.0', // Aggiornato
                     exportDate: new Date().toISOString(),
                     totalGames: STATE.games.length,
                     games: STATE.games
@@ -3855,11 +4152,9 @@
                             }
                             
                             DataManager.sortGames();
-                            DataManager.saveLocal();
                             
-                            if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
-                                await SupabaseManager.syncToCloud(false);
-                            }
+                            // NUOVO: Usa strategia di salvataggio intelligente
+                            await DataManager.saveIntelligent();
                             
                             UI.renderGallery();
                             UI.updateStats();
@@ -3896,16 +4191,17 @@
                 if (confirmation === 'ELIMINA TUTTO') {
                     STATE.games = [];
                     STATE.selectedGames.clear();
-                    DataManager.saveLocal();
                     
-                    if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
-                        SupabaseManager.syncToCloud(false);
-                    }
-                    
-                    UI.renderGallery();
-                    UI.updateStats();
-                    CompareManager.updateUI();
-                    UI.showToast('Tutti i dati sono stati eliminati', 'success');
+                    // NUOVO: Usa strategia di salvataggio intelligente
+                    DataManager.saveIntelligent().then(() => {
+                        UI.renderGallery();
+                        UI.updateStats();
+                        CompareManager.updateUI();
+                        UI.showToast('Tutti i dati sono stati eliminati', 'success');
+                    }).catch(error => {
+                        console.error('Errore durante la cancellazione:', error);
+                        UI.showToast('Errore durante la cancellazione', 'error');
+                    });
                 } else if (confirmation !== null) {
                     UI.showToast('Testo di conferma non corretto', 'error');
                 }
@@ -4083,7 +4379,7 @@
                 NetworkManager.init();
                 
                 let attempts = 0;
-                const maxAttempts = 5;
+                const maxAttempts = 3; // Ridotto da 5
                 
                 const tryInit = () => {
                     attempts++;
@@ -4112,7 +4408,7 @@
                 if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline) {
                     SupabaseManager.syncFromCloud();
                 } else {
-                    UI.updateSyncStatus('local', STATE.isOnline ? 'Modalità offline' : 'Offline');
+                    UI.updateSyncStatus('local', STATE.isOnline ? 'Cloud disabilitato' : 'Offline');
                 }
 
                 setTimeout(() => {
@@ -4121,13 +4417,55 @@
             }
         };
 
-        // Definisco le funzioni globali IMMEDIATAMENTE e correttamente
+        // NUOVE: Funzioni globali per gestione cloud sync e storage
+        window.toggleCloudSync = () => {
+            if (!STATE.isAuthenticated) {
+                UI.showToast('Accesso amministratore richiesto', 'error');
+                return;
+            }
+
+            if (!STATE.supabase) {
+                UI.showToast('Supabase non inizializzato', 'error');
+                return;
+            }
+
+            STATE.cloudSyncEnabled = !STATE.cloudSyncEnabled;
+            StorageManager.updateStorageUI();
+            
+            if (STATE.cloudSyncEnabled) {
+                UI.showToast('Cloud sync abilitato', 'success');
+                if (STATE.isOnline) {
+                    SupabaseManager.syncFromCloud();
+                }
+            } else {
+                UI.showToast('Cloud sync disabilitato - Solo locale', 'warning');
+                UI.updateSyncStatus('local', 'Solo locale');
+            }
+        };
+
+        window.cleanupStorage = () => {
+            if (!STATE.isAuthenticated) {
+                UI.showToast('Accesso amministratore richiesto', 'error');
+                return;
+            }
+
+            const cleaned = Utils.cleanupStorage();
+            Utils.getStorageSize();
+            
+            if (cleaned) {
+                UI.showToast('Cache pulita con successo', 'success');
+            } else {
+                UI.showToast('Nessuna pulizia necessaria', 'info');
+            }
+        };
+
+        // Definisco le funzioni globali
         window.showAuthModal = () => AuthManager.showModal();
         window.closeAuthModal = () => AuthManager.closeModal();
         window.authenticate = () => AuthManager.authenticate();
         window.openAddModal = () => FormManager.openAdd();
         window.toggleEditMode = () => AdminManager.toggleEditMode();
-        window.toggleCompareMode = () => CompareToggleManager.toggle(); // Usa il gestore unificato
+        window.toggleCompareMode = () => CompareToggleManager.toggle();
         window.forceSyncData = () => {
             if (!STATE.isAuthenticated) {
                 UI.showToast('Accesso amministratore richiesto', 'error');
@@ -4135,6 +4473,10 @@
             }
             if (!STATE.isOnline) {
                 UI.showToast('Connessione offline', 'error');
+                return;
+            }
+            if (!STATE.cloudSyncEnabled) {
+                UI.showToast('Cloud sync disabilitato', 'error');
                 return;
             }
             SupabaseManager.syncToCloud(true);
@@ -4164,10 +4506,8 @@
         // Gestione click su card (normale vs confronto)
         window.handleCardClick = (gameId, event) => {
             if (STATE.compareMode) {
-                // In modalità confronto, gestisci come toggle
                 window.toggleCompare(gameId);
             } else if (!STATE.editMode) {
-                // In modalità normale, mostra i dettagli
                 UI.showDetails(gameId);
             }
         };
