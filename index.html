@@ -541,6 +541,45 @@
             box-shadow: 0 4px 12px var(--shadow-accent);
         }
 
+        /* User Controls - Nuova sezione per i controlli visitatore */
+        .user-controls {
+            padding: 1.5rem 2rem;
+            background: var(--gradient-glass);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-secondary);
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .user-btn {
+            background: var(--gradient-secondary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--border-radius-lg);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .user-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .user-btn.compare-mode {
+            background: linear-gradient(135deg, var(--accent-tertiary), #d97706);
+        }
+
         /* Controlli admin più organizzati */
         .admin-controls {
             padding: 2rem;
@@ -1795,6 +1834,17 @@
                 width: 100%;
                 max-width: 250px;
             }
+
+            .user-controls {
+                flex-direction: column;
+                align-items: center;
+                padding: 1.5rem;
+            }
+            
+            .user-btn {
+                width: 100%;
+                max-width: 250px;
+            }
             
             .stats-container {
                 gap: 1rem;
@@ -2061,15 +2111,19 @@
         </nav>
     </div>
 
+    <!-- User Controls - Nuova sezione per i visitatori -->
+    <div class="user-controls" id="userControls">
+        <button class="user-btn" id="userCompareModeBtn" onclick="toggleCompareMode()">
+            <i class="fas fa-balance-scale"></i> Confronta Progetti
+        </button>
+    </div>
+
     <div class="admin-controls" id="adminControls">
         <button class="admin-btn" onclick="openAddModal()">
             <i class="fas fa-plus"></i> Aggiungi
         </button>
         <button class="admin-btn" id="editModeBtn" onclick="toggleEditMode()">
             <i class="fas fa-edit"></i> Modifica
-        </button>
-        <button class="admin-btn" id="compareModeBtn" onclick="toggleCompareMode()">
-            <i class="fas fa-balance-scale"></i> Confronta
         </button>
         <button class="admin-btn sync" onclick="forceSyncData()">
             <i class="fas fa-sync-alt"></i> Sincronizza
@@ -2121,7 +2175,7 @@
     <!-- Modal dettaglio progetto -->
     <div class="modal" id="detailModal">
         <div class="modal-content">
-            <span class="modal-close" onclick="closeModal('detailModal')">
+            <span class="modal-close" onclick="closeModal('detailModal')" title="Chiudi finestra dettagli">
                 <i class="fas fa-times"></i>
             </span>
             <div class="modal-gallery" id="modalGallery">
@@ -2154,7 +2208,7 @@
 
     <!-- Zoom Modal -->
     <div class="zoom-modal" id="zoomModal" onclick="closeZoomModal()">
-        <button class="zoom-close" onclick="closeZoomModal()">
+        <button class="zoom-close" onclick="closeZoomModal()" title="Chiudi zoom">
             <i class="fas fa-times"></i>
         </button>
         <img class="zoom-content" id="zoomImage" src="" alt="Zoom">
@@ -2163,7 +2217,7 @@
     <!-- Compare Modal -->
     <div class="compare-modal" id="compareModal">
         <div class="compare-content">
-            <span class="modal-close" onclick="closeModal('compareModal')">
+            <span class="modal-close" onclick="closeModal('compareModal')" title="Chiudi confronto">
                 <i class="fas fa-times"></i>
             </span>
             <div class="compare-header">
@@ -2179,7 +2233,7 @@
     <!-- Modal form progetto -->
     <div class="form-modal" id="formModal">
         <div class="form-content">
-            <span class="modal-close" onclick="closeModal('formModal')">
+            <span class="modal-close" onclick="closeModal('formModal')" title="Chiudi form">
                 <i class="fas fa-times"></i>
             </span>
             <h2 class="form-title" id="formTitle">Aggiungi Progetto</h2>
@@ -2717,14 +2771,20 @@
                     console.error('Errore salvataggio locale:', error);
                     
                     if (error.name === 'QuotaExceededError' || error.message.includes('quota') || error.message.includes('troppo grandi')) {
-                        UI.showToast('Spazio insufficiente. Riduci il numero di immagini o attiva la sincronizzazione cloud.', 'error');
+                        // Mostra il messaggio di errore solo agli admin autenticati
+                        if (STATE.isAuthenticated) {
+                            UI.showToast('Spazio insufficiente. Riduci il numero di immagini o attiva la sincronizzazione cloud.', 'error');
+                        }
                         
                         // Prova a salvare nel cloud se possibile
                         if (STATE.cloudSyncEnabled && STATE.supabase && STATE.isOnline && STATE.isAuthenticated) {
                             SupabaseManager.syncToCloud(true);
                         }
                     } else {
-                        UI.showToast('Errore nel salvataggio locale', 'error');
+                        // Altri errori mostrati solo agli admin
+                        if (STATE.isAuthenticated) {
+                            UI.showToast('Errore nel salvataggio locale', 'error');
+                        }
                     }
                     return false;
                 }
@@ -2931,6 +2991,7 @@
                     authIcon: document.getElementById('authIcon'),
                     authText: document.getElementById('authText'),
                     adminControls: document.getElementById('adminControls'),
+                    userControls: document.getElementById('userControls'),
                     syncStatus: document.getElementById('syncStatus')
                 };
 
@@ -2941,6 +3002,7 @@
                     elements.authButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Esci';
                     elements.authButton.className = 'auth-btn logout';
                     elements.adminControls.classList.add('show');
+                    elements.userControls.style.display = 'none'; // Nascondi controlli utente in modalità admin
                     elements.syncStatus.style.display = 'flex';
                 } else {
                     elements.authStatus.className = 'auth-status logged-out';
@@ -2949,6 +3011,7 @@
                     elements.authButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Accedi';
                     elements.authButton.className = 'auth-btn';
                     elements.adminControls.classList.remove('show');
+                    elements.userControls.style.display = 'flex'; // Mostra controlli utente in modalità visitatore
                     elements.syncStatus.style.display = 'none';
                 }
             },
@@ -3571,53 +3634,15 @@
                 }
                 
                 const btn = document.getElementById('editModeBtn');
-                const compareBtn = document.getElementById('compareModeBtn');
                 
                 if (STATE.editMode) {
                     btn.innerHTML = '<i class="fas fa-times"></i> Esci';
                     btn.classList.add('edit-mode');
-                    if (compareBtn) compareBtn.disabled = true;
                     UI.showToast('Modalità modifica attiva', 'info');
                 } else {
                     btn.innerHTML = '<i class="fas fa-edit"></i> Modifica';
                     btn.classList.remove('edit-mode');
-                    if (compareBtn) compareBtn.disabled = false;
                     UI.showToast('Modalità visualizzazione ripristinata', 'info');
-                }
-                
-                UI.renderGallery();
-            },
-
-            toggleCompareMode: () => {
-                if (!STATE.isAuthenticated) {
-                    UI.showToast('Accesso amministratore richiesto', 'error');
-                    return;
-                }
-                
-                STATE.compareMode = !STATE.compareMode;
-                if (STATE.compareMode) {
-                    STATE.editMode = false;
-                } else {
-                    CompareManager.clear();
-                }
-                
-                const btn = document.getElementById('compareModeBtn');
-                const editBtn = document.getElementById('editModeBtn');
-                
-                if (STATE.compareMode) {
-                    btn.innerHTML = '<i class="fas fa-times"></i> Esci';
-                    btn.classList.add('edit-mode');
-                    if (editBtn) {
-                        editBtn.disabled = true;
-                        editBtn.classList.remove('edit-mode');
-                        editBtn.innerHTML = '<i class="fas fa-edit"></i> Modifica';
-                    }
-                    UI.showToast('Modalità confronto attiva - Seleziona i progetti da confrontare', 'info');
-                } else {
-                    btn.innerHTML = '<i class="fas fa-balance-scale"></i> Confronta';
-                    btn.classList.remove('edit-mode');
-                    if (editBtn) editBtn.disabled = false;
-                    UI.showToast('Modalità confronto disattivata', 'info');
                 }
                 
                 UI.renderGallery();
@@ -3796,6 +3821,31 @@
             }
         };
 
+        // Gestore unificato per modalità confronto
+        const CompareToggleManager = {
+            toggle: () => {
+                STATE.compareMode = !STATE.compareMode;
+                if (STATE.compareMode && STATE.editMode) {
+                    STATE.editMode = false;
+                }
+                
+                const userBtn = document.getElementById('userCompareModeBtn');
+                
+                if (STATE.compareMode) {
+                    userBtn.innerHTML = '<i class="fas fa-times"></i> Esci dal Confronto';
+                    userBtn.classList.add('compare-mode');
+                    UI.showToast('Modalità confronto attiva - Seleziona i progetti da confrontare', 'info');
+                } else {
+                    userBtn.innerHTML = '<i class="fas fa-balance-scale"></i> Confronta Progetti';
+                    userBtn.classList.remove('compare-mode');
+                    CompareManager.clear();
+                    UI.showToast('Modalità confronto disattivata', 'info');
+                }
+                
+                UI.renderGallery();
+            }
+        };
+
         const EventHandlers = {
             setupAll: () => {
                 EventHandlers.setupNavigation();
@@ -3965,7 +4015,7 @@
         window.authenticate = () => AuthManager.authenticate();
         window.openAddModal = () => FormManager.openAdd();
         window.toggleEditMode = () => AdminManager.toggleEditMode();
-        window.toggleCompareMode = () => AdminManager.toggleCompareMode();
+        window.toggleCompareMode = () => CompareToggleManager.toggle(); // Usa il gestore unificato
         window.forceSyncData = () => {
             if (!STATE.isAuthenticated) {
                 UI.showToast('Accesso amministratore richiesto', 'error');
