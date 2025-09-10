@@ -172,7 +172,7 @@
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
-        /* FIX: Z-index ridotto per controlli admin per evitare sovrapposizione con modal */
+        /* FIX: Z-index migliorato per controlli admin */
         .admin-header-controls {
             position: fixed;
             top: 20px;
@@ -182,7 +182,7 @@
             -webkit-backdrop-filter: blur(20px);
             border-radius: var(--border-radius-xl);
             padding: 12px 16px;
-            z-index: 900; /* Ridotto da 1500 a 900 per evitare sovrapposizione con modal */
+            z-index: 500; /* Ridotto significativamente per essere sotto i modal */
             border: 1px solid var(--border-secondary);
             display: flex;
             align-items: center;
@@ -191,10 +191,12 @@
             transition: var(--transition-normal);
         }
 
-        /* MIGLIORAMENTO: Nascondi controlli admin quando modal è aperto */
+        /* FIX: Miglioramento per nascondere controlli admin quando modal è aperto */
         body.modal-open .admin-header-controls {
             opacity: 0;
             pointer-events: none;
+            transform: scale(0.9);
+            visibility: hidden; /* Aggiunto per sicurezza */
         }
 
         .admin-header-controls .auth-status {
@@ -241,7 +243,7 @@
             padding: 8px 12px;
             font-size: 0.75rem;
             font-weight: 500;
-            z-index: 900; /* Allineato con controlli admin */
+            z-index: 500; /* Allineato con controlli admin */
             border: 1px solid var(--border-secondary);
             display: flex;
             align-items: center;
@@ -250,10 +252,12 @@
             transition: var(--transition-normal);
         }
 
-        /* MIGLIORAMENTO: Nascondi sync status quando modal è aperto */
+        /* FIX: Miglioramento per nascondere sync status quando modal è aperto */
         body.modal-open .sync-status {
             opacity: 0;
             pointer-events: none;
+            transform: scale(0.9);
+            visibility: hidden; /* Aggiunto per sicurezza */
         }
 
         .sync-status.syncing { color: var(--accent-info); }
@@ -691,7 +695,7 @@
             border: 1px solid var(--border-secondary);
         }
 
-        /* Modal più elegante con z-index più alto */
+        /* FIX: Modal con z-index più alto e migliore gestione mobile */
         .modal {
             display: none;
             position: fixed;
@@ -701,7 +705,7 @@
             height: 100%;
             background: var(--bg-overlay);
             backdrop-filter: blur(20px);
-            z-index: 1000; /* Assicurati che sia sopra i controlli admin */
+            z-index: 1000; /* Z-index alto per essere sopra tutto */
             overflow-y: auto;
             padding: 2rem;
         }
@@ -730,6 +734,7 @@
             }
         }
 
+        /* FIX: Pulsante chiusura modal con z-index maggiore */
         .modal-close {
             position: absolute;
             top: 20px;
@@ -737,7 +742,7 @@
             font-size: 1.25rem;
             color: var(--text-primary);
             cursor: pointer;
-            z-index: 1001;
+            z-index: 1010; /* Z-index molto alto per essere sopra tutto */
             width: 40px;
             height: 40px;
             background: var(--bg-overlay);
@@ -1360,7 +1365,7 @@
             }
         }
 
-        /* MIGLIORAMENTI RESPONSIVE per mobile */
+        /* FIX: MIGLIORAMENTI RESPONSIVE per mobile */
         @media (max-width: 768px) {
             .header {
                 padding: 2rem 0;
@@ -1377,7 +1382,7 @@
                 padding: 10px 14px;
                 flex-direction: column;
                 gap: 8px;
-                transform: scale(0.9);
+                transform: scale(0.85);
             }
 
             .admin-header-controls .auth-status {
@@ -1391,9 +1396,9 @@
             }
 
             .sync-status {
-                top: 100px;
+                top: 95px;
                 right: 15px;
-                transform: scale(0.9);
+                transform: scale(0.85);
                 font-size: 0.7rem;
                 padding: 6px 10px;
             }
@@ -1418,16 +1423,25 @@
                 gap: 1.5rem;
             }
             
-            /* MIGLIORAMENTO: Modal più adatti per mobile */
+            /* FIX: Modal più adatti per mobile con padding ridotto per evitare sovrapposizioni */
             .modal-content,
             .form-content {
-                margin: 1rem;
-                padding: 1.5rem;
+                margin: 0.5rem;
+                padding: 1rem;
                 border-radius: var(--border-radius-xl);
             }
 
             .modal-gallery {
                 height: 350px;
+            }
+
+            /* FIX: Pulsante chiusura modal più grande su mobile */
+            .modal-close {
+                top: 15px;
+                right: 15px;
+                width: 44px;
+                height: 44px;
+                font-size: 1.5rem;
             }
             
             .form-grid {
@@ -1486,10 +1500,24 @@
                 max-width: none;
             }
 
-            /* IMPORTANTE: Quando modal è aperto su mobile, nascondi completamente i controlli */
+            /* FIX: IMPORTANTE - Quando modal è aperto su mobile, nascondi completamente i controlli */
             body.modal-open .admin-header-controls,
             body.modal-open .sync-status {
                 display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+            }
+
+            /* FIX: Assicura che il modal sia sempre sopra tutto su mobile */
+            .modal,
+            .form-modal,
+            .auth-modal {
+                z-index: 9999 !important;
+            }
+
+            .modal-close {
+                z-index: 10000 !important;
             }
         }
 
@@ -1505,14 +1533,14 @@
             .modal,
             .form-modal,
             .auth-modal {
-                padding: 1rem;
+                padding: 0.5rem;
             }
             
             .modal-content,
             .form-content,
             .auth-content {
                 padding: 1rem;
-                margin: 0.5rem;
+                margin: 0.25rem;
             }
             
             .modal-gallery {
@@ -1525,13 +1553,22 @@
             .admin-header-controls {
                 top: 10px;
                 right: 10px;
-                transform: scale(0.85);
+                transform: scale(0.8);
             }
 
             .sync-status {
-                top: 85px;
+                top: 90px;
                 right: 10px;
-                transform: scale(0.85);
+                transform: scale(0.8);
+            }
+
+            /* FIX: Ancora più spazio dal top per il pulsante chiusura */
+            .modal-close {
+                top: 10px;
+                right: 10px;
+                width: 48px;
+                height: 48px;
+                font-size: 1.75rem;
             }
         }
 
@@ -1862,16 +1899,16 @@
     </div>
 
     <script>
-        // Configurazione ottimizzata
+        // FIX: Configurazione e oggetti principali definiti PRIMA delle funzioni globali
         const CONFIG = {
             ADMIN_PASSWORD: 'RetroAvia2024!',
             MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
             MAX_IMAGES: 10,
             SUPABASE_URL: 'https://moenkmmkpogjapsyiuat.supabase.co',
             SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vZW5rbW1rcG9namFwc3lpdWF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0OTYyMTYsImV4cCI6MjA3MjA3MjIxNn0.RdFnDxJVIgESel9I6s84KRR3F6yPFL7rk0ycFP_q0pg',
-            SYNC_TIMEOUT: 30000, // 30 secondi
+            SYNC_TIMEOUT: 30000,
             RETRY_ATTEMPTS: 3,
-            RETRY_DELAY: 2000, // 2 secondi
+            RETRY_DELAY: 2000,
             TOAST_DURATION: 4000,
             SEARCH_DEBOUNCE: 300,
             IMAGE_COMPRESSION: {
@@ -1880,7 +1917,6 @@
             }
         };
         
-        // Stato globale
         const STATE = {
             supabase: null,
             games: [],
@@ -1897,7 +1933,6 @@
             isOnline: navigator.onLine
         };
 
-        // Utility functions
         const Utils = {
             debounce: (func, wait) => {
                 let timeout;
@@ -1980,7 +2015,6 @@
             }
         };
 
-        // Gestione Supabase con retry migliorato
         const SupabaseManager = {
             initialize: () => {
                 try {
@@ -2012,7 +2046,6 @@
                 let lastError;
                 for (let attempt = 0; attempt < retries; attempt++) {
                     try {
-                        // Controller per timeout
                         const controller = new AbortController();
                         const timeoutId = setTimeout(() => controller.abort(), CONFIG.SYNC_TIMEOUT);
                         
@@ -2046,7 +2079,6 @@
                 try {
                     UI.updateSyncStatus('syncing', 'Sincronizzazione...');
                     
-                    // Cancella dati esistenti
                     await SupabaseManager.makeRequest(async () => {
                         return await STATE.supabase
                             .from('games')
@@ -2054,7 +2086,6 @@
                             .neq('id', 'none');
                     });
 
-                    // Inserisce nuovi dati se presenti
                     if (STATE.games.length > 0) {
                         const gamesData = STATE.games.map(game => ({
                             id: game.id,
@@ -2166,7 +2197,6 @@
             }
         };
 
-        // Network status monitoring
         const NetworkManager = {
             init: () => {
                 window.addEventListener('online', () => {
@@ -2183,7 +2213,6 @@
             }
         };
 
-        // MIGLIORAMENTO: Gestione dati con migliore controllo errori
         const DataManager = {
             loadLocal: () => {
                 try {
@@ -2218,23 +2247,18 @@
                 } catch (error) {
                     console.error('Errore caricamento locale:', error);
                     STATE.games = [];
-                    // Non mostrare toast qui per evitare il messaggio falso di errore
                 }
             },
 
-            // FIX: Migliorata gestione errori per evitare toast di errore quando il salvataggio funziona
             saveLocal: () => {
                 try {
-                    // Verifica se localStorage è disponibile
                     if (typeof(Storage) === "undefined") {
                         throw new Error('LocalStorage non supportato');
                     }
                     
-                    // Serializza e salva i dati
                     const dataToSave = JSON.stringify(STATE.games);
                     localStorage.setItem('retroavia_games', dataToSave);
                     
-                    // Verifica che il salvataggio sia avvenuto con successo
                     const saved = localStorage.getItem('retroavia_games');
                     if (saved === dataToSave) {
                         return true;
@@ -2243,7 +2267,9 @@
                     }
                 } catch (error) {
                     console.error('Errore salvataggio locale:', error);
-                    UI.showToast('Errore nel salvataggio locale', 'error');
+                    if (STATE.games.length > 0) {
+                        UI.showToast('Errore nel salvataggio locale', 'error');
+                    }
                     return false;
                 }
             },
@@ -2293,7 +2319,6 @@
             }
         };
 
-        // UI Manager migliorato
         const UI = {
             updateSyncStatus: (status, text) => {
                 const syncStatus = document.getElementById('syncStatus');
@@ -2467,7 +2492,6 @@
                 const game = STATE.games.find(g => g.id === id);
                 if (!game) return;
 
-                // MIGLIORAMENTO: Aggiunge classe modal-open al body
                 document.body.classList.add('modal-open');
 
                 document.getElementById('modalTitle').textContent = game.name;
@@ -2572,7 +2596,6 @@
             },
 
             showToast: (message, type = 'success') => {
-                // Rimuovi toast esistenti
                 document.querySelectorAll('.toast').forEach(toast => toast.remove());
 
                 const toast = document.createElement('div');
@@ -2580,7 +2603,6 @@
                 toast.innerHTML = `<i class="fas fa-${UI.getToastIcon(type)}"></i> ${message}`;
                 document.body.appendChild(toast);
                 
-                // Auto-remove
                 setTimeout(() => {
                     if (toast.parentNode) {
                         toast.style.animation = 'slideOutRight 0.3s ease forwards';
@@ -2588,7 +2610,6 @@
                     }
                 }, CONFIG.TOAST_DURATION);
 
-                // Click to dismiss
                 toast.addEventListener('click', () => {
                     toast.style.animation = 'slideOutRight 0.3s ease forwards';
                     setTimeout(() => toast.remove(), 300);
@@ -2605,13 +2626,12 @@
                 return icons[type] || 'info-circle';
             },
 
-            // MIGLIORAMENTO: Gestione modal con rimozione classe modal-open
             closeModal: (modalId) => {
                 const modal = document.getElementById(modalId);
                 if (modal) {
                     modal.style.display = 'none';
                     document.body.style.overflow = '';
-                    document.body.classList.remove('modal-open'); // Rimuove classe per ripristinare visibilità controlli
+                    document.body.classList.remove('modal-open');
                     
                     if (modalId === 'formModal') {
                         FormManager.reset();
@@ -2621,7 +2641,6 @@
             }
         };
 
-        // Form Manager ottimizzato
         const FormManager = {
             reset: () => {
                 const form = document.getElementById('gameForm');
@@ -2641,7 +2660,7 @@
                 FormManager.reset();
                 document.getElementById('formModal').style.display = 'block';
                 document.body.style.overflow = 'hidden';
-                document.body.classList.add('modal-open'); // Aggiunge classe per nascondere controlli
+                document.body.classList.add('modal-open');
                 
                 setTimeout(() => {
                     document.getElementById('gameName')?.focus();
@@ -2683,7 +2702,7 @@
                 
                 document.getElementById('formModal').style.display = 'block';
                 document.body.style.overflow = 'hidden';
-                document.body.classList.add('modal-open'); // Aggiunge classe per nascondere controlli
+                document.body.classList.add('modal-open');
             },
 
             handleSubmit: async (e) => {
@@ -2866,7 +2885,7 @@
                     <div class="image-preview-item" style="animation-delay: ${index * 0.1}s">
                         <img src="${img.data}" alt="${img.name}" class="image-preview-img" loading="lazy">
                         <button type="button" class="image-remove" 
-                                onclick="FormManager.removeImage(${index})" 
+                                onclick="removeImage(${index})" 
                                 title="Rimuovi immagine">
                             <i class="fas fa-times"></i>
                         </button>
@@ -2881,7 +2900,6 @@
             }
         };
 
-        // Auth Manager ottimizzato
         const AuthManager = {
             showModal: () => {
                 if (STATE.isAuthenticated) {
@@ -2889,7 +2907,7 @@
                 } else {
                     document.getElementById('authModal').style.display = 'flex';
                     document.body.style.overflow = 'hidden';
-                    document.body.classList.add('modal-open'); // Aggiunge classe per nascondere controlli
+                    document.body.classList.add('modal-open');
                     setTimeout(() => {
                         document.getElementById('authPassword')?.focus();
                     }, 100);
@@ -2899,7 +2917,7 @@
             closeModal: () => {
                 document.getElementById('authModal').style.display = 'none';
                 document.body.style.overflow = '';
-                document.body.classList.remove('modal-open'); // Rimuove classe per ripristinare controlli
+                document.body.classList.remove('modal-open');
                 document.getElementById('authPassword').value = '';
             },
 
@@ -2935,7 +2953,6 @@
             }
         };
 
-        // Admin Manager ottimizzato
         const AdminManager = {
             toggleEditMode: () => {
                 if (!STATE.isAuthenticated) {
@@ -3105,7 +3122,6 @@
             }
         };
 
-        // Event Handlers ottimizzati
         const EventHandlers = {
             setupAll: () => {
                 EventHandlers.setupNavigation();
@@ -3218,12 +3234,10 @@
             }
         };
 
-        // App Initialization ottimizzata
         const App = {
             initialize: () => {
                 UI.updateSyncStatus('syncing', 'Inizializzazione...');
                 
-                // Inizializza network monitoring
                 NetworkManager.init();
                 
                 let attempts = 0;
@@ -3265,12 +3279,12 @@
             }
         };
 
-        // Global functions per HTML onclick
-        window.showAuthModal = AuthManager.showModal;
-        window.closeAuthModal = AuthManager.closeModal;
-        window.authenticate = AuthManager.authenticate;
-        window.openAddModal = FormManager.openAdd;
-        window.toggleEditMode = AdminManager.toggleEditMode;
+        // FIX: Definisco le funzioni globali IMMEDIATAMENTE e correttamente
+        window.showAuthModal = () => AuthManager.showModal();
+        window.closeAuthModal = () => AuthManager.closeModal();
+        window.authenticate = () => AuthManager.authenticate();
+        window.openAddModal = () => FormManager.openAdd();
+        window.toggleEditMode = () => AdminManager.toggleEditMode();
         window.forceSyncData = () => {
             if (!STATE.isAuthenticated) {
                 UI.showToast('Accesso amministratore richiesto', 'error');
@@ -3282,13 +3296,13 @@
             }
             SupabaseManager.syncToCloud(true);
         };
-        window.exportData = AdminManager.exportData;
-        window.importData = AdminManager.importData;
-        window.clearAllData = AdminManager.clearAllData;
-        window.closeModal = UI.closeModal;
-        window.changeSlide = UI.changeSlide;
-        window.goToSlide = UI.goToSlide;
-        window.showDetails = UI.showDetails;
+        window.exportData = () => AdminManager.exportData();
+        window.importData = () => AdminManager.importData();
+        window.clearAllData = () => AdminManager.clearAllData();
+        window.closeModal = (modalId) => UI.closeModal(modalId);
+        window.changeSlide = (direction) => UI.changeSlide(direction);
+        window.goToSlide = (index) => UI.goToSlide(index);
+        window.showDetails = (id) => UI.showDetails(id);
         window.editGame = (id) => {
             if (!STATE.isAuthenticated) {
                 UI.showToast('Accesso amministratore richiesto', 'error');
@@ -3303,10 +3317,7 @@
             }
             AdminManager.deleteGame(id);
         };
-        window.removeImage = FormManager.removeImage;
-
-        // Funzioni globali per controlli zoom
-        window.ZoomManager = ZoomManager;
+        window.removeImage = (index) => FormManager.removeImage(index);
 
         // Inizializzazione app
         document.addEventListener('DOMContentLoaded', App.initialize);
