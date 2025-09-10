@@ -3319,6 +3319,19 @@
         };
         window.removeImage = (index) => FormManager.removeImage(index);
 
+        // Funzioni globali per il sistema di confronto
+        window.toggleCompare = (gameId) => {
+            const success = CompareManager.toggleGame(gameId);
+            if (success) {
+                // Aggiorna l'UI dopo il toggle
+                setTimeout(() => CompareManager.updateUI(), 50);
+            }
+        };
+        
+        window.openCompareModal = () => CompareManager.openModal();
+        
+        window.clearCompareSelection = () => CompareManager.clear();
+
         // Inizializzazione app
         document.addEventListener('DOMContentLoaded', App.initialize);
     </script>
